@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework Condition="$([MSBuild]::IsOSPlatform('Linux'))">net8.0</TargetFramework>
+	<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('Windows'))">net472;net8.0</TargetFrameworks>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="4.0.1" />
+    <PackageReference Include="MSTest.TestFramework" Version="4.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BinaryKits.Zpl.Label\BinaryKits.Zpl.Label.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ZplData\DownloadGraphicsACS.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ZplData\DownloadGraphicsB64.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ZplData\DownloadGraphicsZ64_net472.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ZplData\DownloadGraphicsZ64.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ZplData\DownloadObject.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ZplData\Zpl.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

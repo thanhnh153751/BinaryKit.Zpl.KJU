@@ -1,0 +1,323 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>BinaryKits.Zpl.Viewer.WebApi</title>
+    <script src="https://unpkg.com/vue@3.4.25/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/bootstrap/dist/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.css" />
+</head>
+<body>
+    <div id="app" class="container-fluid mt-1">
+        <div class="row">
+            <div class="col-2">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="tests-tab" data-bs-toggle="tab" data-bs-target="#tests-tab-pane" type="button" role="tab" aria-controls="tests-tab-pane" aria-selected="true">Tests</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="example-tab" data-bs-toggle="tab" data-bs-target="#example-tab-pane" type="button" role="tab" aria-controls="example-tab-pane" aria-selected="false">Examples</button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="tests-tab-pane" role="tabpanel" aria-labelledby="tests-tab" tabindex="0">
+                        <div v-if="loadingTestData">
+                            <div class="spinner-grow text-secondary" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                        <div v-else class="list-group">
+                            <div v-for="label in testLabels"
+                                 :key="label.name"
+                                 :class="[ 'list-group-item', 'list-group-item-action', label.category === 'test' ? 'bg-light' : '' ]"
+                                 style="cursor:pointer; overflow:hidden"
+                                 @click="changeZplData(label.content, label.format)">
+                                {{ label.name }} <span class="badge bg-info text-white">{{ label.format }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="example-tab-pane" role="tabpanel" aria-labelledby="example-tab" tabindex="0">
+                        <div v-if="loadingTestData">
+                            <div class="spinner-grow text-secondary" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                        <div v-else class="list-group">
+                            <div v-for="label in exampleLabels"
+                                 :key="label.name"
+                                 :class="[ 'list-group-item', 'list-group-item-action', label.category === 'test' ? 'bg-light' : '' ]"
+                                 style="cursor:pointer; overflow:hidden"
+                                 @click="changeZplData(label.content, label.format)">
+                                {{ label.name }} <span class="badge bg-info text-white">{{ label.format }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <textarea class="form-control" v-model="zplData" rows="20" cols="100"></textarea>
+                <div class="mt-1 mb-1">
+                    Labelformat:
+                    <select v-model="selectedLabelFormatIndex" @change="labelFormatChange">
+                        <option v-for="(labelFormat, index) in labelFormats" :key="index" :value="index">{{ labelFormat.width }} mm x {{ labelFormat.height }} mm</option>
+                    </select>
+                    <br />
+                    <input type="text" v-model.number="labelWidth" style="width: 50px" /> mm ({{labelWidthInch}} inches)
+                    <input type="text" v-model.number="labelHeight" style="width: 50px" /> mm ({{labelHeightInch}} inches)
+                    <input type="text" v-model.number="printDensityDpmm" style="width: 40px" /> dpmm ({{dpi}} dpi)<br />
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-primary" @click="render">Render</button>
+                    <button type="button" class="btn btn-secondary" @click="downloadZpl">Download ZPL</button>
+                    <button type="button" class="btn btn-secondary" @click="downloadPng">Download PNG</button>
+                    <button type="button" class="btn btn-secondary" @click="downloadPDF">Download PDF</button>
+                </div>
+                <div>
+                    <hr />
+                    <input type="checkbox" id="overlayCheckbox" v-model="showLabelaryOverlay" @change="renderOverlay" /> <label for="overlayCheckbox">Show labelary.com Overlay*</label>
+                    <br />
+                    <span class="small">* labelary.com is a third-party service, which may or may not respect your privacy. It is recommended to avoid sending genuine data.</span>
+                </div>
+                <hr />
+                Printer IpAddress:<br /><input type="text" v-model="printerIpAddress" style="width: 300px" class="mr-1" />
+                <button type="button" class="btn btn-primary" @click="print">Print</button>
+            </div>
+            <div class="col-6">
+                <div v-if="loadingPreview">
+                    <div class="spinner-grow text-secondary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+                <div v-else class="position-relative">
+                    <div v-if="renderResponse" class="position-absolute">
+                        <div v-for="(labelInfo, index) in renderResponse.labels" :key="index">
+                            <img :src="`data:image/png;base64,${labelInfo.imageBase64}`" class="img-fluid" style="border:1px solid #ccc" />
+                        </div>
+                        <div v-if="renderResponse.nonSupportedCommands.length > 0" class="alert alert-warning mt-1" role="alert">
+                            <h4>Non-supported commands</h4>
+                            <ul>
+                                <li v-for="(unknownCommand, index) in renderResponse.nonSupportedCommands" :key="index">
+                                    {{unknownCommand}}
+                                </li>
+                            </ul>
+                        </div>
+                        <div v-if="renderError" class="alert alert-warning mt-1" role="alert">
+                            <h4>Label rendering error</h4>
+                            <pre>{{ renderError }}</pre>
+                        </div>
+                    </div>
+                    <div v-if="overlayResponse" class="position-absolute">
+                        <div v-for="(labelInfo, index) in overlayResponse.labels" :key="index">
+                            <img :src="`data:image/png;base64,${labelInfo.imageBase64}`" class="img-fluid" style="border:1px solid #ccc" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .list-group-item {
+            padding: 4px;
+        }
+    </style>
+
+    <script type="text/javascript">
+        const App = {
+            data() {
+                return {
+                    loadingTestData: false,
+                    loadingPreview: false,
+                    zplData: null,
+                    testLabels: null,
+                    exampleLabels: null,
+                    pdfs: null,
+                    renderResponse: null,
+                    renderError: null,
+                    printDensityDpmm: 8,
+                    labelWidth: 101.6,
+                    labelHeight: 152.4,
+                    inch2mm: 25.4,
+                    printerIpAddress: null,
+                    selectedLabelFormatIndex: null,
+                    labelFormats: [
+                        {
+                            width: 101.6,
+                            height: 152.4
+                        },
+                        {
+                            width: 54,
+                            height: 86
+                        }
+                    ],
+                    showLabelaryOverlay: false,
+                    overlayResponse: null
+                }
+            },
+            computed: {
+                labelWidthInch() {
+                    return (Math.round(this.labelWidth / this.inch2mm * 10) / 10).toFixed(1)
+                },
+                labelHeightInch() {
+                    return (Math.round(this.labelHeight / this.inch2mm * 10) / 10).toFixed(1)
+                },
+                dpi() {
+                    return (Math.round(this.printDensityDpmm * this.inch2mm))
+                }
+            },
+            async created() {
+                await this.loadLabelData()
+                await this.changeZplData(this.templateLabels[0].content)
+            },
+            methods: {
+                async labelFormatChange() {
+                    this.labelWidth = this.labelFormats[this.selectedLabelFormatIndex].width
+                    this.labelHeight = this.labelFormats[this.selectedLabelFormatIndex].height
+                    this.render();
+                },
+                async loadLabelData() {
+                    try {
+                        this.loadingTestData = true
+                        const response = await axios.get('api/v1/label')
+                        
+                        let labels = response.data.items;
+                        labels.sort((a, b) => a.name.localeCompare(b.name, 'en', { sensitivity: 'base', numeric: true }));
+                        
+                        this.testLabels = labels.filter(function(label){
+                            return label.category === 'Test';
+                        });
+
+                        this.exampleLabels = labels.filter(function(label){
+                            return label.category === 'Example';
+                        });
+                    } finally {
+                        this.loadingTestData = false
+                    }
+                },
+                async changeZplData(zplData, formatData = '') {
+                    let formatParts = formatData.split("x");
+                    if (formatParts.length === 2) {
+                        this.labelWidth = formatParts[0];
+                        this.labelHeight = formatParts[1];
+                    }
+                    
+                    this.zplData = zplData
+                    await this.render()
+                },
+                async render() {
+                    this.renderError = null
+                    try {
+                        this.loadingPreview = true
+                        this.renderResponse = null
+                        this.overlayResponse = null
+                        this.renderOverlay()
+                        const payload = {
+                            zplData: this.zplData,
+                            printDensityDpmm: this.printDensityDpmm,
+                            labelWidth: this.labelWidth,
+                            labelHeight: this.labelHeight
+                        }
+                        const response = await axios.post('api/v1/viewer', payload)
+                        this.renderResponse = response.data
+                    } catch(err) {
+                        this.renderError = err.response.data
+                        console.error(this.renderError)
+                    }
+                    finally {
+                        this.loadingPreview = false
+                    }
+                },
+                async downloadPDF() {
+                    this.renderError = null
+                    try {
+                        const payload = {
+                            zplData: this.zplData,
+                            printDensityDpmm: this.printDensityDpmm,
+                            labelWidth: this.labelWidth,
+                            labelHeight: this.labelHeight,
+                            type: 'PDF'
+                        }
+                        const response = await axios.post('api/v1/viewer', payload)
+
+                        response.data.pdfs.forEach(function (labelInfo, index) {
+                            var element = document.createElement('a');
+                            element.setAttribute('href', 'data:application/pdf;base64,' + labelInfo.pdfBase64);
+                            element.setAttribute('download', 'label-'+ index +'.pdf');
+
+                            element.style.display = 'none';
+                            document.body.appendChild(element);
+
+                            element.click();
+
+                            document.body.removeChild(element);
+                        });
+                    } catch(error) {
+                        this.renderError = error.response.data
+                        console.error(this.renderError)
+                    }
+                },
+                async downloadZpl() {
+                    var element = document.createElement('a');
+                    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(this.zplData));
+                    element.setAttribute('download', 'label.zpl');
+
+                    element.style.display = 'none';
+                    document.body.appendChild(element);
+
+                    element.click();
+
+                    document.body.removeChild(element);
+                },
+                async downloadPng() {
+                    try {
+                        this.renderResponse.labels.forEach(function (labelInfo, index) {
+                            var element = document.createElement('a');
+                            element.setAttribute('href', 'data:image/png;base64,' + labelInfo.imageBase64);
+                            element.setAttribute('download', 'label-'+ index +'.png');
+
+                            element.style.display = 'none';
+                            document.body.appendChild(element);
+
+                            element.click();
+
+                            document.body.removeChild(element);
+                        });
+                    } catch(error) {
+                        console.error(error);
+                    }
+                },
+                async renderOverlay() {
+                    if(this.showLabelaryOverlay) {
+                        try {
+                            const payload = {
+                                zplData: this.zplData,
+                                printDensityDpmm: this.printDensityDpmm,
+                                labelWidth: this.labelWidth,
+                                labelHeight: this.labelHeight
+                            }
+                            const response = await axios.post('api/v1/overlay', payload)
+                            this.overlayResponse = response.data
+                        } catch(err) {
+                            console.error(err)
+                        }
+                    } else {
+                        this.overlayResponse = null
+                    }
+                },
+                async print() {
+                    const payload = {
+                        zplData: this.zplData,
+                        printerIpAddress: this.printerIpAddress
+                    }
+                    const response = await axios.post('api/v1/print', payload)
+                    if(response.status !== 200) {
+                        alert('Cannot print')
+                    }
+                }
+            }
+        };
+        Vue.createApp(App).mount('#app');
+    </script>
+</body>
+</html>
