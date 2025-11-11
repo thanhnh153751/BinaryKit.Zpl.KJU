@@ -85,9 +85,9 @@ namespace BinaryKits.Zpl.Viewer.CommandAnalyzers
                 }
                 else if (this.VirtualPrinter.NextElementFieldData is QrCodeBarcodeFieldData qrCode)
                 {
-                    (ErrorCorrectionLevel errorCorrection, string parsedText) = this.ParseQrCodeFieldData(qrCode, text);
+                    var qrParseResult = this.ParseQrCodeFieldData(qrCode, text);
                     // N.B.: always pass Field Orientation Normal to QR codes; the ZPL II standard does not allow rotation
-                    return new ZplQrCode(parsedText, x, y, qrCode.Model, qrCode.MagnificationFactor, errorCorrection, qrCode.MaskValue, FieldOrientation.Normal, hexadecimalIndicator, bottomToTop, useDefaultPosition);
+                    return new ZplQrCode(qrParseResult.ParsedText, x, y, qrCode.Model, qrCode.MagnificationFactor, qrParseResult.ErrorCorrection, qrCode.MaskValue, FieldOrientation.Normal, hexadecimalIndicator, bottomToTop, useDefaultPosition);
                 }
                 else if (this.VirtualPrinter.NextElementFieldData is UpcABarcodeFieldData upcA)
                 {
@@ -137,7 +137,7 @@ namespace BinaryKits.Zpl.Viewer.CommandAnalyzers
             return new ZplTextField(text, x, y, font, hexadecimalIndicator: hexadecimalIndicator, reversePrint: reversePrint, bottomToTop: bottomToTop, fieldJustification: fieldJustification, useDefaultPosition: useDefaultPosition);
         }
 
-        private (ErrorCorrectionLevel, string) ParseQrCodeFieldData(QrCodeBarcodeFieldData qrCode, string text)
+        private QrParseResult ParseQrCodeFieldData(QrCodeBarcodeFieldData qrCode, string text)
         {
             ErrorCorrectionLevel errorCorrection = qrCode.ErrorCorrection;
             string parsedText = text;
@@ -222,7 +222,11 @@ namespace BinaryKits.Zpl.Viewer.CommandAnalyzers
 
             }
 
-            return (errorCorrection, parsedText);
+            return new QrParseResult
+            {
+                ErrorCorrection = errorCorrection,
+                ParsedText = parsedText
+            };
         }
 
         private ZplFont GetFontFromVirtualPrinter()
@@ -244,5 +248,13 @@ namespace BinaryKits.Zpl.Viewer.CommandAnalyzers
 
             return new ZplFont(fontWidth, fontHeight, fontName, fieldOrientation);
         }
+
+        private class QrParseResult
+        {
+            public ErrorCorrectionLevel ErrorCorrection { get; set; }
+            public string ParsedText { get; set; }
+        }
     }
 }
+
+

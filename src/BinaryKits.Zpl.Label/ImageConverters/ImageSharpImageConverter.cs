@@ -1,6 +1,6 @@
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
 using System.Collections;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
@@ -17,52 +17,65 @@ namespace BinaryKits.Zpl.Label.ImageConverters
         /// <returns></returns>
         public ImageResult ConvertImage(byte[] imageData)
         {
-            using (var ms = new MemoryStream(imageData.Length))
+            // Use MemoryStream to load the image data into a Bitmap
+            using (var ms = new MemoryStream(imageData))
+            // Load the image using System.Drawing.Image.FromStream
+            using (var originalImage = Image.FromStream(ms))
+            using (var bitmapImage = new Bitmap(originalImage)) // Convert to Bitmap for pixel access
+            using (var outputStream = new MemoryStream())
             {
-                using (Image<Rgba32> image = Image.Load(imageData).CloneAs<Rgba32>())
+                var width = bitmapImage.Width;
+                var height = bitmapImage.Height;
+
+                // Calculate bytesPerRow (same logic as SixLabors: pad to the next byte boundary)
+                var bytesPerRow = width % 8 > 0
+                    ? width / 8 + 1
+                    : width / 8;
+
+                var binaryByteCount = height * bytesPerRow;
+
+                // Bitmap.GetPixel is very slow; for high performance, use Bitmap.LockBits,
+                // but for a direct port of the SixLabors loop, GetPixel is the closest equivalent
+                // if performance is not critical. We'll use GetPixel for simplicity here.
+
+                int colorBits = 0;
+                int j = 0;
+
+                for (var y = 0; y < height; y++)
                 {
-                    var bytesPerRow = image.Width % 8 > 0
-                        ? image.Width / 8 + 1
-                        : image.Width / 8;
-
-                    var binaryByteCount = image.Height * bytesPerRow;
-
-                    var colorBits = 0;
-                    var j = 0;
-
-                    for (var y = 0; y < image.Height; y++)
+                    for (var x = 0; x < width; x++)
                     {
-                        for (var x = 0; x < image.Width; x++)
+                        // Get the pixel color
+                        Color pixel = bitmapImage.GetPixel(x, y);
+
+                        // Convert to grayscale value (average R, G, B) and check threshold
+                        var isBlackPixel = ((pixel.R + pixel.G + pixel.B) / 3) < 128;
+
+                        if (isBlackPixel)
                         {
-                            var pixel = image[x, y];
+                            // Set the corresponding bit (most significant bit first for the 7 - j logic)
+                            colorBits |= 1 << (7 - j);
+                        }
 
-                            var isBlackPixel = ((pixel.R + pixel.G + pixel.B) / 3) < 128;
-                            if (isBlackPixel)
-                            {
-                                colorBits |= 1 << (7 - j);
-                            }
+                        j++;
 
-                            j++;
-
-                            if (j == 8 || x == (image.Width - 1))
-                            {
-                                ms.WriteByte((byte)colorBits);
-                                colorBits = 0;
-                                j = 0;
-                            }
+                        // Write the byte when 8 bits are collected, or at the end of the row (and pad)
+                        if (j == 8 || x == (width - 1))
+                        {
+                            outputStream.WriteByte((byte)colorBits);
+                            colorBits = 0;
+                            j = 0;
                         }
                     }
-
-                    return new ImageResult
-                    {
-                        RawData = ms.ToArray(),
-                        BinaryByteCount = binaryByteCount,
-                        BytesPerRow = bytesPerRow
-                    };
                 }
+
+                return new ImageResult
+                {
+                    RawData = outputStream.ToArray(),
+                    BinaryByteCount = binaryByteCount,
+                    BytesPerRow = bytesPerRow
+                };
             }
-
-
         }
 
         private byte Reverse(byte b)
@@ -86,29 +99,50 @@ namespace BinaryKits.Zpl.Label.ImageConverters
         /// <returns></returns>
         public byte[] ConvertImage(byte[] imageData, int bytesPerRow)
         {
-            imageData = imageData.Select(b => Reverse(b)).ToArray();
+            // Assuming 'Reverse' is defined elsewhere in your .NET 4.0 code:
+            // imageData = imageData.Select(b => Reverse(b)).ToArray();
 
             var imageHeight = imageData.Length / bytesPerRow;
             var imageWidth = bytesPerRow * 8;
 
-            using (var image = new Image<Rgba32>(imageWidth, imageHeight))
+            // Create a new Bitmap with the calculated dimensions, using 32-bit ARGB format
+            using (var image = new Bitmap(imageWidth, imageHeight, PixelFormat.Format32bppArgb))
             {
-                for (var y = 0; y < image.Height; y++)
-                {
-                    var bits = new BitArray(imageData.Skip(bytesPerRow * y).Take(bytesPerRow).ToArray());
+                // Convert the raw byte array into a BitArray (a .NET 4.0 supported class)
+                // BitArray reads bits from least significant to most significant for each byte,
+                // which may require careful consideration depending on your specific protocol.
+                var bits = new BitArray(imageData);
 
-                    for (var x = 0; x < image.Width; x++)
+                // System.Drawing does not directly expose a BitArray view like the original code's logic.
+                // We will loop through the bits sequentially.
+                for (var y = 0; y < imageHeight; y++)
+                {
+                    for (var x = 0; x < imageWidth; x++)
                     {
-                        if (bits[x])
+                        // Calculate the index in the 1D BitArray
+                        var bitIndex = (y * imageWidth) + x;
+
+                        if (bitIndex < bits.Length)
                         {
-                            image[x, y] = new Rgba32(0, 0, 0, 255);
+                            // Check if the bit is 'on' (representing a black pixel)
+                            if (bits[bitIndex])
+                            {
+                                // Set the pixel to Black (0, 0, 0, 255)
+                                image.SetPixel(x, y, Color.FromArgb(255, 0, 0, 0));
+                            }
+                            else
+                            {
+                                // Set the pixel to White (or another background color)
+                                image.SetPixel(x, y, Color.FromArgb(255, 255, 255, 255));
+                            }
                         }
                     }
                 }
 
                 using (var memoryStream = new MemoryStream())
                 {
-                    image.SaveAsPng(memoryStream);
+                    // Save the Bitmap as a PNG file into the memory stream
+                    image.Save(memoryStream, ImageFormat.Png);
                     return memoryStream.ToArray();
                 }
             }

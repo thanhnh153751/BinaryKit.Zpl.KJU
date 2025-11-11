@@ -1,9 +1,8 @@
 ﻿using BinaryKits.Zpl.Label.Helpers;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Png;
-using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
 
@@ -42,26 +41,41 @@ namespace BinaryKits.Zpl.Label.Elements
         public override IEnumerable<string> Render(ZplRenderOptions context)
         {
             byte[] objectData;
-            using (var image = Image.Load(ImageData))
+            using (var ms = new MemoryStream(ImageData))
+            using (var originalImage = System.Drawing.Image.FromStream(ms))
+            using (var image = new Bitmap(originalImage))
             {
                 if (context.ScaleFactor != 1)
                 {
                     var scaleWidth = (int)Math.Round(image.Width * context.ScaleFactor);
                     var scaleHeight = (int)Math.Round(image.Height * context.ScaleFactor);
 
-                    image.Mutate(x => x.Resize(scaleWidth, scaleHeight, KnownResamplers.Lanczos3));
+                    using (var scaledImage = image.GetThumbnailImage(scaleWidth, scaleHeight, null, IntPtr.Zero))
+                    {
+                        // To replace the original image variable, we must save the scaled image
+                        // and then reload it or save it directly to the output stream.
+                        // We'll save the scaled image to memory stream for conversion.
+
+                        using (var outputStream = new MemoryStream())
+                        {
+                            // 2. Image Saving (PNG format)
+                            // The #if NET6_0_OR_GREATER block for PNG metadata is not needed
+                            // as System.Drawing manages this differently/doesn't have the same issue.
+                            scaledImage.Save(outputStream, ImageFormat.Png);
+                            objectData = outputStream.ToArray();
+                        }
+                    }
+                }
+                else
+                {
+                    // If no scaling, just save the original image data as PNG
+                    using (var outputStream = new MemoryStream())
+                    {
+                        image.Save(outputStream, ImageFormat.Png);
+                        objectData = outputStream.ToArray();
+                    }
                 }
 
-                using (var ms = new MemoryStream())
-                {
-                    //ImageSharp v3 workaround. 
-#if NET6_0_OR_GREATER
-                    PngMetadata metadata = image.Metadata.GetPngMetadata();
-                    metadata.ColorTable = null;
-#endif
-                    image.Save(ms, new PngEncoder());
-                    objectData = ms.ToArray();
-                }
             }
 
             var hexString = ByteHelper.BytesToHex(objectData);

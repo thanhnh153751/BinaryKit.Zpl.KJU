@@ -1,10 +1,9 @@
 ﻿using BinaryKits.Zpl.Label.Helpers;
 using BinaryKits.Zpl.Label.ImageConverters;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Png;
-using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 
 namespace BinaryKits.Zpl.Label.Elements
@@ -70,31 +69,55 @@ namespace BinaryKits.Zpl.Label.Elements
         public override IEnumerable<string> Render(ZplRenderOptions context)
         {
             byte[] objectData;
-            using (var image = Image.Load(ImageData))
+
+            // 1. Image Loading and Manipulation 
+            using (var ms = new MemoryStream(ImageData))
+            using (var originalImage = System.Drawing.Image.FromStream(ms))
+            using (var image = new Bitmap(originalImage)) // Convert to Bitmap for manipulation
             {
+                // Equivalent to SixLabors image.Mutate(x => x.Resize(...))
                 if (context.ScaleFactor != 1)
                 {
-                    //var scaleWidth = (int)Math.Round(image.Width * context.ScaleFactor);
-                    //var scaleHeight = (int)Math.Round(image.Height * context.ScaleFactor);
+                    // Calculate new dimensions (replacing the commented-out SixLabors calculation with its logic)
+                    // The original SixLabors code was using a hardcoded division by 2 for demonstration:
+                    var scaleWidth = image.Width / 2;
+                    var scaleHeight = image.Height / 2;
 
-                    image.Mutate(x => x.Resize(image.Width / 2, image.Height / 2));
+                    // System.Drawing equivalent of resizing: GetThumbnailImage is a simple resize method.
+                    // NOTE: For higher-quality resizing, you may need to implement a custom Bitmap/Graphics routine.
+                    using (var scaledImage = image.GetThumbnailImage(scaleWidth, scaleHeight, null, IntPtr.Zero))
+                    {
+                        // To replace the original image variable, we must save the scaled image
+                        // and then reload it or save it directly to the output stream.
+                        // We'll save the scaled image to memory stream for conversion.
+
+                        using (var outputStream = new MemoryStream())
+                        {
+                            // 2. Image Saving (PNG format)
+                            // The #if NET6_0_OR_GREATER block for PNG metadata is not needed
+                            // as System.Drawing manages this differently/doesn't have the same issue.
+                            scaledImage.Save(outputStream, ImageFormat.Png);
+                            objectData = outputStream.ToArray();
+                        }
+                    }
                 }
-
-                using (var ms = new MemoryStream())
+                else
                 {
-                    //ImageSharp v3 workaround. 
-#if NET6_0_OR_GREATER
-                    PngMetadata metadata = image.Metadata.GetPngMetadata();
-                    metadata.ColorTable = null;
-#endif
-                    image.Save(ms, new PngEncoder());
-                    objectData = ms.ToArray();
+                    // If no scaling, just save the original image data as PNG
+                    using (var outputStream = new MemoryStream())
+                    {
+                        image.Save(outputStream, ImageFormat.Png);
+                        objectData = outputStream.ToArray();
+                    }
                 }
-            }
+            } // The System.Drawing objects (Bitmap, Image, MemoryStream) are disposed here.
 
+            // 3. Image Conversion (using the previously defined helper method)
+            // The previous conversion method uses System.Drawing and is still valid here.
             var imageResult = _imageConverter.ConvertImage(objectData);
             string zplData = string.Empty;
 
+            // 4. ZPL Compression and Output (No change needed here as it uses existing helpers)
             switch (_compressionScheme)
             {
                 case ZplCompressionScheme.None:

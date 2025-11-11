@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Ionic.Zlib;
+using System;
 using System.IO;
-using System.IO.Compression;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
@@ -89,92 +89,56 @@ namespace BinaryKits.Zpl.Label.Helpers
         /// <returns></returns>
         internal static byte[] Deflate(byte[] data, CompressionLevel compressionLevel = CompressionLevel.Optimal)
         {
+            // Ionic.Zlib handles the ZLib header (0x78, etc.) and the Adler-32 checksum automatically.
+            // Therefore, the manual header writing and checksum calculation from the original code are removed.
+
+            var ionicLevel = ConvertCompressionLevel(compressionLevel);
+
             using (var ms = new MemoryStream())
             {
-                // write header:
-                ms.WriteByte(0x78);
-                // compression level header
-                ms.WriteByte(GetCompressionHeader(compressionLevel));
-
-                // write compressed data (with Deflate headers):
-                var compressor = new DeflateStream(ms, compressionLevel, true);
-                compressor.Write(data, 0, data.Length);
-                compressor.Close();
-
-                // compute Adler-32 checksum
-                uint a1 = 1, a2 = 0;
-                foreach (byte b in data)
+                // ZlibStream creates the ZLib-wrapped compressed data (including header and checksum).
+                // CompressionMode.Compress is the only mode needed here.
+                using (var compressor = new ZlibStream(ms, CompressionMode.Compress, ionicLevel, true))
                 {
-                    a1 = (a1 + b) % 65521;
-                    a2 = (a2 + a1) % 65521;
-                }
+                    compressor.Write(data, 0, data.Length);
+                } // Closing the ZlibStream automatically flushes data and writes the Adler-32 checksum footer.
 
-                //append checksum
-                ms.WriteByte((byte)(a2 >> 8));
-                ms.WriteByte((byte)a2);
-                ms.WriteByte((byte)(a1 >> 8));
-                ms.WriteByte((byte)a1);
                 ms.Seek(0, SeekOrigin.Begin);
                 return ms.ToArray();
             }
         }
 
-#if NET5_0_OR_GREATER
-        /// <summary>
-        /// Compress graphics data with ZLib headers 
-        /// .NET 5.0+ ZlibStream implementation. 
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="compressionLevel"></param>
-        /// <returns></returns>
-        internal static byte[] DeflateCore(byte[] data, CompressionLevel compressionLevel = CompressionLevel.SmallestSize)
-        {
-            using (var ms = new MemoryStream())
-            {
-                using (var compressor = new ZLibStream(ms, compressionLevel))
-                {
-                    compressor.Write(data, 0, data.Length);
-                }
-                return ms.ToArray();
-            }
-        }
-        /// <summary>
-        /// Decompres graphics data with ZLib 
-        /// .NET 5.0+ ZlibStream implementation. 
-        /// </summary>
-        /// <param name="data"></param>
-        internal static byte[] InflateCore(byte[] data)
-        {
-            using (var outputStream = new MemoryStream())
-            {
-                using (var inputStream = new MemoryStream(data))
-                {
-                    using (var decompressor = new ZLibStream(inputStream, CompressionMode.Decompress,true))
-                    {
-                        decompressor.CopyTo(outputStream);
-                        return outputStream.ToArray();
-                    }
-                }
-            }
-        }
-#endif
 
-        private static byte GetCompressionHeader(CompressionLevel level)
+        private static Ionic.Zlib.CompressionLevel ConvertCompressionLevel(CompressionLevel level)
         {
             switch (level)
             {
                 case CompressionLevel.NoCompression:
-                    return 0x01;
+                    return Ionic.Zlib.CompressionLevel.None;
                 case CompressionLevel.Fastest:
-                    return 0x01;
+                    return Ionic.Zlib.CompressionLevel.BestSpeed;
                 case CompressionLevel.Optimal:
-                    return 0x9C;
-#if NET5_0_OR_GREATER
                 case CompressionLevel.SmallestSize:
-                    return 0xDA;
-#endif
+                    // Note: We map Optimal and SmallestSize to the library's best option
+                    // since the library's default is usually 'Optimal'.
+                    return Ionic.Zlib.CompressionLevel.BestCompression;
+                default:
+                    return Ionic.Zlib.CompressionLevel.Default;
             }
-            return 0xDA;
         }
+    }
+    public enum CompressionLevel
+    {
+        // Corresponds to Ionic.Zlib.CompressionLevel.None
+        NoCompression = 0,
+
+        // Corresponds to Ionic.Zlib.CompressionLevel.BestSpeed
+        Fastest = 1,
+
+        // Corresponds to Ionic.Zlib.CompressionLevel.Default
+        Optimal = 2,
+
+        // Corresponds to Ionic.Zlib.CompressionLevel.BestCompression
+        SmallestSize = 3
     }
 }

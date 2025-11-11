@@ -1,22 +1,26 @@
 ﻿using BinaryKits.Zpl.Label;
 using BinaryKits.Zpl.Label.Elements;
 
-using SkiaSharp;
+using System.Drawing; // Replaces using SkiaSharp;
 
 namespace BinaryKits.Zpl.Viewer.ElementDrawers
 {
+    // The interface IElementDrawer will also need its SKPoint and SKCanvas references updated to System.Drawing.PointF and System.Drawing.Graphics.
+
     public abstract class ElementDrawerBase : IElementDrawer
     {
         internal IPrinterStorage printerStorage;
-        internal SKCanvas skCanvas;
+        // Replaced SKCanvas with System.Drawing.Graphics
+        internal Graphics graphicsCanvas;
 
         ///<inheritdoc/>
         public void Prepare(
             IPrinterStorage printerStorage,
-            SKCanvas skCanvas)
+            // Replaced SKCanvas with System.Drawing.Graphics
+            Graphics graphicsCanvas)
         {
             this.printerStorage = printerStorage;
-            this.skCanvas = skCanvas;
+            this.graphicsCanvas = graphicsCanvas;
         }
 
         ///<inheritdoc/>
@@ -41,37 +45,41 @@ namespace BinaryKits.Zpl.Viewer.ElementDrawers
         }
 
         ///<inheritdoc/>
-        public virtual SKPoint Draw(ZplElementBase element, DrawerOptions options, SKPoint currentPosition)
+        // Replaced SKPoint with System.Drawing.PointF
+        public virtual PointF Draw(ZplElementBase element, DrawerOptions options, PointF currentPosition)
         {
             return currentPosition;
         }
 
         ///<inheritdoc/>
-        public virtual SKPoint Draw(ZplElementBase element, DrawerOptions options, SKPoint currentPosition, InternationalFont internationalFont)
+        // Replaced SKPoint with System.Drawing.PointF
+        public virtual PointF Draw(ZplElementBase element, DrawerOptions options, PointF currentPosition, InternationalFont internationalFont)
         {
             return this.Draw(element, options, currentPosition);
         }
 
         ///<inheritdoc/>
-        public virtual SKPoint Draw(ZplElementBase element, DrawerOptions options, SKPoint currentPosition, InternationalFont internationalFont, int printDensityDpmm)
+        // Replaced SKPoint with System.Drawing.PointF
+        public virtual PointF Draw(ZplElementBase element, DrawerOptions options, PointF currentPosition, InternationalFont internationalFont, int printDensityDpmm)
         {
             return this.Draw(element, options, currentPosition, internationalFont);
         }
 
-        protected virtual SKPoint CalculateNextDefaultPosition(float x, float y, float elementWidth, float elementHeight, bool useFieldOrigin, Label.FieldOrientation fieldOrientation, SKPoint currentPosition)
+        // Replaced SKPoint with System.Drawing.PointF
+        protected virtual PointF CalculateNextDefaultPosition(float x, float y, float elementWidth, float elementHeight, bool useFieldOrigin, Label.FieldOrientation fieldOrientation, PointF currentPosition)
         {
             if (useFieldOrigin)
             {
                 switch (fieldOrientation)
                 {
                     case Label.FieldOrientation.Normal:
-                        return new SKPoint(x + elementWidth, y + elementHeight);
+                        return new PointF(x + elementWidth, y + elementHeight);
                     case Label.FieldOrientation.Rotated90:
-                        return new SKPoint(x, y + elementHeight);
+                        return new PointF(x, y + elementHeight);
                     case Label.FieldOrientation.Rotated180:
-                        return new SKPoint(x - elementWidth, y);
+                        return new PointF(x - elementWidth, y);
                     case Label.FieldOrientation.Rotated270:
-                        return new SKPoint(x, y - elementHeight);
+                        return new PointF(x, y - elementHeight);
                 }
             }
             else
@@ -79,13 +87,13 @@ namespace BinaryKits.Zpl.Viewer.ElementDrawers
                 switch (fieldOrientation)
                 {
                     case Label.FieldOrientation.Normal:
-                        return new SKPoint(x + elementWidth, y);
+                        return new PointF(x + elementWidth, y);
                     case Label.FieldOrientation.Rotated90:
-                        return new SKPoint(x, y + elementWidth);
+                        return new PointF(x, y + elementWidth);
                     case Label.FieldOrientation.Rotated180:
-                        return new SKPoint(x - elementWidth, y);
+                        return new PointF(x - elementWidth, y);
                     case Label.FieldOrientation.Rotated270:
-                        return new SKPoint(x, y - elementWidth);
+                        return new PointF(x, y - elementWidth);
                 }
             }
 

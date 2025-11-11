@@ -1,7 +1,7 @@
 ﻿using BinaryKits.Zpl.Label;
 using BinaryKits.Zpl.Label.Elements;
 
-using SkiaSharp;
+using System.Drawing;
 
 namespace BinaryKits.Zpl.Viewer.ElementDrawers
 {
@@ -17,7 +17,7 @@ namespace BinaryKits.Zpl.Viewer.ElementDrawers
         /// <param name="skCanvas"></param>
         void Prepare(
             IPrinterStorage printerStorage,
-            SKCanvas skCanvas);
+            Graphics graphicsCanvas);
 
         /// <summary>
         /// Check if the drawer can draw this element
@@ -54,7 +54,7 @@ namespace BinaryKits.Zpl.Viewer.ElementDrawers
         /// <param name="options"></param>
         /// <param name="currentPosition">The current default field position for elements using default positioning</param>
         /// <returns>The updated default field position after drawing this element</returns>
-        SKPoint Draw(ZplElementBase element, DrawerOptions options, SKPoint currentPosition);
+        PointF Draw(ZplElementBase element, DrawerOptions options, PointF currentPosition);
 
         /// <summary>
         /// Draw the element with extra context information
@@ -64,7 +64,7 @@ namespace BinaryKits.Zpl.Viewer.ElementDrawers
         /// <param name="currentPosition">The current default field position for elements using default positioning</param>
         /// <param name="internationalFont"></param>
         /// <returns>The updated default field position after drawing this element</returns>
-        SKPoint Draw(ZplElementBase element, DrawerOptions options, SKPoint currentPosition, InternationalFont internationalFont);
+        PointF Draw(ZplElementBase element, DrawerOptions options, PointF currentPosition, InternationalFont internationalFont);
 
         /// <summary>
         /// Draw the element with extra context information
@@ -75,6 +75,6 @@ namespace BinaryKits.Zpl.Viewer.ElementDrawers
         /// <param name="internationalFont"></param>
         /// <param name="printDensityDpmm"></param>
         /// <returns>The updated default field position after drawing this element</returns>
-        SKPoint Draw(ZplElementBase element, DrawerOptions options, SKPoint currentPosition, InternationalFont internationalFont, int printDensityDpmm);
+        PointF Draw(ZplElementBase element, DrawerOptions options, PointF currentPosition, InternationalFont internationalFont, int printDensityDpmm);
     }
 }
