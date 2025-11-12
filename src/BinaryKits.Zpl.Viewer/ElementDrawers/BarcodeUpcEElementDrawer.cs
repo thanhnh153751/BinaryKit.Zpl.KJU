@@ -122,7 +122,7 @@ namespace BinaryKits.Zpl.Viewer.ElementDrawers
                     SKFont labelFont = new(labelTypeFace, labelFontSize);
                     if (barcode.PrintInterpretationLineAboveCode)
                     {
-                        this.DrawInterpretationLine(interpretation, labelFont, x, y, resizedImage.Width, resizedImage.Height, barcode.FieldOrigin != null, barcode.FieldOrientation, true, options);
+                        this.DrawInterpretationLine(interpretation, labelFontSize, x, y, resizedImage.Width, resizedImage.Height, barcode.FieldOrigin != null, barcode.FieldOrientation, true, options);
                     }
                     else
                     {

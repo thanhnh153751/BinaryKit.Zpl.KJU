@@ -62,7 +62,7 @@ namespace BinaryKits.Zpl.Viewer.ElementDrawers
             }
         }
 
-        protected void DrawInterpretationLine(string interpretation, InternationalFont internationalFont, float x, float y, int barcodeWidth, int barcodeHeight, bool useFieldOrigin, Label.FieldOrientation fieldOrientation, bool printInterpretationLineAboveCode, DrawerOptions options)
+        protected void DrawInterpretationLine(string interpretation, float labelFontSize, float x, float y, int barcodeWidth, int barcodeHeight, bool useFieldOrigin, Label.FieldOrientation fieldOrientation, bool printInterpretationLineAboveCode, DrawerOptions options)
         {
             // Note: SKFont replaced with InternationalFont (which must expose a System.Drawing.Font).
             // Note: DrawShapedText (HarfBuzz) is replaced with standard DrawString. 
@@ -74,7 +74,8 @@ namespace BinaryKits.Zpl.Viewer.ElementDrawers
             {
                 // Retrieve the GDI+ Font from the InternationalFont object
                 // ASSUMPTION: InternationalFont has a property/method to get System.Drawing.Font
-                Font font = internationalFont.Font;
+
+                Font font = new Font("Arial", labelFontSize);
 
                 // SKPaint replacement: Pen/Brush setup
                 using (Brush textBrush = new SolidBrush(Color.Black))
@@ -255,11 +256,13 @@ namespace BinaryKits.Zpl.Viewer.ElementDrawers
             Color black = Color.Black;
             Color transparent = Color.Transparent;
 
-            for (int row = 0; row < originalHeight; row++)
+            for (int y = 0; y < originalHeight; y++)
             {
-                for (int col = 0; col < originalWidth; col++)
+                for (int x = 0; x < originalWidth; x++)
                 {
-                    Color color = matrix.get_Item(col, row) ? black : transparent;
+                    // Use the real ZXing API
+                    bool isBlack = matrix[x, y];
+                    Color color = isBlack ? black : transparent;
 
                     // Fill the scaled block (pixelScale x pixelScale)
                     for (int dy = 0; dy < pixelScale; dy++)
@@ -267,8 +270,8 @@ namespace BinaryKits.Zpl.Viewer.ElementDrawers
                         for (int dx = 0; dx < pixelScale; dx++)
                         {
                             scaledImage.SetPixel(
-                                (col * pixelScale) + dx,
-                                (row * pixelScale) + dy,
+                                (x * pixelScale) + dx,
+                                (y * pixelScale) + dy,
                                 color
                             );
                         }

@@ -3,9 +3,9 @@ using BinaryKits.Zpl.Label.Elements;
 using BinaryKits.Zpl.Viewer.Helpers;
 using BinaryKits.Zpl.Viewer.Symologies;
 
-using SkiaSharp;
 
 using System;
+using System.Drawing;
 
 namespace BinaryKits.Zpl.Viewer.ElementDrawers
 {
@@ -21,7 +21,7 @@ namespace BinaryKits.Zpl.Viewer.ElementDrawers
         }
 
         ///<inheritdoc/>
-        public override SKPoint Draw(ZplElementBase element, DrawerOptions options, SKPoint currentPosition, InternationalFont internationalFont)
+        public override PointF Draw(ZplElementBase element, DrawerOptions options, PointF currentPosition, InternationalFont internationalFont)
         {
             if (element is ZplBarcode128 barcode)
             {
@@ -69,7 +69,7 @@ namespace BinaryKits.Zpl.Viewer.ElementDrawers
                 }
 
                 (bool[] data, string interpretation) = ZplCode128Symbology.Encode(content, codeSet, gs1);
-                using SKBitmap resizedImage = BoolArrayToSKBitmap(data, barcode.Height, barcode.ModuleWidth);
+                using Bitmap resizedImage = BoolArrayToSKBitmap(data, barcode.Height, barcode.ModuleWidth);
                 byte[] png = resizedImage.Encode(SKEncodedImageFormat.Png, 100).ToArray();
                 this.DrawBarcode(png, x, y, resizedImage.Width, resizedImage.Height, barcode.FieldOrigin != null, barcode.FieldOrientation);
 
@@ -77,9 +77,9 @@ namespace BinaryKits.Zpl.Viewer.ElementDrawers
                 {
                     // TODO: use font 0, auto scale for Mode D
                     float labelFontSize = Math.Min(barcode.ModuleWidth * 10f, 100f);
-                    SKTypeface labelTypeFace = options.FontLoader("A");
-                    SKFont labelFont = new(labelTypeFace, labelFontSize);
-                    this.DrawInterpretationLine(interpretation, labelFont, x, y, resizedImage.Width, resizedImage.Height, barcode.FieldOrigin != null, barcode.FieldOrientation, barcode.PrintInterpretationLineAboveCode, options);
+                    //SKTypeface labelTypeFace = options.FontLoader("A");
+                    //SKFont labelFont = new(labelTypeFace, labelFontSize);
+                    this.DrawInterpretationLine(interpretation, labelFontSize, x, y, resizedImage.Width, resizedImage.Height, barcode.FieldOrigin != null, barcode.FieldOrientation, barcode.PrintInterpretationLineAboveCode, options);
                 }
 
                 return this.CalculateNextDefaultPosition(x, y, resizedImage.Width, resizedImage.Height, barcode.FieldOrigin != null, barcode.FieldOrientation, currentPosition);
