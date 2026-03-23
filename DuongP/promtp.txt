@@ -1,0 +1,21 @@
+Promt: From this query generate all table and example data
+
+{
+  "searchCondition": {
+    "alasCd": "",
+    "bizCd": "",
+    "casNo": "50-00-0",
+    "copCd": "C001",
+    "crtnMm": "03",
+    "crtnYy": "2026",
+    "crtnYy1": "2027",
+    "crtnYy2": "2028",
+    "crtnYy3": "2029",
+    "crtnYy4": "2030",
+    "langCd": "EN",
+    "matCd": "M001",
+    "matDivsCd": "1",
+    "vdcpCd": "V001",
+    "wkplcCd": "W001"
+  }
+}
