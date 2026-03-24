@@ -177,20 +177,20 @@ CREATE TABLE tb_mi_matl_ingt_n (
 -- =========================
 
 -- Common codes
-INSERT INTO tb_rapid_cmn_c (cmn_gr_cd, cmn_cd, opt_val_ctn8, opt_val_ctn10) VALUES
+(opt_val_ctn10 not in talbe) =INSERT INTO tb_rapid_cmn_c (cmn_gr_cd, cmn_cd, opt_val_ctn8, opt_val_ctn10) VALUES
 ('CMSCM_COMPANY', 'C001', 'Y', NULL),
 ('CM_PLANT_DIVISION_MAPPING', 'P001', 'Y', 'C001');
 
 -- Material master
-INSERT INTO tb_cm_matl_m (matl_cd, matl_cate_cd) VALUES
+=INSERT INTO tb_cm_matl_m (matl_cd, matl_cate_cd) VALUES
 ('M001', '1');
 
 -- Vendor fallback name
-INSERT INTO tb_scmsb_rlb_mdp_m (rlb_mdp_id, rlb_vdcp_mdp_nm) VALUES
+==INSERT INTO tb_scmsb_rlb_mdp_m (rlb_mdp_id, rlb_vdcp_mdp_nm) VALUES
 ('V001', 'Vendor One');
 
 -- Expected registration quantity source
-INSERT INTO tb_scmsb_mdlt_puch_expc_qnty_reg_m (
+==INSERT INTO tb_scmsb_mdlt_puch_expc_qnty_reg_m (
     ctry_cd, cop_cd, mat_cd, vdcp_cd, cas_no,
     kor_recm_reg_exmp_no, kor_recm_reg_tp_cd,
     kor_recm_reg_exmp_dt, kor_recm_exmp_st_dt, kor_recm_exmp_end_dt,
@@ -203,25 +203,25 @@ INSERT INTO tb_scmsb_mdlt_puch_expc_qnty_reg_m (
 );
 
 -- LGES registration source (UNION path 1)
-INSERT INTO tb_cm_request_m (request_id, system_cd, request_status_cd) VALUES
+==INSERT INTO tb_cm_request_m (request_id, system_cd, request_status_cd) VALUES
 ('REQ1', 'MM', 'COMPLETE'),
 ('REQ_TMP', 'MM', 'COMPLETE');
 
-INSERT INTO tb_scmsb_rlb_sbsc_reg_req_m (
+==INSERT INTO tb_scmsb_rlb_sbsc_reg_req_m (
     subt_reg_req_doct_no, to_cop_cd, cas_no, sbsc_reg_stp_stat_cd, use_yn, purpose_cd, reg_divs_cd
 ) VALUES
 ('DOC1', 'C001', '50-00-0', NULL, 'Y', 'MP', 'N');
 
-INSERT INTO tb_scmsb_rlb_sbsc_reg_plan_m (subt_reg_req_doct_no, subt_reg_plan_doct_no) VALUES
+==INSERT INTO tb_scmsb_rlb_sbsc_reg_plan_m (subt_reg_req_doct_no, subt_reg_plan_doct_no) VALUES
 ('DOC1', 'PLAN1');
 
-INSERT INTO tb_scmsb_rlb_sbsc_reg_nti_m (
+==INSERT INTO tb_scmsb_rlb_sbsc_reg_nti_m (
     subt_reg_plan_doct_no, sbsc_reg_req_doc_no, reg_qty, previous_rept_no, appr_req_form_id
 ) VALUES
 ('PLAN1', 'DOC1', 'Q2', NULL, 'REQ1');
 
 -- Current year actual monthly
-INSERT INTO tb_mm_subt_sum_matl_m (
+==INSERT INTO tb_mm_subt_sum_matl_m (
     chk_year, sa_comp_cd, wkplc_cd, matl_cd, vend_cd, cas_no,
     mon_01, mon_02, mon_03, mon_04, mon_05, mon_06, mon_07, mon_08, mon_09, mon_10, mon_11, mon_12
 ) VALUES

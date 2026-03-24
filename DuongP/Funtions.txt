@@ -1,0 +1,1138 @@
+-- DROP FUNCTION public.fn_get_acc_cls_nm_string(varchar, varchar, varchar, varchar);
+
+CREATE OR REPLACE FUNCTION public.fn_get_acc_cls_nm_string(p_acc_id character varying, p_acc_menu_cd character varying, p_option_type character varying, p_lang_cd character varying)
+ RETURNS text
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    V_RESULT_STRING TEXT;
+    V_TYPE_CODE_1   VARCHAR(30);
+    V_TYPE_CODE_2   VARCHAR(30);
+    V_LANG_CD       VARCHAR(10);
+    V_EFT_TYPE      VARCHAR(1);
+BEGIN
+    V_LANG_CD := COALESCE(P_LANG_CD, 'ko-KR');
+
+    IF P_OPTION_TYPE = '1' THEN
+        -- ACC TYPE
+        V_TYPE_CODE_1 := 'ACC_WOUND_TYPE_CD';
+        V_TYPE_CODE_2 := 'ACC_LOSS_TYPE_CD';
+        V_EFT_TYPE    := 'N';
+    ELSE
+        -- EFT TYPE
+        V_TYPE_CODE_1 := 'ACC_EFT_WOUND_CD';
+        V_TYPE_CODE_2 := 'ACC_EFT_SCALE_CD';
+        V_EFT_TYPE    := 'Y';
+    END IF;
+
+    SELECT
+        string_agg(NM, ', ')
+    INTO V_RESULT_STRING
+    FROM (
+        SELECT
+            FN_GET_CD_NM(
+                V_TYPE_CODE_1,
+                CLS.ACC_REG_TYPE_CD,
+                V_LANG_CD
+            ) AS NM
+        FROM TB_ACC_CLS_N CLS
+        INNER JOIN TB_RAPID_CMN_C CD
+            ON CLS.ACC_REG_TYPE_CD = CD.CMN_CD
+           AND CD.CMN_GR_CD = V_TYPE_CODE_1
+        WHERE CLS.ACC_ID = P_ACC_ID
+          AND CLS.ACC_MENU_CD = P_ACC_MENU_CD
+          AND CLS.ACC_CLS_CD = 'CT01'
+          AND CLS.EFT_TYPE_YN = V_EFT_TYPE
+
+        UNION
+
+        SELECT
+            FN_GET_CD_NM(
+                V_TYPE_CODE_2,
+                CLS.ACC_REG_TYPE_CD,
+                V_LANG_CD
+            ) AS NM
+        FROM TB_ACC_CLS_N CLS
+        INNER JOIN TB_RAPID_CMN_C CD
+            ON CLS.ACC_REG_TYPE_CD = CD.CMN_CD
+           AND CD.CMN_GR_CD = V_TYPE_CODE_2
+        WHERE CLS.ACC_ID = P_ACC_ID
+          AND CLS.ACC_MENU_CD = P_ACC_MENU_CD
+          AND CLS.ACC_CLS_CD = 'CT02'
+          AND CLS.EFT_TYPE_YN = V_EFT_TYPE
+    ) UnifiedResults;
+
+    RETURN COALESCE(V_RESULT_STRING, '');
+END;
+$function$
+;
+
+
+====================
+-- DROP FUNCTION public.fn_get_cd_nm(varchar, varchar, varchar);
+
+CREATE OR REPLACE FUNCTION public.fn_get_cd_nm(p_gr_cd character varying, p_cd character varying, p_lang_cd character varying)
+ RETURNS character varying
+ LANGUAGE plpgsql
+ STABLE
+AS $function$
+DECLARE
+    d_return  VARCHAR(2000) := NULL;
+    v_lang_cd VARCHAR(10);
+BEGIN
+    v_lang_cd := COALESCE(P_LANG_CD, 'ko');
+
+    SELECT COALESCE(M.MSG_CTN, C.CMN_CD_NM)
+      INTO d_return
+      FROM TB_RAPID_CMN_GR_C G
+      INNER JOIN TB_RAPID_CMN_C  C ON G.CMN_GR_CD = C.CMN_GR_CD
+      LEFT  JOIN TB_RAPID_MSG_M  M ON C.MSG_CD = M.MSG_CD AND M.LANG_CD = v_lang_cd
+     WHERE G.CMN_GR_CD = P_GR_CD
+       AND C.CMN_CD    = P_CD
+     LIMIT 1;
+
+    RETURN d_return; -- 매칭 없으면 NULL 반환
+END;
+$function$
+;
+=====================
+-- DROP FUNCTION public.fn_get_cd_opt_val(varchar, varchar, int4);
+
+CREATE OR REPLACE FUNCTION public.fn_get_cd_opt_val(p_gr_cd character varying, p_cd character varying, p_opt_num integer)
+ RETURNS character varying
+ LANGUAGE plpgsql
+ STABLE
+AS $function$
+DECLARE
+    d_return VARCHAR(4000) := NULL;
+BEGIN
+    SELECT CASE P_OPT_NUM
+             WHEN  1 THEN C.OPT_VAL_CTN1
+             WHEN  2 THEN C.OPT_VAL_CTN2
+             WHEN  3 THEN C.OPT_VAL_CTN3
+             WHEN  4 THEN C.OPT_VAL_CTN4
+             WHEN  5 THEN C.OPT_VAL_CTN5
+             WHEN  6 THEN C.OPT_VAL_CTN6
+             WHEN  7 THEN C.OPT_VAL_CTN7
+             WHEN  8 THEN C.OPT_VAL_CTN8
+             WHEN  9 THEN C.OPT_VAL_CTN9
+             WHEN 10 THEN C.OPT_VAL_CTN10
+             ELSE NULL
+           END
+      INTO d_return
+      FROM TB_RAPID_CMN_GR_C G
+      JOIN TB_RAPID_CMN_C C
+        ON G.CMN_GR_CD = C.CMN_GR_CD
+     WHERE G.CMN_GR_CD = P_GR_CD
+       AND C.CMN_CD    = P_CD
+     LIMIT 1; -- 다중행 방지
+
+    RETURN d_return; -- 매칭 없으면 NULL
+END;
+$function$
+;
+============
+
+-- DROP FUNCTION public.fn_get_cm_code_attr(varchar, varchar, int4);
+
+CREATE OR REPLACE FUNCTION public.fn_get_cm_code_attr(p_grp_cd character varying, p_cd character varying, p_attr_num integer)
+ RETURNS character varying
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    d_return VARCHAR;
+BEGIN
+    SELECT CASE p_attr_num
+        WHEN 1 THEN opt_val_ctn1
+        WHEN 2 THEN opt_val_ctn2
+        WHEN 3 THEN opt_val_ctn3
+        WHEN 4 THEN opt_val_ctn4
+        WHEN 5 THEN opt_val_ctn5
+        WHEN 6 THEN opt_val_ctn6
+        WHEN 7 THEN opt_val_ctn7
+        WHEN 8 THEN opt_val_ctn8
+        WHEN 9 THEN opt_val_ctn9
+        WHEN 10 THEN opt_val_ctn10
+    END
+    INTO d_return
+    FROM tb_rapid_cmn_c
+    WHERE cmn_gr_cd = p_grp_cd
+      AND cmn_cd = p_cd;
+
+    RETURN d_return;
+END;
+$function$
+;
+===============
+-- DROP FUNCTION public.fn_get_cm_matl_name(varchar, varchar);
+
+CREATE OR REPLACE FUNCTION public.fn_get_cm_matl_name(p_matl_cd character varying, p_lang_cd character varying)
+ RETURNS character varying
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    d_return varchar(1000);
+BEGIN
+
+    SELECT matl_nm
+    INTO d_return
+    FROM public.tb_cm_matl_list_n
+    WHERE matl_cd = p_matl_cd
+      AND lang_cd = COALESCE(p_lang_cd, 'ko')
+    LIMIT 1;
+
+    IF d_return IS NOT NULL THEN
+        RETURN d_return;
+    END IF;
+
+    SELECT matl_nm
+    INTO d_return
+    FROM public.tb_cm_matl_list_n
+    WHERE matl_cd = p_matl_cd
+      AND lang_cd = 'ko'
+    LIMIT 1;
+
+    IF d_return IS NOT NULL THEN
+        RETURN d_return;
+    END IF;
+
+    SELECT etc_matl_nm
+    INTO d_return
+    FROM public.tb_mi_matl_ingt_m
+    WHERE matl_cd = p_matl_cd
+    LIMIT 1;
+
+    IF d_return IS NOT NULL THEN
+        RETURN d_return;
+    END IF;
+
+    RETURN '';
+
+END;
+$function$
+;
+=======================
+-- DROP FUNCTION public.fn_get_dept_nm(varchar, varchar);
+
+CREATE OR REPLACE FUNCTION public.fn_get_dept_nm(p_dept_cd character varying, p_lang_cd character varying)
+ RETURNS character varying
+ LANGUAGE plpgsql
+ STABLE
+AS $function$
+DECLARE
+    d_return  VARCHAR(1000) := NULL;
+    v_lang_cd VARCHAR(10);
+BEGIN
+    -- Oracle의 NVL(P_LANG_CD, 'KO')와 유사, 비교는 소문자로 통일
+    v_lang_cd := lower(coalesce(P_LANG_CD, 'ko'));
+
+    SELECT CASE
+             WHEN v_lang_cd = 'ko'              THEN DEPT_NM
+             WHEN v_lang_cd IN ('zhc','zht')    THEN DEPT_CNG_NM
+             WHEN v_lang_cd IN ('en','pl')      THEN DEPT_ENG_NM
+             ELSE DEPT_ENG_NM
+           END
+      INTO d_return
+      FROM TB_RAPID_DEPT_M
+     WHERE DEPT_CD = P_DEPT_CD
+     LIMIT 1;
+
+    RETURN d_return; -- 없으면 NULL
+EXCEPTION
+    WHEN OTHERS THEN
+        RETURN NULL; -- Oracle의 WHEN OTHERS THEN RETURN NULL 대응
+END;
+$function$
+;
+===================
+-- DROP FUNCTION public.fn_get_impn_dom_imp(varchar, varchar);
+
+CREATE OR REPLACE FUNCTION public.fn_get_impn_dom_imp(p_cop_cd character varying, p_vdcp_cd character varying)
+ RETURNS character varying
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    d_return        VARCHAR(10) := NULL;
+    v_cop_ctry_cd   VARCHAR(10) := NULL;
+    v_vdcp_ctry_cd  VARCHAR(10) := NULL;
+BEGIN
+
+    -- check null / empty
+    IF (p_cop_cd IS NULL OR LENGTH(TRIM(p_cop_cd)) = 0)
+       OR (p_vdcp_cd IS NULL OR LENGTH(TRIM(p_vdcp_cd)) = 0) THEN
+        d_return := '';
+    ELSE
+        -- Oracle SELECT FROM DUAL → Postgres direct assign
+        v_cop_ctry_cd := fn_get_cm_code_attr('CMSCM_COMPANY', p_cop_cd, 1);
+        v_vdcp_ctry_cd := SUBSTRING(p_vdcp_cd FROM 1 FOR 2);
+
+        IF v_cop_ctry_cd = v_vdcp_ctry_cd THEN
+            d_return := 'DOM'; -- 내수
+        ELSE
+            IF v_cop_ctry_cd = 'PL' THEN
+                IF v_vdcp_ctry_cd IN (
+                    'AT','BE','BG','CZ','DE','DK','EE','ES','FI','FR',
+                    'GR','HR','HU','IE','IT','LT','LU','LV','NL','PL',
+                    'PT','RO','SE','SI','SK'
+                ) THEN
+                    d_return := 'DOM'; -- EU → 내수
+                ELSE
+                    d_return := 'IMP'; -- 수입
+                END IF;
+            ELSE
+                d_return := 'IMP'; -- 수입
+            END IF;
+        END IF;
+    END IF;
+
+    RETURN d_return;
+END;
+$function$
+;
+========================
+
+-- DROP FUNCTION public.fn_get_ingt_country_cd(text, text, text);
+
+CREATE OR REPLACE FUNCTION public.fn_get_ingt_country_cd(p_gubun text, p_sa_comp_cd text, p_lang_cd text DEFAULT 'ko'::text)
+ RETURNS text
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    S_RESULT TEXT := '';
+BEGIN
+    IF UPPER(P_GUBUN) = 'CODE' THEN
+ 
+        SELECT COALESCE(cmn.cmn_cd, 'NONE')
+        INTO S_RESULT
+        FROM tb_rapid_cmn_c cmn
+        LEFT JOIN tb_rapid_msg_m msg
+            ON cmn.msg_cd = msg.msg_cd
+           AND msg.lang_cd = P_LANG_CD
+        WHERE cmn.cmn_gr_cd = 'CM_COUNTRY_CD'
+          AND cmn.opt_val_ctn8 = 'Y'
+          AND cmn.cmn_cd = (
+              SELECT opt_val_ctn1
+              FROM tb_rapid_cmn_c
+              WHERE cmn_gr_cd = 'CMSCM_COMPANY'
+                AND cmn_cd = P_SA_COMP_CD
+          )
+        LIMIT 1;
+ 
+    ELSIF UPPER(P_GUBUN) = 'NAME' THEN
+ 
+        SELECT COALESCE(msg.msg_ctn, cmn.cmn_cd_desc)
+        INTO S_RESULT
+        FROM tb_rapid_cmn_c cmn
+        LEFT JOIN tb_rapid_msg_m msg
+            ON cmn.msg_cd = msg.msg_cd
+           AND msg.lang_cd = P_LANG_CD
+        WHERE cmn.cmn_gr_cd = 'CM_COUNTRY_CD'
+          AND cmn.opt_val_ctn8 = 'Y'
+          AND cmn.cmn_cd = (
+              SELECT opt_val_ctn1
+              FROM tb_rapid_cmn_c
+              WHERE cmn_gr_cd = 'CMSCM_COMPANY'
+                AND cmn_cd = P_SA_COMP_CD
+          )
+        LIMIT 1;
+ 
+    END IF;
+ 
+    RETURN COALESCE(S_RESULT, '');
+ 
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        RETURN '';
+ 
+END;
+$function$
+;
+============================
+-- DROP FUNCTION public.fn_get_jikwi_nm(varchar, varchar, varchar);
+
+CREATE OR REPLACE FUNCTION public.fn_get_jikwi_nm(p_jps_cd character varying, p_jti_cd character varying, p_lang_cd character varying)
+ RETURNS character varying
+ LANGUAGE plpgsql
+ STABLE
+AS $function$
+DECLARE
+    d_return  VARCHAR(1000) := NULL;
+    V_LANG_CD VARCHAR(10);
+BEGIN
+    V_LANG_CD := COALESCE(P_LANG_CD, 'ko');
+
+    IF (P_JTI_CD IS NULL OR P_JTI_CD = '') THEN
+        -- 직위코드가 없는 경우: 직책명(JPS_CD)
+        SELECT M.MSG_CTN
+          INTO d_return
+          FROM TB_RAPID_CMN_GR_C G
+          JOIN TB_RAPID_CMN_C   C ON G.CMN_GR_CD = C.CMN_GR_CD
+          JOIN TB_RAPID_MSG_M   M ON C.MSG_CD    = M.MSG_CD
+         WHERE G.CMN_GR_CD = 'JPS_CD'
+           AND C.CMN_CD    = P_JPS_CD
+           AND M.LANG_CD   = V_LANG_CD
+         LIMIT 1;
+    ELSE
+        -- 직위코드가 있는 경우: 직위명(JTI_CD)
+        SELECT M.MSG_CTN
+          INTO d_return
+          FROM TB_RAPID_CMN_GR_C G
+          JOIN TB_RAPID_CMN_C   C ON G.CMN_GR_CD = C.CMN_GR_CD
+          JOIN TB_RAPID_MSG_M   M ON C.MSG_CD    = M.MSG_CD
+         WHERE G.CMN_GR_CD = 'JTI_CD'
+           AND C.CMN_CD    = P_JTI_CD
+           AND M.LANG_CD   = V_LANG_CD
+         LIMIT 1;
+    END IF;
+
+    RETURN d_return; -- 매칭 없으면 NULL
+EXCEPTION
+    WHEN OTHERS THEN
+        RETURN NULL; -- Oracle의 예외 처리와 동일한 동작
+END;
+$function$
+;
+========================
+-- DROP FUNCTION public.fn_get_local_time_d(varchar, timestamp, varchar);
+
+CREATE OR REPLACE FUNCTION public.fn_get_local_time_d(p_timezne character varying, p_datetime timestamp without time zone, p_format character varying)
+ RETURNS character varying
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    v_timezone   VARCHAR;
+    v_return     VARCHAR;
+BEGIN
+    -- 1. 입력값 기본 처리
+    IF P_DATETIME IS NULL THEN
+        RETURN NULL;
+    END IF;
+
+    -- 2. 타임존 기본값 설정 (null일 경우 한국 시간)
+    v_timezone := COALESCE(P_TIMEZNE, 'Asia/Seoul');
+
+    -- 3. 핵심 변환 로직
+    -- 1) 'AT TIME ZONE 'UTC'' : 입력 시간을 UTC 시간대로 간주 (Oracle의 FROM_TZ 역할)
+    -- 2) 'AT TIME ZONE v_timezone' : 해당 타임존으로 로컬 변환 (서머타임 자동 적용)
+    BEGIN
+        v_return := TO_CHAR(
+            (P_DATETIME AT TIME ZONE 'UTC') AT TIME ZONE v_timezone, 
+            P_FORMAT
+        );
+    EXCEPTION WHEN OTHERS THEN
+        -- 오류 발생 시 약 100년 전 날짜 반환 (Oracle 로직 유지)
+        v_return := TO_CHAR(CURRENT_TIMESTAMP - INTERVAL '100 years', P_FORMAT);
+    END;
+
+    RETURN v_return;
+END;
+$function$
+;
+================
+-- DROP FUNCTION public.fn_get_local_time_s(varchar, varchar, varchar);
+
+CREATE OR REPLACE FUNCTION public.fn_get_local_time_s(p_timezne character varying, p_datetime character varying, p_format character varying)
+ RETURNS character varying
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    v_timezone   VARCHAR;
+    v_return     VARCHAR;
+    v_timestamp  TIMESTAMP;
+BEGIN
+    -- 1. 입력값 체크
+    IF P_DATETIME IS NULL THEN
+        RETURN NULL;
+    END IF;
+
+    -- 2. 타임존 기본값 설정
+    v_timezone := COALESCE(P_TIMEZNE, 'Asia/Seoul');
+
+    -- 3. 핵심 변환 로직
+    BEGIN
+        -- 문자열을 TIMESTAMP로 변환
+        v_timestamp := TO_TIMESTAMP(P_DATETIME, 'YYYYMMDDHH24MISS')::TIMESTAMP;
+
+        -- UTC로 간주한 뒤 타겟 타임존으로 변환 및 포맷팅
+        v_return := TO_CHAR(
+            (v_timestamp AT TIME ZONE 'UTC') AT TIME ZONE v_timezone, 
+            P_FORMAT
+        );
+    EXCEPTION WHEN OTHERS THEN
+        -- 에러 발생 시 약 100년 전 날짜 반환
+        v_return := TO_CHAR(CURRENT_TIMESTAMP - INTERVAL '100 years', P_FORMAT);
+    END;
+
+    RETURN v_return;
+END;
+$function$
+;
+=================================
+-- DROP FUNCTION public.fn_get_message(varchar, varchar);
+
+CREATE OR REPLACE FUNCTION public.fn_get_message(p_msg_cd character varying, p_lang_cd character varying)
+ RETURNS character varying
+ LANGUAGE plpgsql
+ STABLE
+AS $function$
+DECLARE
+    d_return  VARCHAR(2000);
+    v_lang_cd VARCHAR(10);
+BEGIN
+    v_lang_cd := COALESCE(P_LANG_CD, 'ko');
+    d_return  := P_MSG_CD; -- 기본값(미존재/NULL일 때 대비)
+
+    SELECT COALESCE(A.MSG_CTN, P_MSG_CD)
+      INTO d_return
+      FROM TB_RAPID_MSG_M A
+     WHERE A.MSG_CD  = P_MSG_CD
+       AND A.LANG_CD = v_lang_cd
+     LIMIT 1;
+
+    RETURN d_return;
+END;
+$function$
+;
+=======================
+-- DROP FUNCTION public.fn_get_request_info(varchar, varchar, varchar);
+
+CREATE OR REPLACE FUNCTION public.fn_get_request_info(p_request_id character varying, p_language_cd character varying DEFAULT 'KO'::character varying, p_return_type character varying DEFAULT 'STATUS'::character varying)
+ RETURNS character varying
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    return_val VARCHAR(30) := '';
+    status_val VARCHAR(30) := '';
+    v_approved_date VARCHAR(30) := '';
+    status_cd VARCHAR(30) := '';
+    v_request_date VARCHAR(30) := '';
+BEGIN
+
+    SELECT 
+        fn_get_cd_nm('CMSCM_REQUEST_STATUS', t1.request_status_cd, p_language_cd),
+        t1.request_status_cd,
+        TO_CHAR(MAX(d.approved_date), 'YYYY-MM-DD HH24:MI:SS'),
+        TO_CHAR(MAX(CASE 
+            WHEN d.approval_step_cd = 'SC_REQUEST' 
+            THEN d.update_date 
+        END), 'YYYYMMDD')
+    INTO status_val, status_cd, v_approved_date, v_request_date
+    FROM tb_cm_request_m t1
+    LEFT JOIN tb_cm_approval_d d 
+           ON d.approval_id = t1.approval_id
+    WHERE t1.request_id = p_request_id
+    GROUP BY t1.request_status_cd;
+
+    IF p_return_type = 'APPDATE' THEN
+        return_val := v_approved_date;
+    ELSIF p_return_type = 'STATUS' THEN
+        return_val := status_val;
+    ELSIF p_return_type = 'STATUS_CD' THEN
+        return_val := status_cd;
+    ELSIF p_return_type = 'REQDATE' THEN
+        return_val := v_request_date;
+    END IF;
+
+    RETURN COALESCE(return_val, '');
+END;
+$function$
+;
+=================================
+-- DROP FUNCTION public.fn_get_user_dept_nm(varchar, varchar, varchar);
+
+CREATE OR REPLACE FUNCTION public.fn_get_user_dept_nm(p_user_id_no character varying, p_lang_cd character varying, p_flag character varying)
+ RETURNS character varying
+ LANGUAGE plpgsql
+ STABLE
+AS $function$
+DECLARE
+    d_return  VARCHAR(1000);
+    v_lang_cd VARCHAR(10);
+BEGIN
+    -- Oracle NVL(P_LANG_CD, 'ko') 대응 + 소문자 정규화
+    v_lang_cd := lower(coalesce(P_LANG_CD, 'ko'));
+
+    IF P_FLAG = 'ID' THEN
+        SELECT coalesce(
+                 CASE
+                   WHEN v_lang_cd = 'ko'              THEN DEPT_NM
+                   WHEN v_lang_cd IN ('zhc','zht')    THEN DEPT_CNG_NM
+                   WHEN v_lang_cd IN ('en','pl')      THEN DEPT_ENG_NM
+                   ELSE DEPT_ENG_NM
+                 END,
+                 coalesce(DEPT_ENG_NM, DEPT_NM)
+               )
+          INTO d_return
+          FROM TB_RAPID_USER_M
+         WHERE USER_ID = P_USER_ID_NO
+         LIMIT 1;
+
+    ELSIF P_FLAG = 'NO' THEN
+        SELECT coalesce(
+                 CASE
+                   WHEN v_lang_cd = 'ko'              THEN DEPT_NM
+                   WHEN v_lang_cd IN ('zhc','zht')    THEN DEPT_CNG_NM
+                   WHEN v_lang_cd IN ('en','pl')      THEN DEPT_ENG_NM
+                   ELSE DEPT_ENG_NM
+                 END,
+                 coalesce(DEPT_ENG_NM, DEPT_NM)
+               )
+          INTO d_return
+          FROM TB_RAPID_USER_M
+         WHERE EMP_NO = P_USER_ID_NO
+         LIMIT 1;
+    END IF;
+
+    -- SELECT ... INTO가 행을 못 찾으면 d_return은 NULL로 남음 (Oracle의 NO_DATA_FOUND와 유사 효과)
+    RETURN d_return;
+END;
+$function$
+;
+=========================================
+-- DROP FUNCTION public.fn_get_user_info(varchar, varchar, int4);
+
+CREATE OR REPLACE FUNCTION public.fn_get_user_info(p_user_id character varying, p_lang_cd character varying, p_disp_type integer)
+ RETURNS character varying
+ LANGUAGE plpgsql
+ STABLE
+AS $function$
+DECLARE
+  V_RETURNVAL VARCHAR(2000) := '';
+  v_lang_raw  VARCHAR(20);
+  v_lang_cd   VARCHAR(20); -- 소문자 + 하이픈 제거
+BEGIN
+  v_lang_raw := COALESCE(P_LANG_CD, 'ko');
+  v_lang_cd  := replace(lower(v_lang_raw), '-', '');
+
+  IF P_DISP_TYPE = 1 THEN
+    -- 이름(id/직급or직책/팀)
+    SELECT
+      CASE
+        WHEN v_lang_cd = 'ko' THEN
+          COALESCE(E.EMP_NM, E.EMP_ENG_NM) || '(' || E.USER_ID || '/' ||
+          (CASE WHEN E.JPS_CD IS NULL
+                THEN COALESCE(E.JTI_NM, E.JTI_ENG_NM, '')
+                ELSE COALESCE(E.JPS_NM, E.JPS_ENG_NM, '')
+           END) || '/' ||
+          COALESCE(D.DEPT_NM, D.DEPT_ENG_NM, '') || ')'
+
+        WHEN v_lang_cd IN ('zhc','zht') THEN
+          COALESCE(E.EMP_CNG_NM, E.EMP_ENG_NM, E.EMP_NM) || '(' || E.USER_ID || '/' ||
+          (CASE WHEN E.JPS_CD IS NULL
+                THEN COALESCE(E.JTI_CNG_NM, E.JTI_ENG_NM, '')
+                ELSE COALESCE(E.JPS_CNG_NM, E.JPS_ENG_NM, E.JPS_NM, '')
+           END) || '/' ||
+          COALESCE(D.DEPT_CNG_NM, D.DEPT_ENG_NM, D.DEPT_NM, '') || ')'
+
+        WHEN v_lang_cd IN ('en','pl') THEN
+          COALESCE(E.EMP_ENG_NM, E.EMP_NM) || '(' || E.USER_ID || '/' ||
+          (CASE WHEN E.JPS_CD IS NULL
+                THEN COALESCE(E.JTI_ENG_NM, '')
+                ELSE COALESCE(E.JPS_ENG_NM, E.JPS_NM, '')
+           END) || '/' ||
+          COALESCE(D.DEPT_ENG_NM, D.DEPT_NM, '') || ')'
+
+        ELSE
+          COALESCE(E.EMP_ENG_NM, E.EMP_NM) || '(' || E.USER_ID || '/' ||
+          (CASE WHEN E.JPS_CD IS NULL
+                THEN COALESCE(E.JTI_ENG_NM, '')
+                ELSE COALESCE(E.JPS_ENG_NM, E.JPS_NM, '')
+           END) || '/' ||
+          COALESCE(D.DEPT_ENG_NM, D.DEPT_NM, '') || ')'
+      END
+    INTO V_RETURNVAL
+    FROM TB_RAPID_USER_M E
+    JOIN TB_RAPID_DEPT_M D ON E.DEPT_CD = D.DEPT_CD
+    WHERE E.USER_ID = P_USER_ID
+    LIMIT 1;
+
+  ELSIF P_DISP_TYPE = 2 THEN
+    -- 이름(id)
+    SELECT
+      CASE
+        WHEN v_lang_cd = 'ko' THEN
+          COALESCE(E.EMP_NM, E.EMP_ENG_NM) || '(' || E.USER_ID || ')'
+        WHEN v_lang_cd IN ('zhc','zht') THEN
+          COALESCE(E.EMP_CNG_NM, E.EMP_ENG_NM, E.EMP_NM) || '(' || E.USER_ID || ')'
+        WHEN v_lang_cd IN ('en','pl') THEN
+          COALESCE(E.EMP_ENG_NM, E.EMP_NM) || '(' || E.USER_ID || ')'
+        ELSE
+          COALESCE(E.EMP_ENG_NM, E.EMP_NM) || '(' || E.USER_ID || ')'
+      END
+    INTO V_RETURNVAL
+    FROM TB_RAPID_USER_M E
+    JOIN TB_RAPID_DEPT_M D ON E.DEPT_CD = D.DEPT_CD
+    WHERE E.USER_ID = P_USER_ID
+    LIMIT 1;
+
+  ELSE
+    V_RETURNVAL := '-';
+  END IF;
+
+  IF V_RETURNVAL IS NULL OR V_RETURNVAL = '' THEN
+    V_RETURNVAL := '-';
+  END IF;
+
+  RETURN V_RETURNVAL;
+
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    RETURN '-';
+  WHEN OTHERS THEN
+    RETURN '-';
+END;
+$function$
+;
+===================================
+-- DROP FUNCTION public.fn_get_user_info_nm(varchar, varchar, varchar, varchar);
+
+CREATE OR REPLACE FUNCTION public.fn_get_user_info_nm(p_user_id_no character varying, p_lang_cd character varying, p_flag character varying, p_type character varying DEFAULT 'N'::character varying)
+ RETURNS character varying
+ LANGUAGE plpgsql
+ STABLE
+AS $function$
+DECLARE
+    d_return   VARCHAR(1000);
+    v_lang_cd  VARCHAR(10) := COALESCE(P_LANG_CD, 'ko');
+    v_type     VARCHAR(10) := COALESCE(P_TYPE, 'N');
+    v_emp_nm   VARCHAR(300);
+    v_user_id  VARCHAR(50);
+    v_dept_cd  VARCHAR(50);
+    v_dept_nm  VARCHAR(300);
+    v_jikwi_nm VARCHAR(300);
+BEGIN
+    /* 사용자 정보 조회 */
+    SELECT
+        COALESCE(
+            CASE
+                WHEN v_lang_cd = 'ko'            THEN E.EMP_NM
+                WHEN v_lang_cd IN ('zhC','zhT')  THEN E.EMP_CNG_NM
+                WHEN v_lang_cd IN ('en','pl')    THEN E.EMP_ENG_NM
+                ELSE E.EMP_ENG_NM
+            END,
+            COALESCE(E.EMP_ENG_NM, E.EMP_NM)
+        ),
+        E.DEPT_CD,
+        E.USER_ID,
+        CASE
+            WHEN v_lang_cd = 'ko'
+                THEN CASE WHEN E.JPS_CD IS NULL THEN E.JTI_NM
+                          ELSE COALESCE(E.JPS_NM, E.JPS_ENG_NM) END
+            WHEN v_lang_cd IN ('zhC','zhT')
+                THEN CASE WHEN E.JPS_CD IS NULL THEN E.JTI_CNG_NM
+                          ELSE COALESCE(E.JPS_CNG_NM, E.JPS_ENG_NM, E.JPS_NM) END
+            WHEN v_lang_cd IN ('en','pl')
+                THEN CASE WHEN E.JPS_CD IS NULL THEN E.JTI_ENG_NM
+                          ELSE COALESCE(E.JPS_ENG_NM, E.JPS_NM) END
+            ELSE CASE WHEN E.JPS_CD IS NULL THEN E.JTI_ENG_NM
+                     ELSE COALESCE(E.JPS_ENG_NM, E.JPS_NM) END
+        END
+    INTO v_emp_nm, v_dept_cd, v_user_id, v_jikwi_nm
+    FROM TB_RAPID_USER_M E
+    WHERE (P_FLAG = 'ID' AND E.USER_ID = P_USER_ID_NO)
+       OR (P_FLAG = 'NO' AND E.EMP_NO  = P_USER_ID_NO)
+    LIMIT 1;
+
+    /* 사용자 없으면 NULL 반환 */
+    IF v_emp_nm IS NULL THEN
+        RETURN NULL;
+    END IF;
+
+    /* 부서명 조회 (있을 때만) */
+    IF v_dept_cd IS NOT NULL THEN
+        SELECT
+            COALESCE(
+                CASE
+                    WHEN v_lang_cd = 'ko'            THEN D.DEPT_NM
+                    WHEN v_lang_cd IN ('zhC','zhT')  THEN D.DEPT_CNG_NM
+                    WHEN v_lang_cd IN ('en','pl')    THEN D.DEPT_ENG_NM
+                    ELSE D.DEPT_ENG_NM
+                END,
+                COALESCE(D.DEPT_ENG_NM, D.DEPT_NM)
+            )
+        INTO v_dept_nm
+        FROM TB_RAPID_DEPT_M D
+        WHERE D.DEPT_CD = v_dept_cd
+        LIMIT 1;
+    END IF;
+
+    /* 타입별 결과 구성 */
+    IF v_type = 'N' THEN
+        d_return := v_emp_nm;
+
+    ELSIF v_type = 'ND' THEN
+        d_return := v_emp_nm || '/' || COALESCE(v_dept_nm,'');
+
+    ELSIF v_type = 'NJ' THEN
+        d_return := v_emp_nm || '/' || COALESCE(v_jikwi_nm,'');
+
+    ELSIF v_type = 'NJD' THEN
+        d_return := v_emp_nm || '/' || COALESCE(v_jikwi_nm,'') || '/' || COALESCE(v_dept_nm,'');
+
+    ELSIF v_type = 'NDJ' THEN
+        d_return := v_emp_nm || '/' || COALESCE(v_dept_nm,'') || '/' || COALESCE(v_jikwi_nm,'');
+
+    ELSIF v_type = 'D' THEN
+        d_return := v_dept_nm;
+
+    ELSIF v_type = 'NI' THEN
+        d_return := v_emp_nm || '(' || v_user_id || ')';
+
+    ELSIF v_type = 'NIJD' THEN
+        d_return := v_emp_nm || '(' || v_user_id || '/' || COALESCE(v_jikwi_nm,'') || '/' || COALESCE(v_dept_nm,'') || ')';
+
+    ELSE
+        d_return := v_emp_nm;
+    END IF;
+
+    RETURN d_return;
+
+EXCEPTION
+    WHEN OTHERS THEN
+        RETURN NULL;
+END;
+$function$
+;
+============================
+-- DROP FUNCTION public.fn_get_user_jikwi_nm(varchar, varchar, varchar);
+
+CREATE OR REPLACE FUNCTION public.fn_get_user_jikwi_nm(p_user_id_no character varying, p_lang_cd character varying, p_flag character varying)
+ RETURNS character varying
+ LANGUAGE plpgsql
+ STABLE
+AS $function$
+DECLARE
+  d_return  VARCHAR(1000);
+  v_lang_cd VARCHAR(10);
+BEGIN
+  v_lang_cd := lower(coalesce(P_LANG_CD, 'ko'));
+
+  IF P_FLAG = 'ID' THEN
+    SELECT
+      CASE
+        WHEN v_lang_cd = 'ko'
+          THEN CASE WHEN JPS_CD IS NULL THEN JTI_NM ELSE coalesce(JPS_NM, JPS_ENG_NM, JPS_NM) END
+        WHEN v_lang_cd IN ('zhc','zht')
+          THEN CASE WHEN JPS_CD IS NULL THEN JTI_CNG_NM ELSE coalesce(JPS_CNG_NM, JPS_ENG_NM, JPS_NM) END
+        WHEN v_lang_cd IN ('en','pl')
+          THEN CASE WHEN JPS_CD IS NULL THEN JTI_ENG_NM ELSE coalesce(JPS_ENG_NM, JPS_NM) END
+        ELSE
+          CASE WHEN JPS_CD IS NULL THEN JTI_ENG_NM ELSE coalesce(JPS_ENG_NM, JPS_NM) END
+      END
+    INTO d_return
+    FROM TB_RAPID_USER_M
+    WHERE USER_ID = P_USER_ID_NO
+    LIMIT 1;
+
+  ELSIF P_FLAG = 'NO' THEN
+    SELECT
+      CASE
+        WHEN v_lang_cd = 'ko'
+          THEN CASE WHEN JPS_CD IS NULL THEN JTI_NM ELSE coalesce(JPS_NM, JPS_ENG_NM, JPS_NM) END
+        WHEN v_lang_cd IN ('zhc','zht')
+          THEN CASE WHEN JPS_CD IS NULL THEN JTI_CNG_NM ELSE coalesce(JPS_CNG_NM, JPS_ENG_NM, JPS_NM) END
+        WHEN v_lang_cd IN ('en','pl')
+          THEN CASE WHEN JPS_CD IS NULL THEN JTI_ENG_NM ELSE coalesce(JPS_ENG_NM, JPS_NM) END
+        ELSE
+          CASE WHEN JPS_CD IS NULL THEN JTI_ENG_NM ELSE coalesce(JPS_ENG_NM, JPS_NM) END
+      END
+    INTO d_return
+    FROM TB_RAPID_USER_M
+    WHERE EMP_NO = P_USER_ID_NO
+    LIMIT 1;
+  END IF;
+
+  RETURN d_return;  -- 못 찾으면 NULL
+END;
+$function$
+;
+=============================
+-- DROP FUNCTION public.fn_get_user_nm(varchar, varchar, varchar);
+
+CREATE OR REPLACE FUNCTION public.fn_get_user_nm(p_user_id_no character varying, p_lang_cd character varying, p_flag character varying)
+ RETURNS character varying
+ LANGUAGE plpgsql
+ STABLE
+AS $function$
+DECLARE
+  d_return  VARCHAR(1000);
+  v_lang_cd VARCHAR(10);
+BEGIN
+  v_lang_cd := lower(coalesce(P_LANG_CD, 'ko'));
+
+  IF P_FLAG = 'ID' THEN
+    SELECT coalesce(
+             CASE
+               WHEN v_lang_cd = 'ko'             THEN EMP_NM
+               WHEN v_lang_cd IN ('zhc','zht')   THEN EMP_CNG_NM
+               WHEN v_lang_cd IN ('en','pl')     THEN EMP_ENG_NM
+               ELSE EMP_ENG_NM
+             END,
+             coalesce(EMP_ENG_NM, EMP_NM)
+           )
+      INTO d_return
+      FROM TB_RAPID_USER_M
+     WHERE USER_ID = P_USER_ID_NO
+     LIMIT 1;
+
+  ELSIF P_FLAG = 'NO' THEN
+    SELECT coalesce(
+             CASE
+               WHEN v_lang_cd = 'ko'             THEN EMP_NM
+               WHEN v_lang_cd IN ('zhc','zht')   THEN EMP_CNG_NM
+               WHEN v_lang_cd IN ('en','pl')     THEN EMP_ENG_NM
+               ELSE EMP_ENG_NM
+             END,
+             coalesce(EMP_ENG_NM, EMP_NM)
+           )
+      INTO d_return
+      FROM TB_RAPID_USER_M
+     WHERE EMP_NO = P_USER_ID_NO
+     LIMIT 1;
+  END IF;
+
+  RETURN d_return; -- 없으면 NULL
+END;
+$function$
+;
+======================================
+-- DROP FUNCTION public.fn_get_vand_info(text, text, text);
+
+CREATE OR REPLACE FUNCTION public.fn_get_vand_info(p_vend_cd text, p_sa_comp_cd text, p_gubun text)
+ RETURNS text
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    s_result TEXT := '';
+BEGIN
+
+    IF UPPER(p_gubun) = 'NAME' THEN
+
+        SELECT vend_nm
+        INTO s_result
+        FROM tb_cm_vend_m
+        WHERE vend_id = p_vend_cd
+        LIMIT 1;
+
+    ELSIF UPPER(p_gubun) = 'P_NAME' THEN
+
+        SELECT vend_nm
+        INTO s_result
+        FROM tb_cm_vend_m
+        WHERE vend_id = p_vend_cd
+        LIMIT 1;
+
+    ELSIF UPPER(p_gubun) = 'EMAIL' THEN
+
+        SELECT rep_email_addr
+        INTO s_result
+        FROM tb_cm_vend_m
+        WHERE vend_id = p_vend_cd
+          AND sa_comp_cd = COALESCE(p_sa_comp_cd, 'C100')
+        LIMIT 1;
+
+    ELSIF UPPER(p_gubun) = 'TEL' THEN
+
+        SELECT rep_tel_no
+        INTO s_result
+        FROM tb_cm_vend_m
+        WHERE vend_id = p_vend_cd
+          AND sa_comp_cd = COALESCE(p_sa_comp_cd, 'C100')
+        LIMIT 1;
+
+    ELSE
+        s_result := '';
+    END IF;
+
+    RETURN s_result;
+
+END;
+$function$
+;
+
+============================
+-- DROP FUNCTION public.fn_get_vand_info_lang(varchar, varchar, varchar, varchar);
+
+CREATE OR REPLACE FUNCTION public.fn_get_vand_info_lang(p_vend_cd character varying, p_sa_comp_cd character varying, p_lang character varying, p_gubun character varying)
+ RETURNS character varying
+ LANGUAGE plpgsql
+AS $function$
+
+DECLARE
+    s_result varchar(100) := '';
+BEGIN
+    /*
+        ELSIF UPPER(P_GUBUN) = 'NAME'
+    */
+    IF UPPER(p_gubun) = 'NAME' THEN
+
+        SELECT COALESCE(
+                       CASE
+                           WHEN p_lang = 'en' THEN en_vend_nm
+                           WHEN p_lang = 'zh' THEN cn_vend_nm
+                           ELSE vend_nm
+                           END,
+                       vend_nm
+               )
+        INTO s_result
+        FROM public.tb_cm_vend_m
+        WHERE vend_id = p_vend_cd
+        LIMIT 1;
+
+        IF s_result IS NOT NULL THEN
+            RETURN s_result;
+        END IF;
+
+    ELSIF UPPER(p_gubun) = 'P_NAME' THEN
+
+        SELECT COALESCE(
+                       CASE
+                           WHEN p_lang = 'en' THEN en_vend_nm
+                           WHEN p_lang = 'zh' THEN cn_vend_nm
+                           ELSE vend_nm
+                           END,
+                       vend_nm
+               )
+        INTO s_result
+        FROM public.tb_cm_vend_m
+        WHERE vend_id = p_vend_cd
+        LIMIT 1;
+
+        IF s_result IS NOT NULL THEN
+            RETURN s_result;
+        END IF;
+
+    ELSIF UPPER(p_gubun) = 'EMAIL' THEN
+
+        SELECT rep_email_addr
+        INTO s_result
+        FROM public.tb_cm_vend_m
+        WHERE vend_id = p_vend_cd
+          AND sa_comp_cd = COALESCE(p_sa_comp_cd, 'C100')
+        LIMIT 1;
+
+        IF s_result IS NOT NULL THEN
+            RETURN s_result;
+        END IF;
+
+    ELSIF UPPER(p_gubun) = 'TEL' THEN
+
+        SELECT rep_tel_no
+        INTO s_result
+        FROM public.tb_cm_vend_m
+        WHERE vend_id = p_vend_cd
+          AND sa_comp_cd = COALESCE(p_sa_comp_cd, 'C100')
+        LIMIT 1;
+
+        IF s_result IS NOT NULL THEN
+            RETURN s_result;
+        END IF;
+
+    END IF;
+
+    RETURN '';
+
+END;
+$function$
+;
+===========================
+-- DROP FUNCTION public.sp_cmn_doc_id_seq_upd(varchar, varchar, varchar);
+
+CREATE OR REPLACE FUNCTION public.sp_cmn_doc_id_seq_upd(p_prefix character varying, p_year character varying, p_module character varying)
+ RETURNS integer
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    v_prefix      VARCHAR(4);
+    v_module      VARCHAR(50);
+    v_next_number INTEGER;
+BEGIN
+    -- Normalize input
+    v_prefix := upper(p_prefix);
+    v_module := lower(p_module);
+
+    UPDATE tb_cmn_doc_id_m
+       SET current_number = current_number + 1
+     WHERE year   = p_year
+       AND prefix = v_prefix
+       AND module = v_module
+     RETURNING current_number
+        INTO v_next_number;
+
+    IF NOT FOUND THEN
+        INSERT INTO tb_cmn_doc_id_m (
+            year,
+            prefix,
+            module,
+            current_number
+        )
+        VALUES (
+            p_year,
+            v_prefix,
+            v_module,
+            1
+        )
+        RETURNING current_number
+            INTO v_next_number;
+    END IF;
+
+    RETURN v_next_number;
+
+EXCEPTION
+    WHEN OTHERS THEN
+        -- PostgreSQL tự rollback transaction nếu function fail
+        RAISE;
+END;
+$function$
+;
+============================
+-- DROP FUNCTION public.sp_cmn_doc_id_seq_upd(varchar, int4, varchar);
+
+CREATE OR REPLACE FUNCTION public.sp_cmn_doc_id_seq_upd(p_prefix character varying, p_year integer, p_module character varying)
+ RETURNS integer
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    v_prefix      VARCHAR(4);
+    v_module      VARCHAR(50);
+    v_next_number INTEGER;
+BEGIN
+    -- Normalize input
+    v_prefix := upper(p_prefix);
+    v_module := lower(p_module);
+
+    UPDATE tb_cmn_doc_id_m
+       SET current_number = current_number + 1
+     WHERE year   = p_year
+       AND prefix = v_prefix
+       AND module = v_module
+     RETURNING current_number
+        INTO v_next_number;
+
+    IF NOT FOUND THEN
+        INSERT INTO tb_cmn_doc_id_m (
+            year,
+            prefix,
+            module,
+            current_number
+        )
+        VALUES (
+            p_year,
+            v_prefix,
+            v_module,
+            1
+        )
+        RETURNING current_number
+            INTO v_next_number;
+    END IF;
+
+    RETURN v_next_number;
+
+EXCEPTION
+    WHEN OTHERS THEN
+        -- PostgreSQL tự rollback transaction nếu function fail
+        RAISE;
+END;
+$function$
+;
+
