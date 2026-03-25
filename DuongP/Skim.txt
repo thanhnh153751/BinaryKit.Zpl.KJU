@@ -1,0 +1,5559 @@
+-- public.batch_job_instance definition
+
+-- Drop table
+
+-- DROP TABLE batch_job_instance;
+
+CREATE TABLE batch_job_instance (
+	job_instance_id int8 NOT NULL,
+	"version" int8 NULL,
+	job_name varchar(100) NOT NULL,
+	job_key varchar(32) NOT NULL,
+	CONSTRAINT batch_job_instance_pkey PRIMARY KEY (job_instance_id),
+	CONSTRAINT job_inst_un UNIQUE (job_name, job_key)
+);
+
+
+-- public.cm_board definition
+
+-- Drop table
+
+-- DROP TABLE cm_board;
+
+CREATE TABLE cm_board (
+	notice_seq numeric(22) NOT NULL,
+	notice_cd varchar(20) NOT NULL,
+	sys_cd varchar(30) NULL,
+	title varchar(100) NOT NULL,
+	comp_cd varchar(10) NOT NULL,
+	"content" text NOT NULL,
+	start_date varchar(8) NOT NULL,
+	end_date varchar(8) NOT NULL,
+	file_id varchar(50) NULL,
+	view_cnt numeric(10) NULL,
+	crt_id varchar(30) NOT NULL,
+	crt_dt varchar(14) NOT NULL,
+	updt_id varchar(30) NOT NULL,
+	updt_dt varchar(14) NOT NULL,
+	program_id varchar(30) NULL,
+	site_type_cd varchar(30) NULL,
+	all_yn varchar(1) DEFAULT 'Y'::character varying NULL,
+	CONSTRAINT itmsadmin_con1965200612 PRIMARY KEY (notice_seq)
+);
+CREATE INDEX cm_board_n1 ON public.cm_board USING btree (notice_cd);
+
+
+-- public.tb_acc_analy_d definition
+
+-- Drop table
+
+-- DROP TABLE tb_acc_analy_d;
+
+CREATE TABLE tb_acc_analy_d (
+	acc_id varchar(10) NOT NULL,
+	acc_menu_cd varchar(30) NOT NULL,
+	seq numeric(18) NOT NULL,
+	dir_cause_cnts varchar(4000) NULL,
+	dir_cause_cd varchar(30) NULL,
+	org_cause_cnts varchar(4000) NULL,
+	org_cause_cd varchar(30) NULL,
+	dir_cntmes_cnts varchar(4000) NULL,
+	dir_nonconf_meo_no varchar(20) NULL,
+	org_cntmes_cnts varchar(4000) NULL,
+	org_nonconf_meo_no varchar(20) NULL,
+	crt_dt timestamp DEFAULT now() NOT NULL,
+	crt_id varchar(50) DEFAULT 'Admin'::character varying NOT NULL,
+	updt_dt timestamp DEFAULT now() NOT NULL,
+	updt_id varchar(50) DEFAULT 'Admin'::character varying NOT NULL,
+	CONSTRAINT pk_tb_acc_analy_d PRIMARY KEY (acc_id, acc_menu_cd, seq)
+);
+
+
+-- public.tb_acc_analy_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_acc_analy_n;
+
+CREATE TABLE tb_acc_analy_n (
+	acc_id varchar(10) NOT NULL,
+	acc_menu_cd varchar(30) NOT NULL,
+	seq numeric NOT NULL,
+	dir_cause_cnts varchar(4000) NULL,
+	dir_cause_cd varchar(30) NULL,
+	org_cause_cnts varchar(4000) NULL,
+	org_cause_cd varchar(30) NULL,
+	dir_cntmes_cnts varchar(4000) NULL,
+	dir_nonconf_meo_no varchar(20) NULL,
+	org_cntmes_cnts varchar(4000) NULL,
+	org_nonconf_meo_no varchar(20) NULL,
+	crt_id varchar(50) NOT NULL,
+	crt_dt timestamp NOT NULL,
+	updt_id varchar(50) NOT NULL,
+	updt_dt timestamp NOT NULL,
+	CONSTRAINT pk_tb_acc_analy_n PRIMARY KEY (acc_id, acc_menu_cd, seq)
+);
+
+
+-- public.tb_acc_cls_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_acc_cls_n;
+
+CREATE TABLE tb_acc_cls_n (
+	acc_id varchar(10) NOT NULL,
+	acc_menu_cd varchar(30) NOT NULL,
+	acc_cls_cd varchar(30) NOT NULL,
+	acc_reg_type_cd varchar(30) NOT NULL,
+	seq numeric NOT NULL,
+	acc_reg_dtl_cd varchar(30) NULL,
+	acc_reg_desc_nm varchar(300) NULL,
+	acc_grd_cd varchar(30) NULL,
+	acc_cls_chg_dtm varchar(14) NULL,
+	crt_id varchar(30) NOT NULL,
+	crt_dt timestamp NOT NULL,
+	updt_id varchar(30) NOT NULL,
+	updt_dt timestamp NOT NULL,
+	eft_type_yn varchar(1) NOT NULL,
+	CONSTRAINT pk_tb_acc_cls_n PRIMARY KEY (acc_id, acc_menu_cd, acc_cls_cd, acc_reg_type_cd, seq, eft_type_yn)
+);
+
+
+-- public.tb_acc_cmpos_d definition
+
+-- Drop table
+
+-- DROP TABLE tb_acc_cmpos_d;
+
+CREATE TABLE tb_acc_cmpos_d (
+	acc_id varchar(10) NOT NULL,
+	acc_menu_cd varchar(30) NOT NULL,
+	acc_st_gbn_cd varchar(30) NOT NULL,
+	seq numeric(18) NOT NULL,
+	dir_cause_cnts varchar(4000) NULL,
+	idrc_cause_cnts varchar(4000) NULL,
+	mng_absen_cnts varchar(4000) NULL,
+	acc_treat_dtm timestamp NULL,
+	acc_treat_cnts varchar(4000) NULL,
+	crt_dt timestamp DEFAULT now() NOT NULL,
+	crt_id varchar(50) DEFAULT 'Admin'::character varying NOT NULL,
+	updt_dt timestamp DEFAULT now() NOT NULL,
+	updt_id varchar(50) DEFAULT 'Admin'::character varying NOT NULL,
+	CONSTRAINT pk_tb_acc_cmpos_d PRIMARY KEY (acc_id, acc_menu_cd, acc_st_gbn_cd, seq)
+);
+
+
+-- public.tb_acc_cmpos_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_acc_cmpos_n;
+
+CREATE TABLE tb_acc_cmpos_n (
+	acc_id varchar(10) NOT NULL,
+	acc_menu_cd varchar(30) NOT NULL,
+	acc_st_gbn_cd varchar(30) NOT NULL,
+	seq numeric NOT NULL,
+	dir_cause_cnts varchar(4000) NULL,
+	idrc_cause_cnts varchar(4000) NULL,
+	mng_absen_cnts varchar(4000) NULL,
+	acc_treat_dtm timestamp NULL,
+	acc_treat_cnts varchar(4000) NULL,
+	crt_id varchar(30) NOT NULL,
+	crt_dt timestamp NOT NULL,
+	updt_id varchar(30) NOT NULL,
+	updt_dt timestamp NOT NULL,
+	CONSTRAINT pk_tb_acc_cmpos_n PRIMARY KEY (acc_id, acc_menu_cd, acc_st_gbn_cd, seq)
+);
+
+
+-- public.tb_acc_damage_d definition
+
+-- Drop table
+
+-- DROP TABLE tb_acc_damage_d;
+
+CREATE TABLE tb_acc_damage_d (
+	acc_id varchar(10) NOT NULL,
+	seq numeric(18) NOT NULL,
+	damage_group_cd varchar(40) NOT NULL,
+	damage_cd_value varchar(30) NOT NULL,
+	damage_cd_nm varchar(1000) NULL,
+	crt_dt timestamp DEFAULT now() NOT NULL,
+	crt_id varchar(50) DEFAULT 'Admin'::character varying NOT NULL,
+	updt_dt timestamp DEFAULT now() NOT NULL,
+	updt_id varchar(50) DEFAULT 'Admin'::character varying NOT NULL,
+	CONSTRAINT pk_tb_acc_damage_d PRIMARY KEY (acc_id, seq, damage_group_cd, damage_cd_value)
+);
+
+
+-- public.tb_acc_damage_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_acc_damage_n;
+
+CREATE TABLE tb_acc_damage_n (
+	acc_id varchar(10) NOT NULL,
+	seq numeric NOT NULL,
+	damage_group_cd varchar(40) NOT NULL,
+	damage_cd_value varchar(30) NOT NULL,
+	damage_cd_nm varchar(1000) NULL,
+	crt_id varchar(50) NOT NULL,
+	crt_dt timestamp NOT NULL,
+	updt_id varchar(50) NOT NULL,
+	updt_dt timestamp NOT NULL,
+	CONSTRAINT pk_tb_acc_damage_n PRIMARY KEY (acc_id, seq, damage_group_cd, damage_cd_value)
+);
+
+
+-- public.tb_acc_evdnc_d definition
+
+-- Drop table
+
+-- DROP TABLE tb_acc_evdnc_d;
+
+CREATE TABLE tb_acc_evdnc_d (
+	acc_id varchar(10) NOT NULL,
+	seq varchar(6) NOT NULL,
+	evdnc_gbn_cd varchar(30) NULL,
+	evdnc_cnts varchar(4000) NULL,
+	cnf_rslt_cnts varchar(4000) NULL,
+	file_id numeric(18) NULL,
+	crt_dt timestamp DEFAULT now() NOT NULL,
+	crt_id varchar(50) DEFAULT 'Admin'::character varying NOT NULL,
+	updt_dt timestamp DEFAULT now() NOT NULL,
+	updt_id varchar(50) DEFAULT 'Admin'::character varying NOT NULL,
+	CONSTRAINT pk_tb_acc_evdnc_d PRIMARY KEY (acc_id, seq)
+);
+
+
+-- public.tb_acc_evdnc_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_acc_evdnc_n;
+
+CREATE TABLE tb_acc_evdnc_n (
+	acc_id varchar(10) NOT NULL,
+	seq varchar(6) NOT NULL,
+	evdnc_gbn_cd varchar(30) NULL,
+	evdnc_cnts varchar(4000) NULL,
+	cnf_rslt_cnts varchar(4000) NULL,
+	file_id varchar(50) NULL,
+	crt_id varchar(30) NOT NULL,
+	crt_dt timestamp NOT NULL,
+	updt_id varchar(30) NOT NULL,
+	updt_dt timestamp NOT NULL,
+	CONSTRAINT pk_tb_acc_evdnc_n PRIMARY KEY (acc_id, seq)
+);
+
+
+-- public.tb_acc_icdt_dept_d definition
+
+-- Drop table
+
+-- DROP TABLE tb_acc_icdt_dept_d;
+
+CREATE TABLE tb_acc_icdt_dept_d (
+	icdt_expl_id varchar(10) NOT NULL,
+	icdt_expl_dept_cd varchar(30) NOT NULL,
+	cmplt_plan_dt timestamp NULL,
+	cmplt_dt timestamp NULL,
+	icdt_expl_emp_no varchar(30) NULL,
+	file_id numeric(18) NULL,
+	crt_dt timestamp DEFAULT now() NOT NULL,
+	crt_id varchar(50) DEFAULT 'Admin'::character varying NOT NULL,
+	updt_dt timestamp DEFAULT now() NOT NULL,
+	updt_id varchar(50) DEFAULT 'Admin'::character varying NOT NULL,
+	CONSTRAINT pk_tb_acc_icdt_dept_d PRIMARY KEY (icdt_expl_id, icdt_expl_dept_cd)
+);
+
+
+-- public.tb_acc_icdt_dept_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_acc_icdt_dept_n;
+
+CREATE TABLE tb_acc_icdt_dept_n (
+	icdt_expl_id varchar(10) NOT NULL,
+	icdt_expl_dept_cd varchar(30) NOT NULL,
+	cmplt_plan_dt timestamp NULL,
+	cmplt_dt timestamp NULL,
+	icdt_expl_emp_no varchar(30) NULL,
+	file_id varchar(50) NULL,
+	crt_id varchar(50) NOT NULL,
+	crt_dt timestamp NOT NULL,
+	updt_id varchar(50) NOT NULL,
+	updt_dt timestamp NOT NULL,
+	CONSTRAINT pk_tb_acc_icdt_dept_n PRIMARY KEY (icdt_expl_id, icdt_expl_dept_cd)
+);
+
+
+-- public.tb_acc_icdt_expl_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_acc_icdt_expl_m;
+
+CREATE TABLE tb_acc_icdt_expl_m (
+	icdt_expl_id varchar(10) NOT NULL,
+	acc_id varchar(10) NOT NULL,
+	icdt_expl_title varchar(300) NULL,
+	cmplt_tmlmt_dt timestamp NOT NULL,
+	occur_proc_cd varchar(30) NULL,
+	reld_sbstn_nm varchar(100) NULL,
+	dtl_ctn text NULL,
+	file_id varchar(50) NULL,
+	request_id varchar(30) NULL,
+	location_dtl varchar(100) NULL,
+	crt_dt timestamp DEFAULT now() NOT NULL,
+	crt_id varchar(50) DEFAULT 'Admin'::character varying NOT NULL,
+	updt_dt timestamp DEFAULT now() NOT NULL,
+	updt_id varchar(50) DEFAULT 'Admin'::character varying NOT NULL,
+	CONSTRAINT pk_tb_acc_icdt_expl_m PRIMARY KEY (icdt_expl_id)
+);
+
+
+-- public.tb_acc_loss_d definition
+
+-- Drop table
+
+-- DROP TABLE tb_acc_loss_d;
+
+CREATE TABLE tb_acc_loss_d (
+	acc_id varchar(10) NOT NULL,
+	seq numeric(18) NOT NULL,
+	equip_nm varchar(100) NULL,
+	eft_scale_etc_nm varchar(100) NULL,
+	eft_amt_cd varchar(30) NULL,
+	eft_amt_etc_nm numeric(18) NULL,
+	opr_stop_dcnt numeric(18) NULL,
+	gbbstn_nm varchar(100) NULL,
+	oil_leakage varchar(100) NULL,
+	remarks varchar(200) NULL,
+	crt_dt timestamp DEFAULT now() NOT NULL,
+	crt_id varchar(50) DEFAULT 'Admin'::character varying NOT NULL,
+	updt_dt timestamp DEFAULT now() NOT NULL,
+	updt_id varchar(50) DEFAULT 'Admin'::character varying NOT NULL,
+	CONSTRAINT pk_tb_acc_loss_d PRIMARY KEY (acc_id, seq)
+);
+
+
+-- public.tb_acc_loss_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_acc_loss_n;
+
+CREATE TABLE tb_acc_loss_n (
+	acc_id varchar(10) NOT NULL,
+	seq numeric NOT NULL,
+	equip_nm varchar(100) NULL,
+	eft_scale_etc_nm varchar(100) NULL,
+	eft_amt_cd varchar(30) NULL,
+	eft_amt_etc_nm numeric NULL,
+	opr_stop_dcnt numeric NULL,
+	crt_id varchar(50) NOT NULL,
+	crt_dt timestamp NOT NULL,
+	updt_id varchar(50) NOT NULL,
+	updt_dt timestamp NOT NULL,
+	gbbstn_nm varchar(100) NULL,
+	oil_leakage varchar(100) NULL,
+	remarks varchar(200) NULL,
+	CONSTRAINT pk_tb_acc_loss_n PRIMARY KEY (acc_id, seq)
+);
+
+
+-- public.tb_acc_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_acc_m;
+
+CREATE TABLE tb_acc_m (
+	acc_menu_cd varchar(1) NOT NULL,
+	acc_id varchar(10) NOT NULL,
+	acc_nm text NULL,
+	acc_occur_st_cd varchar(30) NULL,
+	acc_grd_cd varchar(30) NULL,
+	acc_index numeric NULL,
+	acc_exm_comm_yn varchar(1) NULL,
+	acc_occur_dtm timestamp NULL,
+	acc_plc_cd varchar(30) NULL,
+	acc_dtl_plc_nm varchar(300) NULL,
+	occur_plant_cd varchar(30) NULL,
+	occur_factry_cd varchar(30) NULL,
+	occur_dept_cd varchar(30) NULL,
+	acc_rng_cd varchar(30) NULL,
+	acc_rng_etc_nm varchar(300) NULL,
+	work_gbn_cd varchar(30) NULL,
+	acc_wound_yn varchar(1) NULL,
+	acc_physc_loss_yn varchar(1) NULL,
+	acc_route_cnts varchar(4000) NULL,
+	expct_issue_cnts varchar(4000) NULL,
+	file_id varchar(50) NULL,
+	request_id varchar(30) NULL,
+	rslt_request_id varchar(30) NULL,
+	acc_exmpl_seq numeric NULL,
+	acc_rng_flag_co varchar(1) NULL,
+	acc_rng_flag_sup varchar(1) NULL,
+	acc_rng_flag_etc varchar(1) NULL,
+	acc_invstr_emp_no varchar(30) NULL,
+	exm_start_date varchar(8) NULL,
+	exm_end_date varchar(8) NULL,
+	case_cnts varchar(4000) NULL,
+	invstr_cnts varchar(4000) NULL,
+	pre_exm_comm_yn varchar(1) NULL,
+	crt_id varchar(50) NOT NULL,
+	crt_dt timestamp NOT NULL,
+	updt_id varchar(50) NOT NULL,
+	updt_dt timestamp NOT NULL,
+	business_trip_flag varchar(1) NULL,
+	img_file_id varchar(100) NULL,
+	acc_cause varchar(4000) NULL,
+	acc_measure varchar(4000) NULL,
+	CONSTRAINT pk_tb_acc_m PRIMARY KEY (acc_menu_cd, acc_id)
+);
+
+
+-- public.tb_acc_rcvr_d definition
+
+-- Drop table
+
+-- DROP TABLE tb_acc_rcvr_d;
+
+CREATE TABLE tb_acc_rcvr_d (
+	acc_id varchar(10) NOT NULL,
+	acc_menu_cd varchar(30) NOT NULL,
+	acc_occur_st_cd varchar(30) NOT NULL,
+	acc_rcvr_seq numeric(18) NOT NULL,
+	rcvr_emp_no varchar(30) NOT NULL,
+	rcvr_gbn_cd varchar(30) NULL,
+	reply_opinon_cnts varchar(4000) NULL,
+	reply_dtm timestamp NULL,
+	sndr_emp_no varchar(30) NULL,
+	snd_dtm timestamp NULL,
+	mand_rcv_yn varchar(1) NULL,
+	crt_dt timestamp DEFAULT now() NOT NULL,
+	crt_id varchar(50) DEFAULT 'Admin'::character varying NOT NULL,
+	updt_dt timestamp DEFAULT now() NOT NULL,
+	updt_id varchar(50) DEFAULT 'Admin'::character varying NOT NULL,
+	CONSTRAINT pk_tb_acc_rcvr_d PRIMARY KEY (acc_id, acc_menu_cd, acc_occur_st_cd, acc_rcvr_seq, rcvr_emp_no)
+);
+
+
+-- public.tb_acc_rcvr_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_acc_rcvr_n;
+
+CREATE TABLE tb_acc_rcvr_n (
+	acc_id varchar(10) NOT NULL,
+	acc_menu_cd varchar(30) NOT NULL,
+	acc_occur_st_cd varchar(30) NOT NULL,
+	acc_rcvr_seq numeric NOT NULL,
+	rcvr_emp_no varchar(30) NOT NULL,
+	rcvr_gbn_cd varchar(30) NULL,
+	reply_opinon_cnts varchar(4000) NULL,
+	reply_dtm varchar(14) NULL,
+	sndr_emp_no varchar(30) NULL,
+	snd_dtm varchar(14) NULL,
+	mand_rcv_yn varchar(1) NULL,
+	crt_id varchar(50) NOT NULL,
+	crt_dt timestamp NOT NULL,
+	updt_id varchar(50) NOT NULL,
+	updt_dt timestamp NOT NULL,
+	CONSTRAINT pk_tb_acc_rcvr_n PRIMARY KEY (acc_id, acc_menu_cd, acc_occur_st_cd, acc_rcvr_seq, rcvr_emp_no)
+);
+
+
+-- public.tb_acc_seq_generate definition
+
+-- Drop table
+
+-- DROP TABLE tb_acc_seq_generate;
+
+CREATE TABLE tb_acc_seq_generate (
+	"year" varchar(4) NOT NULL,
+	prefix varchar(4) NOT NULL,
+	current_number int4 NOT NULL
+);
+
+
+-- public.tb_acc_wound_man_d definition
+
+-- Drop table
+
+-- DROP TABLE tb_acc_wound_man_d;
+
+CREATE TABLE tb_acc_wound_man_d (
+	acc_id varchar(10) NOT NULL,
+	seq numeric(18) NOT NULL,
+	nm varchar(100) NULL,
+	postn_cd varchar(5) NULL,
+	postn_nm varchar(100) NULL,
+	belng_co_nm varchar(300) NULL,
+	dept_cd varchar(30) NULL,
+	dept_nm varchar(200) NULL,
+	belng_gbn_cd varchar(30) NOT NULL,
+	natnl_gbn_cd varchar(30) NULL,
+	natnl_cd varchar(30) NULL,
+	stay_qualf_cd varchar(30) NULL,
+	stay_qualf_nm varchar(100) NULL,
+	brthymd varchar(8) NULL,
+	age numeric(18) NULL,
+	joinco_date varchar(8) NULL,
+	cnwrk_yy numeric(18) NULL,
+	cnwrk_mm numeric(18) NULL,
+	emp_type_cd varchar(30) NULL,
+	emp_type_etc_nm varchar(300) NULL,
+	work_type_cd varchar(30) NULL,
+	work_type_etc_nm varchar(300) NULL,
+	wound_part_nm varchar(1000) NULL,
+	wound_kind_nm varchar(1000) NULL,
+	wound_grd_cd varchar(30) NULL,
+	rest_start_date varchar(8) NULL,
+	rest_end_date varchar(8) NULL,
+	rest_dcnt numeric(18) NULL,
+	rest_dd_cnf_yn varchar(1) NULL,
+	remarks varchar(200) NULL,
+	crt_dt timestamp DEFAULT now() NOT NULL,
+	crt_id varchar(50) DEFAULT 'Admin'::character varying NOT NULL,
+	updt_dt timestamp DEFAULT now() NOT NULL,
+	updt_id varchar(50) DEFAULT 'Admin'::character varying NOT NULL,
+	CONSTRAINT pk_tb_acc_wound_man_d PRIMARY KEY (acc_id, seq)
+);
+
+
+-- public.tb_acc_wound_man_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_acc_wound_man_n;
+
+CREATE TABLE tb_acc_wound_man_n (
+	acc_id varchar(10) NOT NULL,
+	seq numeric NOT NULL,
+	nm varchar(100) NULL,
+	postn_cd varchar(5) NULL,
+	postn_nm varchar(100) NULL,
+	belng_co_nm varchar(300) NULL,
+	dept_cd varchar(30) NULL,
+	dept_nm varchar(200) NULL,
+	belng_gbn_cd varchar(30) NOT NULL,
+	natnl_gbn_cd varchar(30) NULL,
+	natnl_cd varchar(30) NULL,
+	stay_qualf_cd varchar(30) NULL,
+	stay_qualf_nm varchar(100) NULL,
+	brthymd varchar(8) NULL,
+	age numeric NULL,
+	joinco_date varchar(8) NULL,
+	cnwrk_yy numeric NULL,
+	cnwrk_mm numeric NULL,
+	emp_type_cd varchar(30) NULL,
+	emp_type_etc_nm varchar(300) NULL,
+	work_type_cd varchar(30) NULL,
+	work_type_etc_nm varchar(300) NULL,
+	wound_part_nm varchar(1000) NULL,
+	wound_kind_nm varchar(1000) NULL,
+	wound_grd_cd varchar(30) NULL,
+	rest_start_date varchar(8) NULL,
+	rest_end_date varchar(8) NULL,
+	rest_dcnt numeric NULL,
+	rest_dd_cnf_yn varchar(1) NULL,
+	crt_id varchar(50) NOT NULL,
+	crt_dt timestamp NOT NULL,
+	updt_id varchar(50) NOT NULL,
+	updt_dt timestamp NOT NULL,
+	remarks varchar(200) NULL,
+	CONSTRAINT pk_tb_acc_wound_man_n PRIMARY KEY (acc_id, seq)
+);
+
+
+-- public.tb_cm_approval_d definition
+
+-- Drop table
+
+-- DROP TABLE tb_cm_approval_d;
+
+CREATE TABLE tb_cm_approval_d (
+	approval_id numeric NOT NULL,
+	group_seqs numeric NOT NULL,
+	progress_seqs numeric NOT NULL,
+	approval_line_id numeric NULL,
+	approval_seqs numeric NULL,
+	approval_step_cd varchar(30) NULL,
+	approver_type_cd varchar(30) NULL,
+	approver_emp_no varchar(30) NULL,
+	approver_emp_name varchar(300) NULL,
+	approver_dept_cd varchar(20) NULL,
+	approver_dept_name varchar(300) NULL,
+	approver_job_name varchar(80) NULL,
+	approved_emp_no varchar(30) NULL,
+	approved_emp_name varchar(30) NULL,
+	approved_dept_cd varchar(20) NULL,
+	approved_dept_name varchar(300) NULL,
+	approved_job_name varchar(80) NULL,
+	button_cd varchar(30) NULL,
+	action_cd varchar(30) NULL,
+	approved_date timestamp NULL,
+	approved_action_cd varchar(30) NULL,
+	check_date timestamp NULL,
+	approval_comment varchar(4000) NULL,
+	create_user_id varchar(30) NOT NULL,
+	create_date timestamp NOT NULL,
+	update_user_id varchar(30) NULL,
+	update_date timestamp NULL,
+	CONSTRAINT gcms_mgr_con503400068 PRIMARY KEY (approval_id, group_seqs, progress_seqs)
+);
+
+
+-- public.tb_cm_approval_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_cm_approval_m;
+
+CREATE TABLE tb_cm_approval_m (
+	approval_id numeric NOT NULL,
+	approval_line_id numeric NULL,
+	country_cd varchar(2) NULL,
+	system_cd varchar(10) NULL,
+	program_id varchar(30) NULL,
+	current_group_seqs numeric NULL,
+	current_progress_seqs numeric NULL,
+	approval_status_cd varchar(30) NULL,
+	approver_emp_no varchar(30) NULL,
+	appointee_emp_no varchar(30) NULL,
+	create_user_id varchar(30) NOT NULL,
+	create_date timestamp NOT NULL,
+	update_user_id varchar(30) NULL,
+	update_date timestamp NULL,
+	CONSTRAINT gcms_mgr_con502600007 PRIMARY KEY (approval_id)
+);
+
+
+-- public.tb_cm_block_exception_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_cm_block_exception_n;
+
+CREATE TABLE tb_cm_block_exception_n (
+	plant_vend_class_cd varchar(1) NOT NULL,
+	plant_vend_cd varchar(30) NOT NULL,
+	sa_comp_cd varchar(10) NOT NULL,
+	upappr_no_block_yn varchar(1) NULL,
+	po_no_block_yn varchar(1) NULL,
+	bl_no_block_yn varchar(1) NULL,
+	desc_cnts varchar(4000) NULL,
+	use_yn varchar(1) NULL,
+	cret_user_id varchar(20) NOT NULL,
+	cret_dte timestamp NOT NULL,
+	lt_upt_user_id varchar(20) NULL,
+	lt_upt_dte timestamp NULL,
+	matl_cate_cd varchar(1) NULL,
+	CONSTRAINT pk_tb_cm_block_exception_n PRIMARY KEY (plant_vend_class_cd, plant_vend_cd, sa_comp_cd)
+);
+
+
+-- public.tb_cm_board_comp_d definition
+
+-- Drop table
+
+-- DROP TABLE tb_cm_board_comp_d;
+
+CREATE TABLE tb_cm_board_comp_d (
+	board_no numeric NOT NULL,
+	sa_comp_cd varchar(50) NOT NULL,
+	note varchar(1000) NULL,
+	create_user_id varchar(30) NOT NULL,
+	create_date timestamp NOT NULL,
+	update_user_id varchar(30) NULL,
+	update_date timestamp NULL,
+	CONSTRAINT tb_cm_board_comp_d_pk PRIMARY KEY (board_no, sa_comp_cd)
+);
+
+
+-- public.tb_cm_board_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_cm_board_m;
+
+CREATE TABLE tb_cm_board_m (
+	board_no numeric NOT NULL,
+	prnt_board_no numeric NULL,
+	board_type_cd varchar(30) NOT NULL,
+	title varchar(300) NOT NULL,
+	"content" text NULL,
+	start_date varchar(8) NULL,
+	end_date varchar(8) NULL,
+	popup_flag bpchar(1) DEFAULT 'N'::bpchar NOT NULL,
+	use_flag bpchar(1) DEFAULT 'Y'::bpchar NOT NULL,
+	file_id varchar(50) NULL,
+	view_cnt numeric DEFAULT 0 NULL,
+	create_user_id varchar(30) NOT NULL,
+	create_date timestamp NOT NULL,
+	update_user_id varchar(30) NULL,
+	update_date timestamp NULL,
+	all_yn varchar(1) DEFAULT 'Y'::character varying NULL,
+	CONSTRAINT gcms_mgr_con682800019 PRIMARY KEY (board_no)
+);
+
+
+-- public.tb_cm_customer_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_cm_customer_m;
+
+CREATE TABLE tb_cm_customer_m (
+	customer_id varchar(20) NULL,
+	customer_nm varchar(200) NULL,
+	en_customer_nm varchar(200) NULL,
+	boss_nm varchar(60) NULL,
+	biz_no varchar(40) NULL,
+	rep_tel_no varchar(30) NULL,
+	biz_type_nm varchar(150) NULL,
+	biz_condi_nm varchar(150) NULL,
+	zip_cd varchar(20) NULL,
+	addr_nm varchar(200) NULL,
+	addr_detail_nm varchar(200) NULL,
+	natl_cd varchar(30) NULL,
+	rep_email_addr varchar(300) NULL,
+	ue_yn varchar(1) NOT NULL,
+	cret_dte timestamp NULL,
+	cret_user_id varchar(20) NULL,
+	lt_upt_dte timestamp NULL,
+	lt_upt_user_id varchar(20) NULL,
+	cn_customer_nm varchar(200) NULL
+);
+
+
+-- public.tb_cm_matl_list_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_cm_matl_list_n;
+
+CREATE TABLE tb_cm_matl_list_n (
+	matl_cd varchar(100) NOT NULL,
+	lang_cd varchar(3) NOT NULL,
+	sa_comp_cd varchar(10) NULL,
+	matl_nm varchar(300) NULL,
+	ue_yn varchar(1) NULL,
+	cret_dte timestamp NOT NULL,
+	cret_user_id varchar(20) NOT NULL,
+	lt_upt_dte timestamp NULL,
+	lt_upt_user_id varchar(20) NULL,
+	grade_id varchar(100) NULL,
+	grade_id_nm varchar(200) NULL,
+	biocide_yn varchar(1) NULL,
+	matl_nm3 varchar(400) NULL,
+	matl_nm2 varchar(400) NULL,
+	CONSTRAINT tb_cm_matl_list_n_pkey PRIMARY KEY (matl_cd, lang_cd)
+);
+
+
+-- public.tb_cm_matl_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_cm_matl_m;
+
+CREATE TABLE tb_cm_matl_m (
+	matl_cd varchar(100) NOT NULL,
+	sa_comp_cd varchar(10) NULL,
+	matl_grp_cd varchar(9) NULL,
+	matl_type_cd varchar(30) NULL,
+	net_wt numeric(13, 4) NULL,
+	gross_wt numeric(13, 4) NULL,
+	bs_ut varchar(3) NULL,
+	wt_ut varchar(3) NULL,
+	matl_cret_dte timestamp NULL,
+	lgc_mak_yn varchar(1) NULL,
+	ue_yn varchar(1) DEFAULT 'Y'::character varying NOT NULL,
+	cret_dte timestamp NOT NULL,
+	cret_user_id varchar(20) NOT NULL,
+	lt_upt_dte timestamp NULL,
+	lt_upt_user_id varchar(20) NULL,
+	pste_cate_cd varchar(7) NULL,
+	matl_cate_cd varchar(30) NULL,
+	bos_except_target_yn varchar(1) DEFAULT 'N'::character varying NULL,
+	grade_id varchar(30) NULL,
+	grade_id_nm varchar(200) NULL,
+	biocide_yn varchar(1) NULL,
+	CONSTRAINT tb_cm_matl_m_pkey PRIMARY KEY (matl_cd)
+);
+CREATE INDEX idx_tb_cm_matl_m_01 ON public.tb_cm_matl_m USING btree (matl_cd, lgc_mak_yn);
+CREATE INDEX idx_tb_cm_matl_m_02 ON public.tb_cm_matl_m USING btree (bos_except_target_yn);
+
+
+-- public.tb_cm_month_sell_record_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_cm_month_sell_record_n;
+
+CREATE TABLE tb_cm_month_sell_record_n (
+	sell_yyyymm varchar(6) NOT NULL,
+	customer_cd varchar(30) NOT NULL,
+	matl_cd varchar(100) NOT NULL,
+	business_org_cd varchar(30) NOT NULL,
+	dist_channel_cd varchar(30) NOT NULL,
+	prod_grp_cd varchar(30) NOT NULL,
+	nation_cd varchar(30) NOT NULL,
+	sell_qty varchar(30) NULL,
+	sell_unit_cd varchar(30) NULL,
+	cret_user_id varchar(20) NOT NULL,
+	cret_dte date NOT NULL,
+	lt_upt_user_id varchar(20) NULL,
+	lt_upt_dte date NULL,
+	sa_comp_cd varchar(10) DEFAULT 'C100'::character varying NOT NULL,
+	CONSTRAINT pk_tb_cm_month_sell_record_n PRIMARY KEY (sell_yyyymm, customer_cd, matl_cd, business_org_cd, dist_channel_cd, prod_grp_cd, nation_cd, sa_comp_cd)
+);
+CREATE INDEX tb_cm_month_sell_record_n_idx01 ON public.tb_cm_month_sell_record_n USING btree (sell_yyyymm);
+
+
+-- public.tb_cm_request_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_cm_request_m;
+
+CREATE TABLE tb_cm_request_m (
+	request_id varchar(30) NOT NULL,
+	country_cd varchar(2) NULL,
+	system_cd varchar(10) NULL,
+	program_id varchar(30) NULL,
+	requestor_emp_no varchar(30) NULL,
+	requestor_emp_name varchar(300) NULL,
+	requestor_dept_cd varchar(20) NULL,
+	requestor_dept_name varchar(300) NULL,
+	requestor_job_name varchar(80) NULL,
+	request_title text NULL,
+	request_date timestamp NULL,
+	request_status_cd varchar(30) NULL,
+	biz_document_no varchar(50) NULL,
+	approval_id numeric NULL,
+	file_id varchar(50) NULL,
+	create_user_id varchar(30) NOT NULL,
+	create_date timestamp NOT NULL,
+	update_user_id varchar(30) NULL,
+	update_date timestamp NULL,
+	column1 varchar(50) NULL,
+	column2 varchar(50) NULL,
+	column3 varchar(50) NULL,
+	column4 varchar(50) NULL,
+	column5 varchar(50) NULL,
+	column6 varchar(50) NULL,
+	column7 varchar(50) NULL,
+	column8 varchar(50) NULL,
+	column9 varchar(50) NULL,
+	column10 varchar(64) NULL,
+	column11 varchar(50) NULL,
+	column12 varchar(50) NULL,
+	column13 varchar(50) NULL,
+	column14 varchar(50) NULL,
+	column15 varchar(50) NULL,
+	column16 varchar(50) NULL,
+	column17 varchar(50) NULL,
+	column18 varchar(50) NULL,
+	column19 varchar(50) NULL,
+	column20 varchar(50) NULL,
+	column21 varchar(50) NULL,
+	column22 varchar(50) NULL,
+	column23 varchar(50) NULL,
+	column24 varchar(50) NULL,
+	column25 varchar(50) NULL,
+	column26 varchar(50) NULL,
+	column27 varchar(50) NULL,
+	column28 varchar(50) NULL,
+	column29 varchar(50) NULL,
+	column30 varchar(50) NULL,
+	CONSTRAINT tb_cm_request_m_pkey PRIMARY KEY (request_id)
+);
+CREATE INDEX tb_cm_request_m_idx01 ON public.tb_cm_request_m USING btree (approval_id);
+
+
+-- public.tb_cm_vend_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_cm_vend_m;
+
+CREATE TABLE tb_cm_vend_m (
+	sa_comp_cd varchar(10) NOT NULL,
+	vend_id varchar(20) NOT NULL,
+	vend_nm varchar(200) NULL,
+	en_vend_nm varchar(200) NULL,
+	boss_nm varchar(60) NULL,
+	biz_no varchar(40) NULL,
+	rep_tel_no varchar(30) NULL,
+	biz_type_nm varchar(150) NULL,
+	biz_condi_nm varchar(150) NULL,
+	zip_cd varchar(20) NULL,
+	addr_nm varchar(200) NULL,
+	addr_detail_nm varchar(200) NULL,
+	custom_no varchar(40) NULL,
+	ue_yn varchar(1) NOT NULL,
+	cret_dte timestamp NULL,
+	cret_user_id varchar(50) NULL,
+	lt_upt_dte timestamp NULL,
+	lt_upt_user_id varchar(50) NULL,
+	rep_email_addr varchar(300) NULL,
+	cn_vend_nm varchar(200) NULL,
+	homa_lock_yn varchar(1) DEFAULT 'N'::character varying NOT NULL,
+	CONSTRAINT tb_cm_vend_m_pkey PRIMARY KEY (sa_comp_cd, vend_id)
+);
+CREATE INDEX tb_cm_vend_m_idx1 ON public.tb_cm_vend_m USING btree (vend_id);
+
+
+-- public.tb_cmm_chem_sbst_conf_ingrd_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_cmm_chem_sbst_conf_ingrd_n;
+
+CREATE TABLE tb_cmm_chem_sbst_conf_ingrd_n (
+	chemical_substance_no varchar(50) NOT NULL,
+	configuration_ingrd_serial_no numeric NOT NULL,
+	configuration_ingredient_name varchar(1000) NULL,
+	cas_no varchar(50) NULL,
+	conf_ingrd_cntn_qty_sct_flag varchar(1) NULL,
+	conf_ingrd_cntn_qty_min_value numeric NULL,
+	conf_ingrd_cntn_qty_max_value numeric NULL,
+	msds_signal_value varchar(10) NULL,
+	msds_fire_value varchar(1) NULL,
+	msds_reactivity_value varchar(1) NULL,
+	msds_sanitation_value varchar(1) NULL,
+	chemical_substance_appear_desc varchar(150) NULL,
+	ph_value numeric NULL,
+	boil_point_value numeric NULL,
+	boil_point_exp_terms_content varchar(150) NULL,
+	boil_point_unit_code varchar(40) NULL,
+	flash_point_value numeric NULL,
+	flash_point_exp_terms_content varchar(150) NULL,
+	flash_point_unit_code varchar(40) NULL,
+	explim_upper_limit_value numeric NULL,
+	explim_lower_limit_value numeric NULL,
+	ignition_point_value numeric NULL,
+	ignition_pnt_exp_terms_content varchar(150) NULL,
+	ignition_point_unit_code varchar(40) NULL,
+	relative_weight_value numeric NULL,
+	tlv_stel_value numeric NULL,
+	tlv_c_value numeric NULL,
+	tlv_twac_value numeric NULL,
+	use_flag varchar(1) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_date timestamp NULL,
+	last_update_user_id varchar(40) NULL,
+	alt_data_apprv_serial_order_no varchar(30) NULL,
+	effective_yyyymmdd varchar(8) NULL,
+	CONSTRAINT pk_cmm_chem_sbst_conf_grd_01 PRIMARY KEY (chemical_substance_no, configuration_ingrd_serial_no)
+);
+CREATE INDEX ix_cmm_chem_sbst_conf_grd_n_01 ON public.tb_cmm_chem_sbst_conf_ingrd_n USING btree (cas_no);
+
+
+-- public.tb_cmm_chemical_substance_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_cmm_chemical_substance_m;
+
+CREATE TABLE tb_cmm_chemical_substance_m (
+	chemical_substance_no varchar(50) NOT NULL,
+	part_no varchar(50) NULL,
+	merchandise_business_place_id varchar(20) NULL,
+	merchandise_id varchar(20) NULL,
+	chemical_substance_name varchar(200) NULL,
+	chemical_substance_class_code varchar(50) NULL,
+	chemical_substance_status_code varchar(50) NULL,
+	maker_id numeric NULL,
+	maker_domestic_flag bpchar(1) NULL,
+	supplier_code varchar(40) NULL,
+	lgd_unregister_supplier_name varchar(200) NULL,
+	supplier_domestic_flag bpchar(1) NULL,
+	contact_name varchar(300) NULL,
+	contact_phone_no varchar(30) NULL,
+	contact_email_addr varchar(256) NULL,
+	msds_revision_yyyymmdd bpchar(8) NULL,
+	msds_rev_expected_yyyymmdd bpchar(8) NULL,
+	use_flag bpchar(1) NULL,
+	attach_file_id numeric NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_date timestamp NULL,
+	last_update_user_id varchar(40) NULL,
+	substance_type_code varchar(30) NULL,
+	keeping_temperature_class_code varchar(40) NULL,
+	flammability_class_code varchar(40) NULL,
+	ph_classification_code varchar(40) NULL,
+	carry_in_enabled_flag bpchar(1) NULL,
+	n_y_assigned_part_flag bpchar(1) NULL,
+	supplier_check_date timestamp NULL,
+	mail_send_flag bpchar(1) NULL,
+	scs_user_id varchar(50) NULL,
+	amendment_rejected_flag bpchar(1) NULL,
+	conf_ingredient_change_flag bpchar(1) NULL,
+	contact_employee_no varchar(30) NULL,
+	msds_confirm_yyyymmdd bpchar(8) NULL,
+	msds_revision_request_sheet_no varchar(30) NULL,
+	msds_submit_type_code varchar(50) NULL,
+	msds_submit_suspend_prd_code varchar(50) NULL,
+	msds_serial_order_no varchar(30) NULL,
+	psm_target_hybrid_sbst_flag bpchar(1) NULL,
+	contract_approval_target_flag bpchar(1) NULL,
+	use_region_code varchar(30) NULL,
+	country_code varchar(2) NULL,
+	CONSTRAINT tb_cmm_chemical_substance_m_pk PRIMARY KEY (chemical_substance_no)
+);
+CREATE INDEX idx_cmm_chem_sbst_m_01 ON public.tb_cmm_chemical_substance_m USING btree (part_no);
+CREATE INDEX idx_cmm_chem_sbst_m_02 ON public.tb_cmm_chemical_substance_m USING btree (merchandise_business_place_id, merchandise_id);
+CREATE INDEX idx_cmm_chem_sbst_m_03 ON public.tb_cmm_chemical_substance_m USING btree (upper((chemical_substance_name)::text));
+CREATE INDEX idx_cmm_chem_sbst_m_04 ON public.tb_cmm_chemical_substance_m USING btree (SUBSTRING(chemical_substance_no FROM 4 FOR 1));
+CREATE INDEX idx_cmm_chem_sbst_m_05 ON public.tb_cmm_chemical_substance_m USING btree (supplier_check_date);
+CREATE INDEX idx_cmm_chem_sbst_m_06 ON public.tb_cmm_chemical_substance_m USING btree (mail_send_flag);
+CREATE INDEX idx_cmm_chem_sbst_m_07 ON public.tb_cmm_chemical_substance_m USING btree (scs_user_id);
+CREATE INDEX idx_cmm_chem_sbst_m_08 ON public.tb_cmm_chemical_substance_m USING btree (amendment_rejected_flag);
+CREATE INDEX idx_cmm_chem_sbst_m_09 ON public.tb_cmm_chemical_substance_m USING btree (contact_employee_no);
+CREATE INDEX idx_cmm_chem_sbst_m_10 ON public.tb_cmm_chemical_substance_m USING btree (msds_confirm_yyyymmdd);
+CREATE INDEX idx_cmm_chem_sbst_m_11 ON public.tb_cmm_chemical_substance_m USING btree (msds_revision_request_sheet_no);
+CREATE INDEX idx_cmm_chem_sbst_m_12 ON public.tb_cmm_chemical_substance_m USING btree (use_region_code);
+CREATE INDEX idx_cmm_chem_sbst_m_13 ON public.tb_cmm_chemical_substance_m USING btree (country_code);
+
+
+-- public.tb_cmn_doc_id_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_cmn_doc_id_m;
+
+CREATE TABLE tb_cmn_doc_id_m (
+	"module" varchar(4) NOT NULL,
+	prefix varchar(4) NOT NULL,
+	"year" int4 NOT NULL,
+	current_number int4 NOT NULL,
+	CONSTRAINT pk_tb_cmn_doc_id_m PRIMARY KEY (module, prefix, year)
+);
+
+
+-- public.tb_cmn_nonconf_asignr_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_cmn_nonconf_asignr_n;
+
+CREATE TABLE tb_cmn_nonconf_asignr_n (
+	nonconf_id varchar(30) NOT NULL,
+	asignr_seq numeric NOT NULL,
+	asignr_emp_no varchar(30) NULL,
+	nonconf_prg_st_cd varchar(30) NULL,
+	crt_id varchar(50) NULL,
+	crt_dt timestamp NULL,
+	updt_id varchar(50) NULL,
+	updt_dt timestamp NULL,
+	CONSTRAINT pk_tb_cmn_nonconf_asignr_n PRIMARY KEY (nonconf_id, asignr_seq)
+);
+
+
+-- public.tb_cmn_nonconf_asignr_proc_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_cmn_nonconf_asignr_proc_n;
+
+CREATE TABLE tb_cmn_nonconf_asignr_proc_n (
+	nonconf_id varchar(30) NOT NULL,
+	asignr_seq numeric NOT NULL,
+	asignr_emp_no varchar(30) NOT NULL,
+	nonconf_prg_st_cd varchar(30) NULL,
+	prg_dt varchar(14) NULL,
+	crt_id varchar(50) NOT NULL,
+	crt_dt timestamp NOT NULL,
+	updt_id varchar(50) NOT NULL,
+	updt_dt timestamp NOT NULL,
+	CONSTRAINT pk_tb_cmn_nonconf_asignr_proc_n PRIMARY KEY (nonconf_id, asignr_seq, asignr_emp_no)
+);
+
+
+-- public.tb_cmn_nonconf_dtl_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_cmn_nonconf_dtl_n;
+
+CREATE TABLE tb_cmn_nonconf_dtl_n (
+	nonconf_id varchar(30) NOT NULL,
+	nonconf_prg_gbn_cd varchar(30) NOT NULL,
+	nonconf_seq numeric NOT NULL,
+	phenom_prbpnt_content varchar(4000) NULL,
+	org_cause_content varchar(4000) NULL,
+	recur_prevnt_content varchar(4000) NULL,
+	photo_file_id varchar(50) NULL,
+	crt_id varchar(50) NULL,
+	crt_dt timestamp NULL,
+	updt_id varchar(50) NULL,
+	updt_dt timestamp NULL,
+	CONSTRAINT pk_tb_cmn_nonconf_dtl_n PRIMARY KEY (nonconf_id, nonconf_prg_gbn_cd, nonconf_seq)
+);
+
+
+-- public.tb_cmn_nonconf_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_cmn_nonconf_n;
+
+CREATE TABLE tb_cmn_nonconf_n (
+	nonconf_id varchar(30) NOT NULL,
+	plant_cd varchar(30) NULL,
+	factry_cd varchar(30) NULL,
+	dept_cd varchar(30) NULL,
+	nonconf_prg_st_cd varchar(30) NULL,
+	nonconf_title_nm varchar(100) NULL,
+	nonconf_src_cd varchar(30) NULL,
+	nonconf_src_id varchar(30) NULL,
+	nonconf_src_ver_no varchar(30) NULL,
+	nonconf_src_etc_nm varchar(30) NULL,
+	nonconf_src_grd_cd varchar(30) NULL,
+	nonconf_src_milge_num numeric NULL,
+	nonconf_src_etc_cls_content varchar(100) NULL,
+	nonconf_src_etc_expln_content varchar(4000) NULL,
+	nonconf_reg_emp_no varchar(30) NULL,
+	nonconf_reg_dt timestamp NULL,
+	agreer_flag varchar(1) NULL,
+	act_gbn_cd varchar(30) NULL,
+	act_tmlmt_dt timestamp NULL,
+	act_plan_dt timestamp NULL,
+	act_fsh_dt timestamp NULL,
+	appv_dt varchar(8) NULL,
+	fsh_dt varchar(8) NULL,
+	act_plan_skip_flag varchar(1) NULL,
+	plan_title_nm varchar(100) NULL,
+	act_title_nm varchar(100) NULL,
+	law_violt_field_cd varchar(30) NULL,
+	cvlapl_dtl_content varchar(4000) NULL,
+	nonconf_reg_file_id varchar(50) NULL,
+	act_plan_file_id varchar(50) NULL,
+	act_rslt_file_id varchar(50) NULL,
+	request_id varchar(30) NULL,
+	crt_id varchar(50) NOT NULL,
+	crt_dt timestamp NOT NULL,
+	updt_id varchar(50) NOT NULL,
+	updt_dt timestamp NOT NULL,
+	CONSTRAINT pk_tb_cmn_nonconf_n PRIMARY KEY (nonconf_id)
+);
+
+
+-- public.tb_cmn_nonconf_refr_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_cmn_nonconf_refr_n;
+
+CREATE TABLE tb_cmn_nonconf_refr_n (
+	nonconf_id varchar(30) NOT NULL,
+	asignr_seq numeric NOT NULL,
+	asignr_emp_no varchar(30) NOT NULL,
+	crt_id varchar(50) NOT NULL,
+	crt_dt timestamp NOT NULL,
+	updt_id varchar(50) NOT NULL,
+	updt_dt timestamp NOT NULL,
+	CONSTRAINT pk_tb_cmn_nonconf_refr_n PRIMARY KEY (nonconf_id, asignr_seq, asignr_emp_no)
+);
+
+
+-- public.tb_cmn_nonconf_tmlmt_h definition
+
+-- Drop table
+
+-- DROP TABLE tb_cmn_nonconf_tmlmt_h;
+
+CREATE TABLE tb_cmn_nonconf_tmlmt_h (
+	nonconf_id varchar(30) NOT NULL,
+	tmlmt_seq numeric NOT NULL,
+	act_tmlmt_dt varchar(14) NULL,
+	asignr_emp_no varchar(30) NOT NULL,
+	crt_id varchar(50) NOT NULL,
+	crt_dt timestamp NOT NULL,
+	updt_id varchar(50) NOT NULL,
+	updt_dt timestamp NOT NULL,
+	CONSTRAINT pk_tb_cmn_nonconf_tmlmt_h PRIMARY KEY (nonconf_id, tmlmt_seq)
+);
+
+
+-- public.tb_eng_chem_master_info definition
+
+-- Drop table
+
+-- DROP TABLE tb_eng_chem_master_info;
+
+CREATE TABLE tb_eng_chem_master_info (
+	chem_id varchar(20) NOT NULL,
+	chem_name_ko text NULL,
+	chem_name_en text NULL,
+	chem_name_zh text NULL,
+	chem_name_ja text NULL,
+	cas_no varchar(500) NULL,
+	ke_no varchar(100) NULL,
+	rtecs_no varchar(100) NULL,
+	ec_no varchar(100) NULL,
+	un_no varchar(100) NULL,
+	icsc_no varchar(100) NULL,
+	hs_code varchar(100) NULL,
+	annex varchar(100) NULL,
+	encs varchar(100) NULL,
+	ishl varchar(100) NULL,
+	molecular_formula text NULL,
+	molecular_weight varchar(50) NULL,
+	molecular_unit varchar(20) NULL,
+	smile_code text NULL,
+	is_ncis varchar(20) NULL,
+	ncis_mat_id varchar(100) NULL,
+	non_hazard_chem_no varchar(100) NULL,
+	non_hazard_chem_notice_date varchar(10) NULL,
+	non_hazard_chem_notice varchar(500) NULL,
+	is_hazard_chem varchar(20) NULL,
+	is_exist_chem varchar(20) NULL,
+	chem_desc text NULL,
+	description text NULL,
+	make_type varchar(20) NULL,
+	reference_materials text NULL,
+	source_desc text NULL,
+	is_del varchar(5) DEFAULT '0'::character varying NULL,
+	init_user varchar(100) NULL,
+	init_date varchar(14) NULL,
+	update_user varchar(100) NULL,
+	update_date varchar(14) NULL,
+	tran_src varchar(500) NULL,
+	is_imdg varchar(20) NULL,
+	chem_name_search text NULL,
+	is_compound varchar(20) NULL,
+	cas_no_encrypt varchar(1000) NULL,
+	srch_name text NULL,
+	no_cas_number varchar(500) NULL,
+	CONSTRAINT tb_eng_chem_master_info_pkey PRIMARY KEY (chem_id)
+);
+CREATE INDEX idx_eng_chem_master_info_cas_no ON public.tb_eng_chem_master_info USING btree (cas_no);
+CREATE INDEX idx_eng_chem_master_info_description ON public.tb_eng_chem_master_info USING btree (description);
+
+
+-- public.tb_eng_regula_chem_map definition
+
+-- Drop table
+
+-- DROP TABLE tb_eng_regula_chem_map;
+
+CREATE TABLE tb_eng_regula_chem_map (
+	chem_id varchar(20) NOT NULL,
+	regulate_id varchar(20) NOT NULL,
+	regulate_item_id varchar(20) NOT NULL,
+	is_del varchar(20) DEFAULT '0'::character varying NULL,
+	init_user varchar(100) NULL,
+	init_date varchar(14) NULL,
+	update_user varchar(100) NULL,
+	update_date varchar(14) NULL,
+	tran_src varchar(500) NULL,
+	CONSTRAINT tb_eng_regula_chem_map_pkey PRIMARY KEY (chem_id, regulate_id, regulate_item_id)
+);
+CREATE INDEX idx_eng_regula_chem_map_reg ON public.tb_eng_regula_chem_map USING btree (regulate_id, regulate_item_id);
+
+
+-- public.tb_esh_standby_log definition
+
+-- Drop table
+
+-- DROP TABLE tb_esh_standby_log;
+
+CREATE TABLE tb_esh_standby_log (
+	standby_log_id int8 NOT NULL,
+	plant_cd varchar(20) NOT NULL,
+	log_dt date NOT NULL,
+	start_time varchar(4) NULL,
+	end_time varchar(4) NULL,
+	eqp_nm varchar(200) NULL,
+	line_nm varchar(200) NULL,
+	process_nm varchar(200) NULL,
+	operation_ctn text NULL,
+	special_note text NULL,
+	remark text NULL,
+	writer_id varchar(50) NULL,
+	confirmer_id varchar(50) NULL,
+	status varchar(20) NULL,
+	crt_dt timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	crt_id varchar(50) NULL,
+	updt_dt timestamp NULL,
+	updt_id varchar(50) NULL,
+	deleted int2 DEFAULT 0 NOT NULL,
+	deleted_at timestamp NULL,
+	CONSTRAINT tb_esh_standby_log_pkey PRIMARY KEY (standby_log_id)
+);
+
+
+-- public.tb_ghs_ruleset_regulate_map definition
+
+-- Drop table
+
+-- DROP TABLE tb_ghs_ruleset_regulate_map;
+
+CREATE TABLE tb_ghs_ruleset_regulate_map (
+	ruleset_id varchar(100) NOT NULL,
+	regulate_id varchar(20) NOT NULL,
+	regulate_item_id varchar(20) NOT NULL,
+	is_use varchar(20) NULL,
+	order_idx varchar(10) NULL,
+	init_user varchar(100) NULL,
+	init_date varchar(14) NULL,
+	update_user varchar(100) NULL,
+	update_date varchar(14) NULL,
+	tran_src varchar(200) NULL,
+	CONSTRAINT tb_ghs_ruleset_regulate_map_pkey PRIMARY KEY (ruleset_id, regulate_id, regulate_item_id)
+);
+
+
+-- public.tb_im_zehs1t8010t_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_im_zehs1t8010t_n;
+
+CREATE TABLE tb_im_zehs1t8010t_n (
+	budat date NOT NULL,
+	matnr varchar(18) NOT NULL,
+	lifnr varchar(10) NOT NULL,
+	werks varchar(4) NOT NULL,
+	imtyp varchar(2) NOT NULL,
+	menge numeric(13, 3) NULL,
+	meins varchar(3) NULL,
+	cret_user_id varchar(20) NULL,
+	cret_dte date NULL,
+	lt_upt_user_id varchar(20) NULL,
+	lt_upt_dte date NULL,
+	sa_comp_cd varchar(10) NULL,
+	CONSTRAINT gcms_mgr_con689600874 PRIMARY KEY (budat, matnr, lifnr, werks, imtyp)
+);
+CREATE INDEX tb_im_zehs1t8010t_n_idx_01 ON public.tb_im_zehs1t8010t_n USING btree (sa_comp_cd, lifnr, imtyp, matnr, budat);
+
+
+-- public.tb_mdlt_sup_plan_sum_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_mdlt_sup_plan_sum_m;
+
+CREATE TABLE tb_mdlt_sup_plan_sum_m (
+	ver_id varchar(10) NOT NULL,
+	chk_year varchar(4) NOT NULL,
+	matl_cd varchar(100) NULL,
+	vend_cd varchar(100) NULL,
+	sa_comp_cd varchar(10) NOT NULL,
+	matl_nm varchar(500) NULL,
+	vend_nm varchar(100) NULL,
+	pcls_dtl_ctn varchar(200) NULL,
+	mdl_alas_nm varchar(40) NULL,
+	mat_gr_ctn varchar(50) NULL,
+	plant_cd varchar(100) NULL,
+	unit_cd varchar(10) NULL,
+	puch_expc_qty numeric NULL,
+	data_ins_dtm timestamp NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_dtm timestamp NULL,
+	data_upd_user_id varchar(50) NULL,
+	wkplc_cd varchar(10) NULL
+);
+
+
+-- public.tb_mi_matl_ingt_inv_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_mi_matl_ingt_inv_m;
+
+CREATE TABLE tb_mi_matl_ingt_inv_m (
+	matl_ingt_suy_no varchar(20) NOT NULL,
+	sa_comp_cd varchar(10) NULL,
+	matl_cd varchar(30) NOT NULL,
+	vend_cd varchar(20) NOT NULL,
+	matl_cate_cd varchar(30) NULL,
+	proc_stat_cd varchar(7) NOT NULL,
+	ord_type_cd varchar(3) NULL,
+	matl_suy_type_cd varchar(30) NULL,
+	pste_cate_cd varchar(7) NULL,
+	op_heat_cd varchar(30) NULL,
+	op_heat_nm varchar(100) NULL,
+	dvs_cd varchar(30) NULL,
+	dvs_nm varchar(100) NULL,
+	imp_ctry_cd varchar(30) NULL,
+	hs_cd varchar(40) NULL,
+	year_imp_quota numeric(16) NULL,
+	eu_expt_history_yn varchar(1) NULL,
+	poi_subt_cont_yn varchar(1) NULL,
+	matl_us_cd varchar(10) NULL,
+	matl_us_detail_cnts text NULL,
+	attach_file_grp_id numeric NULL,
+	ingt_open_cd varchar(30) NULL,
+	req_recept_dte timestamp NULL,
+	sbmt_deadline_dte timestamp NULL,
+	sbmt_dte timestamp NULL,
+	efft_expiry_dte timestamp NULL,
+	sbmt_uer_id varchar(20) NULL,
+	quality_charge_id varchar(20) NULL,
+	vend_charge_email_addr text NULL,
+	appr_dte timestamp NULL,
+	cmrt_yn varchar(1) NULL,
+	cry_yn varchar(1) NULL,
+	re_inv_suy_yn varchar(1) NULL,
+	cret_dte timestamp NOT NULL,
+	cret_user_id varchar(200) NOT NULL,
+	lt_upt_dte timestamp NULL,
+	lt_upt_user_id varchar(200) NULL,
+	wt_ut varchar(30) NULL,
+	etc_matl_nm varchar(100) NULL,
+	serveone_mro_matl_yn varchar(1) NULL,
+	imp_rept_rcv_no varchar(20) NULL,
+	imp_rept_qty numeric NULL,
+	imp_rept_qty_ut varchar(3) NULL,
+	tox_imp_rept_rcv_no varchar(20) NULL,
+	tox_imp_rept_qty numeric NULL,
+	tox_imp_rept_qty_ut varchar(3) NULL,
+	matl_desc text NULL,
+	cont_check_yn varchar(1) NULL,
+	cont_check_msg text NULL,
+	temp_unblock_yn varchar(1) NULL,
+	temp_unblock_appr_no varchar(40) NULL,
+	temp_unblock_appr_dte timestamp NULL,
+	temp_unblock_cnts text NULL,
+	obs_subt_cont_yn varchar(1) NULL,
+	mro_register_req_no varchar(30) NULL,
+	inv_err_cd varchar(30) NULL,
+	self_reg_yn varchar(1) DEFAULT 'N'::character varying NULL,
+	wkplc_add_yn varchar(1) DEFAULT 'N'::character varying NULL,
+	res_subt_cont_yn varchar(1) NULL,
+	pro_subt_cont_yn varchar(1) NULL,
+	rem_imp_rept_rcv_no varchar(20) NULL,
+	rem_imp_rept_qty numeric NULL,
+	rem_imp_rept_qty_ut varchar(3) NULL,
+	prm_imp_rept_rcv_no varchar(20) NULL,
+	prm_imp_rept_qty numeric NULL,
+	prm_imp_rept_qty_ut varchar(3) NULL,
+	lgc_subt_reg_yn varchar(1) NULL,
+	vend_subt_reg_yn varchar(1) NULL,
+	vend_send_desc text NULL,
+	biocide_yn varchar(1) NULL,
+	bzplc_id varchar(20) NULL,
+	obs_imp_rept_rcv_no varchar(30) NULL,
+	obs_imp_rept_qty numeric NULL,
+	obs_imp_rept_qty_ut varchar(10) NULL,
+	lgc_imp_rept_rcv_no varchar(30) NULL,
+	lgc_imp_rept_qty numeric NULL,
+	lgc_imp_rept_qty_ut varchar(10) NULL,
+	asb_subt_cont_yn varchar(1) NULL,
+	asb_imp_rept_rcv_no varchar(30) NULL,
+	asb_imp_rept_bl_no varchar(30) NULL,
+	asb_imp_rept_qty numeric NULL,
+	asb_imp_rept_qty_ut varchar(10) NULL,
+	vend_imp_rept_rcv_no varchar(30) NULL,
+	vend_imp_rept_qty numeric NULL,
+	vend_imp_rept_qty_ut varchar(10) NULL,
+	abt_bl_no varchar(30) NULL,
+	abt_apl_no varchar(30) NULL,
+	abt_apl_dte timestamp NULL,
+	erp_supl_req_yn varchar(1) DEFAULT 'N'::character varying NULL,
+	oem_yn varchar(30) NULL,
+	purpose varchar(30) NULL,
+	reg_insp_yn varchar(1) NULL,
+	org_matl_ingt_suy_no varchar(20) NULL,
+	prt_matl_ingt_suy_no varchar(20) NULL,
+	mat_sell_excp_ctry_cd varchar(10) NULL,
+	mat_sell_excp_cd varchar(30) NULL,
+	mat_sell_excp_nm varchar(100) NULL,
+	tox_imp_rept_apr_no varchar(100) NULL,
+	rem_imp_purpose varchar(500) NULL,
+	imp_no_chk varchar(1) DEFAULT 'N'::character varying NULL,
+	imp_tox_chk varchar(1) DEFAULT 'N'::character varying NULL,
+	imp_rem_chk varchar(1) DEFAULT 'N'::character varying NULL,
+	imp_prm_chk varchar(1) DEFAULT 'N'::character varying NULL,
+	pmss_sbsc_impn_dclr_tgt_yn varchar(1) NULL,
+	pmss_sbsc_impn_dclr_no varchar(20) NULL,
+	pmss_sbsc_impn_dclr_qty numeric NULL,
+	pmss_sbsc_exc_cho_yn varchar(1) NULL,
+	pms_imp_rept_qty_ut varchar(3) NULL,
+	quch_self_reg_yn varchar(1) DEFAULT 'N'::character varying NULL,
+	quch_smit_dtm timestamp NULL,
+	CONSTRAINT tb_mi_matl_ingt_inv_m_pkey PRIMARY KEY (matl_ingt_suy_no)
+);
+CREATE INDEX tb_mi_matl_ingt_inv_m_idx01 ON public.tb_mi_matl_ingt_inv_m USING btree (matl_cd, vend_cd, proc_stat_cd, ord_type_cd);
+
+
+-- public.tb_mi_matl_ingt_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_mi_matl_ingt_m;
+
+CREATE TABLE tb_mi_matl_ingt_m (
+	matl_cd varchar(30) NOT NULL,
+	vend_cd varchar(20) NOT NULL,
+	sa_comp_cd varchar(10) NULL,
+	matl_cate_cd varchar(30) NULL,
+	ord_type_cd varchar(3) NULL,
+	imp_ctry_cd varchar(30) NULL,
+	hs_cd varchar(40) NULL,
+	year_imp_quota numeric(16) NULL,
+	eu_expt_history_yn varchar(1) NULL,
+	poi_subt_cont_yn varchar(1) NULL,
+	wt_ut varchar(3) NULL,
+	matl_us_cd varchar(10) NULL,
+	matl_us_detail_cnts varchar(1000) NULL,
+	lt_matl_ingt_suy_no varchar(20) NULL,
+	cret_dte timestamp NOT NULL,
+	cret_user_id varchar(20) NOT NULL,
+	lt_upt_dte timestamp NULL,
+	lt_upt_user_id varchar(20) NULL,
+	etc_matl_nm varchar(100) NULL,
+	serveone_mro_matl_yn varchar(1) NULL,
+	res_subt_cont_yn varchar(1) NULL,
+	pro_subt_cont_yn varchar(1) NULL,
+	lgc_subt_reg_yn varchar(1) NULL,
+	vend_subt_reg_yn varchar(1) NULL,
+	wkplc_cd varchar(8) NOT NULL,
+	supply_yn varchar(1) DEFAULT 'N'::character varying NULL,
+	abt_cd varchar(30) NULL,
+	supply_reuqest_id varchar(30) NULL,
+	supply_request_user varchar(20) NULL,
+	CONSTRAINT pk_tb_mi_matl_ingt_m PRIMARY KEY (matl_cd, vend_cd, wkplc_cd)
+);
+CREATE INDEX idx_tb_mi_matl_ingt_m_01 ON public.tb_mi_matl_ingt_m USING btree (lt_matl_ingt_suy_no, matl_cd, vend_cd);
+CREATE INDEX idx_tb_mi_matl_ingt_m_02 ON public.tb_mi_matl_ingt_m USING btree (lt_upt_dte DESC);
+CREATE INDEX idx_tb_mi_matl_ingt_m_03 ON public.tb_mi_matl_ingt_m USING btree (matl_cd, vend_cd);
+CREATE INDEX tb_mi_matl_ingt_m_idx01 ON public.tb_mi_matl_ingt_m USING btree (matl_cd);
+
+
+-- public.tb_mi_matl_ingt_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_mi_matl_ingt_n;
+
+CREATE TABLE tb_mi_matl_ingt_n (
+	matl_ingt_suy_no varchar(20) NOT NULL,
+	chem_comp_seq numeric NOT NULL,
+	subt_cate_cd varchar(30) NULL,
+	cas_no varchar(200) NULL,
+	en_subt_nm varchar(2000) NULL,
+	busi_sect_cate_cd varchar(10) NULL,
+	imputs_coml_yn varchar(1) NULL,
+	min_cont_inquaty_sign_value varchar(20) NULL,
+	min_ingt_cont numeric NULL,
+	max_cont_inquaty_sign_value varchar(20) NULL,
+	max_ingt_cont numeric NULL,
+	rep_cont numeric NULL,
+	subt_cont numeric NULL,
+	cal_wt numeric NULL,
+	wt_ut varchar(3) NULL,
+	k_reach_reg_obj_yn varchar(30) NULL,
+	k_reach_reg_chk_cate_cd varchar(30) NULL,
+	k_reach_reg_no varchar(100) NULL,
+	k_reach_reg_dte timestamp NULL,
+	k_reach_req_qty_vol varchar(30) NULL,
+	eu_reg_cate_cd varchar(30) NULL,
+	eu_exm_type_cd varchar(30) NULL,
+	eu_reach_reg_no varchar(100) NULL,
+	eu_reg_qty_vol varchar(30) NULL,
+	eu_lgc_req_gurt_qty numeric NULL,
+	eu_lgc_ofr_gurt_qty numeric NULL,
+	eu_or_nm varchar(80) NULL,
+	eu_or_charge varchar(60) NULL,
+	eu_or_addr varchar(500) NULL,
+	eu_or_tel varchar(60) NULL,
+	eu_or_email varchar(100) NULL,
+	osha_cd varchar(30) NULL,
+	scdsa_cd varchar(30) NULL,
+	chem_magt_obj_cd varchar(30) NULL,
+	lv2_subt_coml_yn varchar(30) NULL,
+	lv3_subt_coml_yn varchar(30) NULL,
+	comp_no varchar(20) NULL,
+	cmrt_yn varchar(1) NULL,
+	crt_yn varchar(1) NULL,
+	cret_dte timestamp NOT NULL,
+	cret_user_id varchar(200) NOT NULL,
+	lt_upt_dte timestamp NULL,
+	lt_upt_user_id varchar(200) NULL,
+	eu_reg_type_cd varchar(30) NULL,
+	k_pre_matl_yn varchar(1) NULL,
+	k_pois_yn varchar(1) NULL,
+	k_restrict_matl_yn varchar(1) NULL,
+	k_prohibit_matl_yn varchar(1) NULL,
+	k_prepare_matl_yn varchar(1) NULL,
+	k_narcotic_matl_yn varchar(1) NULL,
+	is_check01 varchar(2) NULL,
+	is_check02 varchar(2) NULL,
+	is_check03 varchar(2) NULL,
+	is_check04 varchar(2) NULL,
+	is_check05 varchar(2) NULL,
+	is_check06 varchar(2) NULL,
+	is_check07 varchar(2) NULL,
+	is_check08 varchar(2) NULL,
+	is_check09 varchar(2) NULL,
+	is_check10 varchar(2) NULL,
+	is_check11 varchar(2) NULL,
+	is_check12 varchar(2) NULL,
+	is_check13 varchar(2) NULL,
+	is_check14 varchar(2) NULL,
+	is_check15 varchar(2) NULL,
+	eu_or_natl_cd varchar(30) NULL,
+	biocide_flag_cd varchar(30) NULL,
+	biocide_reg_cd varchar(30) NULL,
+	biocide_type_cd varchar(500) NULL,
+	biocide_usage_desc varchar(2000) NULL,
+	qsap516 varchar(30) NULL,
+	qsap640 varchar(30) NULL,
+	qsap648 varchar(30) NULL,
+	qsapc41 varchar(30) NULL,
+	qsape12 varchar(30) NULL,
+	qsapb77 varchar(30) NULL,
+	qsapa44 varchar(30) NULL,
+	qsapd63 varchar(30) NULL,
+	qsap025 varchar(30) NULL,
+	qsapa89 varchar(30) NULL,
+	qsapzzz varchar(30) NULL,
+	qsapa94 varchar(30) NULL,
+	qsap462 varchar(30) NULL,
+	qsni019 varchar(30) NULL,
+	abt_cd varchar(30) NULL,
+	msds_approval_yn varchar(10) NULL,
+	msds_grace_period timestamp NULL,
+	msds_submit_name varchar(100) NULL,
+	msds_submit_num varchar(100) NULL,
+	k_reach_or_nm varchar(80) NULL,
+	k_reach_or_charge varchar(60) NULL,
+	k_reach_or_addr varchar(500) NULL,
+	k_reach_or_tel varchar(60) NULL,
+	k_reach_or_email varchar(100) NULL,
+	k_reach_or_natl_cd varchar(30) NULL,
+	k_reach_exm_type_cd varchar(30) NULL,
+	chem_reg_rev_sta varchar(10) NULL,
+	year_pur_est numeric NULL,
+	k_reach_lges_req_qty_vol numeric DEFAULT 0 NULL,
+	inxs_sbsc_tgt_yn varchar(1) NULL,
+	inxs_sbsc_use_useg_cd varchar(20) NULL,
+	inxs_sbsc_evd_atch_file_id varchar(50) NULL,
+	subt_no varchar(20) NULL,
+	rsmt_rstc_cond_cd varchar(10) NULL,
+	rsmt_exct_clus_cd varchar(10) NULL,
+	rsmt_use_useg_cd varchar(10) NULL,
+	rsmt_atnt_expc_dt timestamp NULL,
+	rsmt_tgt_yn varchar(1) NULL,
+	hrsk_sbsc_tgt_yn varchar(1) NULL,
+	hrsk_sbsc_use_useg_cd varchar(10) NULL,
+	lice_subt_yn varchar(1) NULL,
+	cana_sbsc_ctrd_sbsc_clsf_cd varchar(10) NULL,
+	cana_sbsc_ctrd_sbsc_tp_cd varchar(10) NULL,
+	cana_sbsc_ctrd_dclr_tp_cd varchar(10) NULL,
+	cana_sbsc_ctrd_rgst_ctn varchar(50) NULL,
+	cana_sbsc_ctrd_reg_qty_tp_cd varchar(10) NULL,
+	cana_sbsc_ctrd_dclr_no varchar(50) NULL,
+	cana_sbsc_ctrd_reg_exmp_dt varchar(8) NULL,
+	cana_sbsc_ctrd_reg_yn varchar(1) NULL,
+	etc_rmk varchar(4000) NULL,
+	euc_no varchar(100) NULL,
+	sbsc_divs_cd varchar(20) NULL,
+	n2_sbsc_no varchar(20) NULL,
+	sbsc_reg_befo_ins_dtl_id varchar(30) NULL,
+	plmr_nnms_divs_cd varchar(30) NULL,
+	sbsc_reg_tp_cd varchar(50) NULL,
+	sbsc_reg_atch_file_id varchar(50) NULL,
+	reg_exmp_st_dt varchar(50) NULL,
+	reg_exmp_end_dt varchar(50) NULL,
+	sbsc_reg_tp_sa_sct_yn varchar(1) NULL,
+	exmp_rsn_sa_sct_yn varchar(1) NULL,
+	sbsc_reg_exmp_no_sa_sct_yn varchar(1) NULL,
+	reg_qty_sa_sct_yn varchar(1) NULL,
+	reg_exmp_dd_sa_sct_yn varchar(1) NULL,
+	CONSTRAINT pk_tb_mi_matl_ingt_d PRIMARY KEY (matl_ingt_suy_no, chem_comp_seq)
+);
+CREATE INDEX tb_mi_matl_ingt_n_idx2 ON public.tb_mi_matl_ingt_n USING btree (cas_no);
+
+
+-- public.tb_mi_matl_ingt_polm_mono_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_mi_matl_ingt_polm_mono_n;
+
+CREATE TABLE tb_mi_matl_ingt_polm_mono_n (
+	matl_ingt_suy_no varchar(20) NOT NULL,
+	chem_comp_seq numeric NOT NULL,
+	monomer_seq numeric NOT NULL,
+	busi_sect_cate_cd varchar(10) NULL,
+	ingt_type_cd varchar(30) NULL,
+	matl_cd varchar(30) NULL,
+	cas_no varchar(200) NULL,
+	en_subt_nm varchar(3000) NULL,
+	subt_cont numeric NULL,
+	eu_reg_cate_cd varchar(30) NULL,
+	eu_exm_type_cd varchar(30) NULL,
+	eu_reach_reg_no varchar(100) NULL,
+	eu_reg_qty_vol varchar(30) NULL,
+	eu_lgc_req_gurt_qty numeric(16, 3) NULL,
+	eu_lgc_ofr_gurt_qty numeric(16, 3) NULL,
+	eu_or_nm varchar(80) NULL,
+	eu_or_charge varchar(60) NULL,
+	eu_or_addr varchar(500) NULL,
+	eu_or_tel varchar(60) NULL,
+	eu_or_email varchar(100) NULL,
+	cret_dte date NULL,
+	cret_user_id varchar(200) NULL,
+	lt_upt_dte date NULL,
+	lt_upt_user_id varchar(200) NULL,
+	eu_reg_type_cd varchar(30) NULL,
+	eu_or_natl_cd varchar(30) NULL,
+	n2_sbsc_no varchar(20) NULL,
+	CONSTRAINT pk_tb_mi_matl_ingt_polm_mono_n PRIMARY KEY (matl_ingt_suy_no, chem_comp_seq, monomer_seq)
+);
+
+
+-- public.tb_mi_wkplc_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_mi_wkplc_n;
+
+CREATE TABLE tb_mi_wkplc_n (
+	matl_ingt_suy_no varchar(20) NOT NULL,
+	wkplc_cd varchar(8) NOT NULL,
+	appr_doc_seq varchar(40) NULL,
+	appr_dte timestamp NULL,
+	cret_dte timestamp NOT NULL,
+	cret_user_id varchar(200) NOT NULL,
+	lt_upt_dte timestamp NULL,
+	lt_upt_user_id varchar(200) NULL,
+	column9 varchar(50) NULL,
+	column10 varchar(50) NULL,
+	column11 varchar(50) NULL,
+	column12 varchar(50) NULL,
+	column13 varchar(50) NULL,
+	column14 varchar(50) NULL,
+	column15 varchar(50) NULL,
+	column16 varchar(50) NULL,
+	column17 varchar(50) NULL,
+	column18 varchar(50) NULL,
+	column19 varchar(50) NULL,
+	column20 varchar(50) NULL,
+	column21 varchar(50) NULL,
+	column22 varchar(50) NULL,
+	column23 varchar(50) NULL,
+	column24 varchar(50) NULL,
+	column25 varchar(50) NULL,
+	column26 varchar(50) NULL,
+	column27 varchar(50) NULL,
+	column28 varchar(50) NULL,
+	column29 varchar(50) NULL,
+	column30 varchar(50) NULL,
+	CONSTRAINT tb_mi_wkplc_n_pkey PRIMARY KEY (matl_ingt_suy_no, wkplc_cd)
+);
+CREATE INDEX tb_mi_wkplc_n_idx01 ON public.tb_mi_wkplc_n USING btree (matl_ingt_suy_no);
+
+
+-- public.tb_mm_complete_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_mm_complete_n;
+
+CREATE TABLE tb_mm_complete_n (
+	subt_reg_notice_doct_no varchar(30) NOT NULL,
+	request_title_nm varchar(300) NULL,
+	reg_complete_detail_cnts text NULL,
+	appr_req_form_id varchar(20) NULL,
+	attach_file_grp_id numeric NULL,
+	cret_user_id varchar(20) NOT NULL,
+	cret_dte timestamp NOT NULL,
+	lt_upt_user_id varchar(20) NULL,
+	lt_upt_dte timestamp NULL,
+	CONSTRAINT gcms_mgr_con694700949 PRIMARY KEY (subt_reg_notice_doct_no)
+);
+
+
+-- public.tb_mm_eu_reg_count_exemp_yn definition
+
+-- Drop table
+
+-- DROP TABLE tb_mm_eu_reg_count_exemp_yn;
+
+CREATE TABLE tb_mm_eu_reg_count_exemp_yn (
+	sell_yyyymm varchar(6) NOT NULL,
+	customer_cd varchar(30) NOT NULL,
+	matl_cd varchar(100) NOT NULL,
+	business_org_cd varchar(30) NOT NULL,
+	dist_channel_cd varchar(30) NOT NULL,
+	prod_grp_cd varchar(30) NOT NULL,
+	nation_cd varchar(30) NOT NULL,
+	cas_no varchar(200) NOT NULL,
+	exemp_yn varchar(1) NOT NULL,
+	cret_dte date NOT NULL,
+	cret_user_id varchar(20) NOT NULL,
+	lt_upt_dte date NULL,
+	lt_upt_user_id varchar(20) NULL,
+	n2_sbsc_no varchar(20) NULL,
+	CONSTRAINT pk_tb_mm_eu_reg_count_exemp_yn PRIMARY KEY (sell_yyyymm, customer_cd, matl_cd, business_org_cd, dist_channel_cd, prod_grp_cd, nation_cd, cas_no)
+);
+
+
+-- public.tb_mm_req_type_test_item_map_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_mm_req_type_test_item_map_n;
+
+CREATE TABLE tb_mm_req_type_test_item_map_n (
+	detail_reg_request_type_cd varchar(30) NOT NULL,
+	test_head_cd varchar(30) NOT NULL,
+	cret_user_id varchar(20) NOT NULL,
+	cret_dte timestamp NOT NULL,
+	lt_upt_user_id varchar(20) NULL,
+	lt_upt_dte timestamp NULL,
+	CONSTRAINT tb_mm_req_type_test_item_map_n_pkey PRIMARY KEY (detail_reg_request_type_cd, test_head_cd)
+);
+
+
+-- public.tb_mm_review_req_polm_dtl_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_mm_review_req_polm_dtl_n;
+
+CREATE TABLE tb_mm_review_req_polm_dtl_n (
+	subt_reg_review_req_doct_no varchar(30) NOT NULL,
+	polymor_seq numeric NOT NULL,
+	monomer_cas_no varchar(20) NULL,
+	polymor_subt_nm varchar(200) NULL,
+	polymor_cont numeric NULL,
+	cret_user_id varchar(20) NOT NULL,
+	cret_dte timestamp NOT NULL,
+	lt_upt_user_id varchar(20) NULL,
+	lt_upt_dte timestamp NULL,
+	subt_no varchar(50) NULL,
+	n2_sbsc_no varchar(50) NULL,
+	CONSTRAINT gcms_mgr_con507500281 PRIMARY KEY (subt_reg_review_req_doct_no, polymor_seq)
+);
+
+
+-- public.tb_mm_subt_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_mm_subt_m;
+
+CREATE TABLE tb_mm_subt_m (
+	subt_no varchar(20) NOT NULL,
+	lang_cd varchar(3) NOT NULL,
+	cas_no varchar(200) NULL,
+	subt_nm text NULL,
+	chem_calcu_value text NULL,
+	einecs_no varchar(10) NULL,
+	reach_reg_no varchar(30) NULL,
+	cret_dte timestamp NULL,
+	cret_user_id varchar(20) NULL,
+	lt_upt_dte timestamp NULL,
+	lt_upt_user_id varchar(20) NULL,
+	subt_al_nm text NULL,
+	hrsk_sbsc_yn varchar(1) NULL,
+	rstc_sbsc_yn varchar(1) NULL,
+	pmss_sbsc_yn varchar(1) NULL,
+	rsmt_useg_matr_ctn varchar(500) NULL,
+	CONSTRAINT tb_mm_subt_m_pkey PRIMARY KEY (subt_no, lang_cd)
+);
+CREATE INDEX tb_mm_subt_m_idx01 ON public.tb_mm_subt_m USING btree (cas_no);
+
+
+-- public.tb_mm_subt_reg_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_mm_subt_reg_m;
+
+CREATE TABLE tb_mm_subt_reg_m (
+	subt_reg_notice_doct_no varchar(30) NOT NULL,
+	reg_natn_cd varchar(30) NULL,
+	req_op_heat_cd varchar(30) NULL,
+	req_division_cd varchar(30) NULL,
+	req_dept_cd varchar(100) NULL,
+	req_dept_nm varchar(200) NULL,
+	charge_id varchar(30) NULL,
+	import_making_cate_cd varchar(30) NULL,
+	reg_subt_cate_cd varchar(30) NULL,
+	cas_no varchar(30) NULL,
+	gen_term_name varchar(3000) NULL,
+	represent_nm varchar(300) NULL,
+	chem_subt_no varchar(30) NULL,
+	chem_subt_nm varchar(3000) NULL,
+	molcl_fomul_cnts varchar(3000) NULL,
+	pste_cate_cd varchar(30) NULL,
+	pste_detail_info_nm varchar(100) NULL,
+	us_cd varchar(4000) NULL,
+	us_nm varchar(1000) NULL,
+	reg_expt_qty numeric NULL,
+	ton_reg_qty numeric NULL,
+	domestic_overseas_cate_cd varchar(30) NULL,
+	reg_type_cd varchar(30) NULL,
+	previous_rept_no varchar(30) NULL,
+	or_vend_nm varchar(100) NULL,
+	reg_year varchar(4) NULL,
+	matl_list varchar(3000) NULL,
+	cret_dte date NOT NULL,
+	cret_user_id varchar(20) NOT NULL,
+	lt_upt_dte date NULL,
+	lt_upt_user_id varchar(20) NULL,
+	import_vend_list varchar(4000) NULL,
+	subt_reg_charge_id varchar(30) NULL,
+	last_comp_flag varchar(1) NULL,
+	attach_file_grp_id numeric NULL,
+	biocide_type_cd varchar(4000) NULL,
+	biocide_yn varchar(1) NULL,
+	CONSTRAINT pk_tb_mm_subt_reg_m PRIMARY KEY (subt_reg_notice_doct_no)
+);
+
+
+-- public.tb_mm_subt_regist_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_mm_subt_regist_n;
+
+CREATE TABLE tb_mm_subt_regist_n (
+	subt_reg_notice_doct_no varchar(30) NOT NULL,
+	regist_seq varchar(30) NOT NULL,
+	reg_cate_cd varchar(30) NOT NULL,
+	reg_cate_nm varchar(100) NULL,
+	reg_vend_nm varchar(1000) NULL,
+	reg_no varchar(30) NULL,
+	reg_day varchar(10) NULL,
+	reg_end_day varchar(10) NULL,
+	reg_qty numeric NULL,
+	protect_yn varchar(1) NULL,
+	cret_dte date NULL,
+	cret_user_id varchar(20) NULL,
+	lt_upt_dte date NULL,
+	lt_upt_user_id varchar(20) NULL,
+	attach_file_grp_id numeric NULL,
+	attach_file_class_cd varchar(30) NULL,
+	protect_last_yn varchar(1) NULL,
+	reg_vend_comp_cd varchar(10) NULL,
+	CONSTRAINT pk_tb_mm_subt_regist_n PRIMARY KEY (subt_reg_notice_doct_no, regist_seq)
+);
+
+
+-- public.tb_mm_subt_sum_matl_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_mm_subt_sum_matl_m;
+
+CREATE TABLE tb_mm_subt_sum_matl_m (
+	chk_year varchar(4) NOT NULL,
+	sa_comp_cd varchar(10) NOT NULL,
+	matl_cd varchar(100) NOT NULL,
+	vend_cd varchar(20) NOT NULL,
+	plant_cd varchar(4) NOT NULL,
+	chk_cate_cd varchar(2) NOT NULL,
+	cas_no varchar(30) NOT NULL,
+	subt_cont numeric NOT NULL,
+	wkplc_cd varchar(7) NULL,
+	op_heat_cd varchar(30) NULL,
+	dvs_cd varchar(30) NULL,
+	mon_01 numeric DEFAULT 0 NULL,
+	mon_02 numeric DEFAULT 0 NULL,
+	mon_03 numeric DEFAULT 0 NULL,
+	mon_04 numeric DEFAULT 0 NULL,
+	mon_05 numeric DEFAULT 0 NULL,
+	mon_06 numeric DEFAULT 0 NULL,
+	mon_07 numeric DEFAULT 0 NULL,
+	mon_08 numeric DEFAULT 0 NULL,
+	mon_09 numeric DEFAULT 0 NULL,
+	mon_10 numeric DEFAULT 0 NULL,
+	mon_11 numeric DEFAULT 0 NULL,
+	mon_12 numeric DEFAULT 0 NULL,
+	cret_user_id varchar(20) NOT NULL,
+	cret_dte timestamp NOT NULL,
+	lt_upt_user_id varchar(20) NULL,
+	lt_upt_dte timestamp NULL,
+	lges_type_cd varchar(30) NULL,
+	reg_max_yn varchar(1) DEFAULT 'N'::character varying NULL,
+	lges_max_yn varchar(1) DEFAULT 'N'::character varying NULL,
+	natn_cd varchar(10) NULL,
+	k_reach_reg_obj_cd varchar(30) NULL,
+	k_reg_cate_cd varchar(30) NULL,
+	eu_reg_cate_cd varchar(30) NULL,
+	k_reg_qty_vol varchar(30) NULL,
+	eu_reg_qty_vol varchar(30) NULL,
+	matl_ingt_suy_no varchar(20) NULL,
+	lges_reg_qty numeric NULL,
+	n2_sbsc_no varchar(20) NULL,
+	CONSTRAINT pk_tb_mm_subt_sum_matl_m PRIMARY KEY (chk_year, sa_comp_cd, matl_cd, vend_cd, plant_cd, chk_cate_cd, cas_no)
+);
+
+
+-- public.tb_pi_part_cate_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_pi_part_cate_n;
+
+CREATE TABLE tb_pi_part_cate_n (
+	prod_ingt_suy_no varchar(20) NOT NULL,
+	comp_no varchar(20) NOT NULL,
+	comp_nm varchar(2000) NULL,
+	comp_up_no varchar(20) NULL,
+	comp_lv_cd numeric NULL,
+	comp_type_cd varchar(30) NULL,
+	comt_vend_cd varchar(20) NULL,
+	comt_vend_nm varchar(500) NULL,
+	subt_cont numeric(13, 4) NULL,
+	comt_wt numeric NULL,
+	wt_ut varchar(3) NULL,
+	matl_cd varchar(30) NULL,
+	matl_comp_no varchar(20) NULL,
+	cret_dte date NOT NULL,
+	cret_user_id varchar(20) NOT NULL,
+	lt_upt_dte date NULL,
+	lt_upt_user_id varchar(20) NULL,
+	bom_comp_qty numeric NULL,
+	bom_base_ut varchar(4) NULL,
+	complete_cd varchar(30) NULL,
+	part_matl_cd varchar(30) NULL,
+	CONSTRAINT pk_tb_pi_part_cate_n PRIMARY KEY (comp_no, prod_ingt_suy_no)
+);
+CREATE INDEX idx_tb_pi_part_cate_n_003 ON public.tb_pi_part_cate_n USING btree (comp_no, matl_cd, comt_vend_cd);
+CREATE INDEX index_eu_tb_pi_part_cate_n ON public.tb_pi_part_cate_n USING btree (prod_ingt_suy_no, comp_no, matl_cd);
+CREATE INDEX index_up_comp_tb_pi_part_cate_n ON public.tb_pi_part_cate_n USING btree (prod_ingt_suy_no, comp_no, comp_up_no);
+
+
+-- public.tb_pi_prod_ingt_inv_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_pi_prod_ingt_inv_m;
+
+CREATE TABLE tb_pi_prod_ingt_inv_m (
+	prod_ingt_suy_no varchar(20) NOT NULL,
+	sa_comp_cd varchar(10) NULL,
+	matl_cd varchar(30) NULL,
+	matl_nm varchar(300) NULL,
+	proc_stat_cd varchar(7) NULL,
+	matl_grp_cd varchar(9) NULL,
+	bom_ver varchar(20) NULL,
+	matl_us_cd varchar(10) NULL,
+	matl_us_detail_cnts varchar(1000) NULL,
+	cret_type_hand_work_yn varchar(1) NULL,
+	new_ver_forb_yn varchar(1) NULL,
+	op_heat_cd varchar(30) NULL,
+	op_heat_nm varchar(100) NULL,
+	dvs_cd varchar(30) NULL,
+	dvs_nm varchar(100) NULL,
+	k_reach_reg_dte date NULL,
+	attach_file_grp_id numeric NULL,
+	project_contents varchar(1000) NULL,
+	cret_dte date NOT NULL,
+	cret_user_id varchar(20) NOT NULL,
+	lt_upt_dte date NULL,
+	lt_upt_user_id varchar(20) NULL,
+	cmrt_yn varchar(1) NULL,
+	crt_yn varchar(1) NULL,
+	bom_std_qty numeric NULL,
+	bom_std_ut varchar(3) NULL,
+	cal_wt numeric NULL,
+	bom_cnt numeric NULL,
+	bos_complete_cd varchar(30) NULL,
+	request_id varchar(30) NULL,
+	matl_is_cd_cnts varchar(1000) NULL,
+	biocide_yn varchar(1) NULL,
+	matl_is_cd varchar(10) NULL,
+	subs_bom_ver varchar(8) NULL,
+	hs_cd varchar(40) NULL,
+	scip_no varchar(40) NULL,
+	CONSTRAINT pk_tb_pi_prod_ingt_inv_m PRIMARY KEY (prod_ingt_suy_no)
+);
+CREATE INDEX n1_tb_pi_prod_ingt_inv_m ON public.tb_pi_prod_ingt_inv_m USING btree (matl_cd, bom_ver);
+CREATE INDEX n2_tb_pi_prod_ingt_inv_m ON public.tb_pi_prod_ingt_inv_m USING btree (proc_stat_cd);
+CREATE INDEX n3_tb_pi_prod_ingt_inv_m ON public.tb_pi_prod_ingt_inv_m USING btree (matl_cd, proc_stat_cd, prod_ingt_suy_no);
+
+
+-- public.tb_pi_prod_ingt_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_pi_prod_ingt_m;
+
+CREATE TABLE tb_pi_prod_ingt_m (
+	matl_cd varchar(30) NOT NULL,
+	sa_comp_cd varchar(10) NULL,
+	matl_cate_cd varchar(30) NULL,
+	lt_prod_ingt_suy_no varchar(20) NULL,
+	eu_exp_yn varchar(1) NULL,
+	cret_dte date NOT NULL,
+	cret_user_id varchar(20) NOT NULL,
+	lt_upt_dte date NULL,
+	lt_upt_user_id varchar(20) NULL,
+	CONSTRAINT pk_tb_pi_prod_ingt_m PRIMARY KEY (matl_cd)
+);
+
+
+-- public.tb_pi_prod_ingt_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_pi_prod_ingt_n;
+
+CREATE TABLE tb_pi_prod_ingt_n (
+	prod_ingt_suy_no varchar(20) NOT NULL,
+	chem_comp_seq numeric NOT NULL,
+	ingt_type_cd varchar(30) NULL,
+	cas_no varchar(200) NULL,
+	en_subt_nm varchar(3000) NULL,
+	busi_sect_cate_yn varchar(10) NULL,
+	ingt_propet_cd varchar(30) NULL,
+	matl_us_cd varchar(10) NULL,
+	matl_us_detail_cnts varchar(1000) NULL,
+	subt_cont numeric(13, 4) NULL,
+	cal_wt numeric NULL,
+	wt_ut varchar(3) NULL,
+	min_msds_mark_cont numeric(13, 4) NULL,
+	max_msds_mark_cont numeric(13, 4) NULL,
+	reach_reg_no varchar(20) NULL,
+	non_inclus_subt_yn varchar(1) NULL,
+	subt_conv_yn varchar(1) NULL,
+	lgc_mak_yn varchar(1) NULL,
+	atv_dte date NULL,
+	non_atv_dte date NULL,
+	comp_no varchar(20) NULL,
+	cret_dte date NOT NULL,
+	cret_user_id varchar(20) NOT NULL,
+	lt_upt_dte date NULL,
+	lt_upt_user_id varchar(12) NULL,
+	matl_cd varchar(30) NULL,
+	rep_cont numeric NULL,
+	min_cont_inquaty_sign_value varchar(10) NULL,
+	max_cont_inquaty_sign_value varchar(10) NULL,
+	cmrt_yn varchar(1) NULL,
+	crt_yn varchar(1) NULL,
+	matl_subt_cont numeric(13, 4) NULL,
+	biocide_yn varchar(1) NULL,
+	subt_al_nm varchar(1000) NULL,
+	to21_sbsc_no varchar(50) NULL,
+	n2_sbsc_no varchar(50) NULL,
+	CONSTRAINT pk_tb_pi_prod_ingt_n PRIMARY KEY (prod_ingt_suy_no, chem_comp_seq)
+);
+
+
+-- public.tb_pi_prod_ingt_polm_mono_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_pi_prod_ingt_polm_mono_n;
+
+CREATE TABLE tb_pi_prod_ingt_polm_mono_n (
+	prod_ingt_suy_no varchar(20) NOT NULL,
+	chem_comp_seq numeric NOT NULL,
+	monomer_seq numeric NOT NULL,
+	busi_sect_cate_cd varchar(10) NULL,
+	ingt_type_cd varchar(30) NULL,
+	matl_cd varchar(30) NULL,
+	cas_no varchar(200) NULL,
+	en_subt_nm varchar(3000) NULL,
+	subt_cont numeric NULL,
+	cret_dte date NULL,
+	cret_user_id varchar(20) NULL,
+	lt_upt_dte date NULL,
+	lt_upt_user_id varchar(20) NULL,
+	to21_sbsc_no varchar(50) NULL,
+	n2_sbsc_no varchar(50) NULL,
+	CONSTRAINT pk_tb_pi_prod_ingt_monomer_n PRIMARY KEY (prod_ingt_suy_no, chem_comp_seq, monomer_seq)
+);
+
+
+-- public.tb_psm_report_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_report_n;
+
+CREATE TABLE tb_psm_report_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	report_title varchar(256) NULL,
+	progress_status_code varchar(5) NULL,
+	last_report_flag varchar(1) NULL,
+	delete_flag varchar(1) NULL,
+	applicant_employee_no varchar(30) NULL,
+	applicant_department_code varchar(10) NULL,
+	write_start_date timestamp NULL,
+	last_submit_date timestamp NULL,
+	substance_quantity_range_code varchar(50) NULL,
+	substance_capacity_range_code varchar(50) NULL,
+	notes varchar(2000) NULL,
+	business_place_name varchar(30) NULL,
+	biz_register_no varchar(20) NULL,
+	work_type_code varchar(20) NULL,
+	representative_first_name varchar(300) NULL,
+	region_code varchar(30) NULL,
+	complex_code varchar(50) NULL,
+	business_type_desc varchar(4000) NULL,
+	worker_number numeric NULL,
+	equipment_electric_power_value numeric NULL,
+	applicant_desc varchar(4000) NULL,
+	applicant_qualification_detail varchar(2000) NULL,
+	attach_file_id varchar(50) NULL,
+	consulting_supplier_code varchar(40) NULL,
+	consulting_supplier_name varchar(500) NULL,
+	consulting_supplier_brn varchar(20) NULL,
+	consulting_supplier_addr varchar(2000) NULL,
+	consulting_supr_rep_phone_no varchar(30) NULL,
+	production_object_desc varchar(2000) NULL,
+	business_place_addr varchar(1000) NULL,
+	business_place_square_value varchar(500) NULL,
+	business_start_date timestamp NULL,
+	business_closing_date timestamp NULL,
+	move_in_date timestamp NULL,
+	test_run_start_date timestamp NULL,
+	test_run_end_date timestamp NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_report_n_pk PRIMARY KEY (document_management_no, version_seqs)
+);
+CREATE INDEX ix_psm_report_n_01 ON public.tb_psm_report_n USING btree (report_title);
+CREATE INDEX ix_psm_report_n_02 ON public.tb_psm_report_n USING btree (progress_status_code);
+CREATE INDEX ix_psm_report_n_03 ON public.tb_psm_report_n USING btree (delete_flag);
+CREATE INDEX ix_psm_report_n_05 ON public.tb_psm_report_n USING btree (last_report_flag);
+
+
+-- public.tb_psm_report_rev_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_report_rev_n;
+
+CREATE TABLE tb_psm_report_rev_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	menu_code varchar(10) NOT NULL,
+	update_employee_no varchar(30) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_report_rev_n_pk PRIMARY KEY (document_management_no, version_seqs, menu_code)
+);
+
+
+-- public.tb_psm_rpt_abnor_occr_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_abnor_occr_n;
+
+CREATE TABLE tb_psm_rpt_abnor_occr_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	equipment_serial_no varchar(40) NOT NULL,
+	equipment_description varchar(200) NULL,
+	setup_temperature_value varchar(2000) NULL,
+	setup_pressure_value varchar(2000) NULL,
+	setup_height_value varchar(2000) NULL,
+	setup_value_desc varchar(4000) NULL,
+	sensor_desc varchar(4000) NULL,
+	last_operating_equipment_desc varchar(4000) NULL,
+	operating_stop_range_desc varchar(4000) NULL,
+	check_cycle_desc varchar(4000) NULL,
+	notes varchar(2000) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_abnor_occr_n_pk PRIMARY KEY (document_management_no, version_seqs, equipment_serial_no)
+);
+
+
+-- public.tb_psm_rpt_area_inst_mach_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_area_inst_mach_n;
+
+CREATE TABLE tb_psm_rpt_area_inst_mach_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	detail_serial_no numeric NOT NULL,
+	item_serial_no numeric NOT NULL,
+	machine_desc varchar(400) NULL,
+	level1_content varchar(250) NULL,
+	level2_content varchar(250) NULL,
+	level3_content varchar(250) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_area_inst_mach_n_pk PRIMARY KEY (document_management_no, version_seqs, detail_serial_no, item_serial_no)
+);
+
+
+-- public.tb_psm_rpt_biz_plc_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_biz_plc_n;
+
+CREATE TABLE tb_psm_rpt_biz_plc_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	building_code varchar(30) NOT NULL,
+	region_code varchar(30) NULL,
+	zone_code varchar(40) NULL,
+	location_detail_desc varchar(4000) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_biz_plc_n_pk PRIMARY KEY (document_management_no, version_seqs, building_code)
+);
+
+
+-- public.tb_psm_rpt_cln_eqp_inst_pln_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_cln_eqp_inst_pln_n;
+
+CREATE TABLE tb_psm_rpt_cln_eqp_inst_pln_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	equipment_serial_no varchar(40) NOT NULL,
+	region_code varchar(30) NULL,
+	zone_code varchar(40) NULL,
+	building_code varchar(30) NULL,
+	floor_code varchar(40) NULL,
+	location_detail_desc varchar(4000) NULL,
+	tempr_maint_method_content varchar(4000) NULL,
+	check_cycle_desc varchar(4000) NULL,
+	notes varchar(2000) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_cln_eqp_inst_pln_n_pk PRIMARY KEY (document_management_no, version_seqs, equipment_serial_no)
+);
+
+
+-- public.tb_psm_rpt_dngr_area_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_dngr_area_n;
+
+CREATE TABLE tb_psm_rpt_dngr_area_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	detail_serial_no numeric NOT NULL,
+	location_detail_desc varchar(4000) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_dngr_area_n_pk PRIMARY KEY (document_management_no, version_seqs, detail_serial_no)
+);
+
+
+-- public.tb_psm_rpt_eqp_inst_pln_dtl_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_eqp_inst_pln_dtl_n;
+
+CREATE TABLE tb_psm_rpt_eqp_inst_pln_dtl_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	equipment_type_code varchar(40) NOT NULL,
+	detail_serial_no numeric NOT NULL,
+	equipment_detail_type_code varchar(40) NOT NULL,
+	plan_detail varchar(4000) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_eqp_inst_pln_dtl_n_pk PRIMARY KEY (document_management_no, version_seqs, equipment_type_code, detail_serial_no, equipment_detail_type_code)
+);
+
+
+-- public.tb_psm_rpt_eqp_inst_pln_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_eqp_inst_pln_n;
+
+CREATE TABLE tb_psm_rpt_eqp_inst_pln_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	equipment_type_code varchar(40) NOT NULL,
+	detail_serial_no numeric NOT NULL,
+	region_code varchar(30) NULL,
+	zone_code varchar(40) NULL,
+	building_code varchar(30) NULL,
+	floor_code varchar(40) NULL,
+	location_detail_desc varchar(4000) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_eqp_inst_pln_n_pk PRIMARY KEY (document_management_no, version_seqs, equipment_type_code, detail_serial_no)
+);
+
+
+-- public.tb_psm_rpt_equip_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_equip_n;
+
+CREATE TABLE tb_psm_rpt_equip_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	equipment_serial_no varchar(40) NOT NULL,
+	equipment_name varchar(100) NULL,
+	embeded_item_content varchar(2000) NULL,
+	rated_capacity_value varchar(2000) NULL,
+	design_pressure_value varchar(2000) NULL,
+	operation_pressure_value varchar(2000) NULL,
+	design_temperature_value varchar(2000) NULL,
+	operation_temperature_value varchar(2000) NULL,
+	prmr_material_content varchar(2000) NULL,
+	parts_material_content varchar(2000) NULL,
+	gas_leak_debarment_mtl_content varchar(2000) NULL,
+	welding_efficiency_value varchar(2000) NULL,
+	design_thickness_value varchar(2000) NULL,
+	corrosion_marginal_value varchar(2000) NULL,
+	use_thickness_value varchar(2000) NULL,
+	after_heat_treatment_flag varchar(1) NULL,
+	non_break_inspection_rate_code varchar(50) NULL,
+	notes varchar(2000) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_equip_n_pk PRIMARY KEY (document_management_no, version_seqs, equipment_serial_no)
+);
+
+
+-- public.tb_psm_rpt_equip_plc_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_equip_plc_n;
+
+CREATE TABLE tb_psm_rpt_equip_plc_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	equipment_serial_no varchar(40) NOT NULL,
+	building_code varchar(30) NOT NULL,
+	region_code varchar(30) NULL,
+	zone_code varchar(40) NULL,
+	location_detail_desc varchar(4000) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_equip_plc_n_pk PRIMARY KEY (document_management_no, version_seqs, equipment_serial_no, building_code)
+);
+
+
+-- public.tb_psm_rpt_facil_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_facil_n;
+
+CREATE TABLE tb_psm_rpt_facil_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	equipment_type_code varchar(40) NOT NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_facil_n_pk PRIMARY KEY (document_management_no, version_seqs, equipment_type_code)
+);
+
+
+-- public.tb_psm_rpt_fire_rsst_eqp_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_fire_rsst_eqp_n;
+
+CREATE TABLE tb_psm_rpt_fire_rsst_eqp_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	detail_serial_no numeric NOT NULL,
+	equipment_description varchar(200) NULL,
+	parts_desc varchar(2000) NULL,
+	equipment_test_basis_desc varchar(4000) NULL,
+	notes varchar(2000) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_fire_rsst_eqp_n_pk PRIMARY KEY (document_management_no, version_seqs, detail_serial_no)
+);
+
+
+-- public.tb_psm_rpt_gas_alt_inst_pln_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_gas_alt_inst_pln_n;
+
+CREATE TABLE tb_psm_rpt_gas_alt_inst_pln_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	equipment_serial_no varchar(40) NOT NULL,
+	sensing_target_content varchar(4000) NULL,
+	install_place_desc varchar(4000) NULL,
+	alert_motion_time_value varchar(600) NULL,
+	abnorm_sensing_method_content varchar(4000) NULL,
+	setup_value_desc varchar(4000) NULL,
+	location_detail_desc varchar(4000) NULL,
+	strictness_degree_content varchar(1000) NULL,
+	action_plan_detail_desc varchar(4000) NULL,
+	maintenance_content varchar(4000) NULL,
+	notes varchar(2000) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_gas_alt_inst_pln_n_pk PRIMARY KEY (document_management_no, version_seqs, equipment_serial_no)
+);
+
+
+-- public.tb_psm_rpt_hazop_anal_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_hazop_anal_n;
+
+CREATE TABLE tb_psm_rpt_hazop_anal_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	node_id varchar(40) NOT NULL,
+	detail_serial_no numeric NOT NULL,
+	hazard_exposure_content varchar(2000) NULL,
+	hazard_cause_content varchar(4000) NULL,
+	result_content varchar(4000) NULL,
+	action_result_content varchar(4000) NULL,
+	hazard_frequency_code varchar(50) NULL,
+	hazard_intensity_code varchar(50) NULL,
+	hazard_exposure_grade_value varchar(100) NULL,
+	improvement_solution_content varchar(3000) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_hazop_anal_n_pk PRIMARY KEY (document_management_no, version_seqs, node_id, detail_serial_no)
+);
+
+
+-- public.tb_psm_rpt_hazop_attend_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_hazop_attend_n;
+
+CREATE TABLE tb_psm_rpt_hazop_attend_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	detail_serial_no numeric NOT NULL,
+	tech_expert_pro_field_name varchar(150) NULL,
+	full_name varchar(240) NULL,
+	company_name varchar(300) NULL,
+	position_name varchar(100) NULL,
+	department_name varchar(240) NULL,
+	career_desc varchar(4000) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_hazop_attend_n_pk PRIMARY KEY (document_management_no, version_seqs, detail_serial_no)
+);
+
+
+-- public.tb_psm_rpt_hazop_grade_bas_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_hazop_grade_bas_n;
+
+CREATE TABLE tb_psm_rpt_hazop_grade_bas_n (
+	hazard_frequency_code varchar(50) NOT NULL,
+	hazard_intensity_code varchar(50) NOT NULL,
+	hazard_exposure_grade_value varchar(100) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_hazop_grade_bas_n_pk PRIMARY KEY (hazard_frequency_code, hazard_intensity_code)
+);
+
+
+-- public.tb_psm_rpt_hazop_guide_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_hazop_guide_n;
+
+CREATE TABLE tb_psm_rpt_hazop_guide_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	node_id varchar(40) NOT NULL,
+	hazop_item_code varchar(50) NOT NULL,
+	parameter_value varchar(4000) NULL,
+	unit_desc varchar(240) NULL,
+	non_exist_flag varchar(1) NULL,
+	decreased_flag varchar(1) NULL,
+	increased_flag varchar(1) NULL,
+	addition_flag varchar(1) NULL,
+	partial_flag varchar(1) NULL,
+	reversal_flag varchar(1) NULL,
+	etc_flag varchar(1) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_hazop_guide_n_pk PRIMARY KEY (document_management_no, version_seqs, node_id, hazop_item_code)
+);
+
+
+-- public.tb_psm_rpt_hazop_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_hazop_n;
+
+CREATE TABLE tb_psm_rpt_hazop_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	node_id varchar(40) NOT NULL,
+	process_name varchar(100) NULL,
+	review_content varchar(4000) NULL,
+	notes varchar(2000) NULL,
+	pc_process_name varchar(200) NULL,
+	design_review_opinion_content varchar(4000) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_hazop_n_pk PRIMARY KEY (document_management_no, version_seqs, node_id)
+);
+
+
+-- public.tb_psm_rpt_hzrd_sbst_conf_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_hzrd_sbst_conf_n;
+
+CREATE TABLE tb_psm_rpt_hzrd_sbst_conf_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	chemical_substance_no varchar(50) NOT NULL,
+	configuration_ingrd_serial_no numeric NOT NULL,
+	cas_no varchar(50) NULL,
+	cas_no_desc varchar(4000) NULL,
+	configuration_ingredient_name varchar(1000) NULL,
+	configuration_ingredient_desc varchar(4000) NULL,
+	chemical_formula_value varchar(100) NULL,
+	chemical_formula_desc varchar(200) NULL,
+	hazard_exposure_content varchar(2000) NULL,
+	hazard_exposure_unit_code varchar(50) NULL,
+	explim_upper_limit_content varchar(2000) NULL,
+	explim_lower_limit_content varchar(2000) NULL,
+	oral_toxicity_content varchar(2000) NULL,
+	percutaneous_toxicity_content varchar(2000) NULL,
+	suction_toxicity_content varchar(2000) NULL,
+	flash_point_content varchar(2000) NULL,
+	ignition_point_content varchar(2000) NULL,
+	steam_pressure_content varchar(2000) NULL,
+	corrosivity_flag varchar(1) NULL,
+	corrosivity_content varchar(2000) NULL,
+	abnormal_reactivity_flag varchar(1) NULL,
+	abnormal_reactivity_content varchar(2000) NULL,
+	day_usage_value varchar(2000) NULL,
+	storage_quantity_value varchar(2000) NULL,
+	notes varchar(2000) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_hzrd_sbst_conf_n_pk PRIMARY KEY (document_management_no, version_seqs, chemical_substance_no, configuration_ingrd_serial_no)
+);
+
+
+-- public.tb_psm_rpt_hzrd_sbst_conf_pl_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_hzrd_sbst_conf_pl_n;
+
+CREATE TABLE tb_psm_rpt_hzrd_sbst_conf_pl_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	chemical_substance_no varchar(50) NOT NULL,
+	configuration_ingrd_serial_no numeric NOT NULL,
+	building_code varchar(30) NOT NULL,
+	region_code varchar(30) NULL,
+	zone_code varchar(40) NULL,
+	location_detail_desc varchar(4000) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_hzrd_sbst_conf_pl_n_pk PRIMARY KEY (document_management_no, version_seqs, chemical_substance_no, configuration_ingrd_serial_no, building_code)
+);
+
+
+-- public.tb_psm_rpt_hzrd_sbst_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_hzrd_sbst_n;
+
+CREATE TABLE tb_psm_rpt_hzrd_sbst_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	chemical_substance_no varchar(50) NOT NULL,
+	detail_desc varchar(4000) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_hzrd_sbst_n_pk PRIMARY KEY (document_management_no, version_seqs, chemical_substance_no)
+);
+
+
+-- public.tb_psm_rpt_inst_prt_eqp_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_inst_prt_eqp_n;
+
+CREATE TABLE tb_psm_rpt_inst_prt_eqp_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	equipment_serial_no varchar(40) NOT NULL,
+	detail_serial_no numeric NOT NULL,
+	primary_item_name varchar(2000) NULL,
+	specification_content varchar(300) NULL,
+	install_quantity_value varchar(600) NULL,
+	check_cycle_desc varchar(4000) NULL,
+	notes varchar(2000) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_inst_prt_eqp_n_pk PRIMARY KEY (document_management_no, version_seqs, equipment_serial_no, detail_serial_no)
+);
+
+
+-- public.tb_psm_rpt_jsa_job_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_jsa_job_n;
+
+CREATE TABLE tb_psm_rpt_jsa_job_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	process_seq_no numeric NOT NULL,
+	work_no numeric NOT NULL,
+	work_procedure_rsk_assess_name varchar(500) NULL,
+	work_procedure_rsk_assess_desc varchar(4000) NULL,
+	ppe_desc varchar(4000) NULL,
+	protection_equipment_desc varchar(4000) NULL,
+	approver1_text varchar(4000) NULL,
+	approver2_text varchar(4000) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_jsa_job_n_pk PRIMARY KEY (document_management_no, version_seqs, process_seq_no, work_no)
+);
+
+
+-- public.tb_psm_rpt_jsa_job_step_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_jsa_job_step_n;
+
+CREATE TABLE tb_psm_rpt_jsa_job_step_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	process_seq_no numeric NOT NULL,
+	work_no numeric NOT NULL,
+	step_no numeric NOT NULL,
+	step_name varchar(300) NULL,
+	hazard_factor_content varchar(4000) NULL,
+	safety_mgt_solution_desc varchar(2000) NULL,
+	evaluation_basis_desc varchar(2000) NULL,
+	hazard_frequency_code varchar(50) NULL,
+	hazard_intensity_code varchar(50) NULL,
+	hazard_exposure_grade_value varchar(100) NULL,
+	improvement_solution_content varchar(3000) NULL,
+	notes varchar(2000) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_jsa_job_step_n_pk PRIMARY KEY (document_management_no, version_seqs, process_seq_no, work_no, step_no)
+);
+
+
+-- public.tb_psm_rpt_jsa_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_jsa_n;
+
+CREATE TABLE tb_psm_rpt_jsa_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	process_seq_no numeric NOT NULL,
+	process_description varchar(150) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_jsa_n_pk PRIMARY KEY (document_management_no, version_seqs, process_seq_no)
+);
+
+
+-- public.tb_psm_rpt_lcee_inst_pln_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_lcee_inst_pln_n;
+
+CREATE TABLE tb_psm_rpt_lcee_inst_pln_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	detail_serial_no numeric NOT NULL,
+	process_description varchar(150) NULL,
+	location_detail_desc varchar(4000) NULL,
+	hzrd_substn_occur_equip_desc varchar(4000) NULL,
+	hazardous_substance_content varchar(4000) NULL,
+	lcee_hood_desc varchar(4000) NULL,
+	hood_suction_air_speed_value varchar(600) NULL,
+	transport_air_speed_value varchar(600) NULL,
+	emission_air_quantity_value varchar(600) NULL,
+	electric_power_capacity_value varchar(2000) NULL,
+	break_debarment_mtl_content varchar(4000) NULL,
+	action_plan_detail_desc varchar(4000) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_lcee_inst_pln_n_pk PRIMARY KEY (document_management_no, version_seqs, detail_serial_no)
+);
+
+
+-- public.tb_psm_rpt_mach_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_mach_n;
+
+CREATE TABLE tb_psm_rpt_mach_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	equipment_serial_no varchar(40) NOT NULL,
+	machine_type_code varchar(40) NULL,
+	machine_desc varchar(400) NULL,
+	machine_specification_content varchar(2000) NULL,
+	machine_material_content varchar(2000) NULL,
+	electric_power_capacity_value varchar(2000) NULL,
+	protection_device_content varchar(2000) NULL,
+	notes varchar(2000) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_mach_n_pk PRIMARY KEY (document_management_no, version_seqs, equipment_serial_no)
+);
+
+
+-- public.tb_psm_rpt_pipe_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_pipe_n;
+
+CREATE TABLE tb_psm_rpt_pipe_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	detail_serial_no numeric NOT NULL,
+	class_code_name varchar(200) NULL,
+	input_material_detail_desc varchar(4000) NULL,
+	design_temperature_value varchar(2000) NULL,
+	design_pressure_value varchar(2000) NULL,
+	raw_material_name varchar(100) NULL,
+	gas_leak_debarment_mtl_content varchar(2000) NULL,
+	non_break_insp_rate_value varchar(2000) NULL,
+	after_heat_treatment_flag varchar(1) NULL,
+	notes varchar(2000) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_pipe_n_pk PRIMARY KEY (document_management_no, version_seqs, detail_serial_no)
+);
+
+
+-- public.tb_psm_rpt_raw_mtl_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_raw_mtl_n;
+
+CREATE TABLE tb_psm_rpt_raw_mtl_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	detail_serial_no numeric NOT NULL,
+	item_name varchar(200) NULL,
+	use_qty numeric NULL,
+	usage_name varchar(100) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_raw_mtl_n_pk PRIMARY KEY (document_management_no, version_seqs, detail_serial_no)
+);
+
+
+-- public.tb_psm_rpt_sbst_conf_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_sbst_conf_n;
+
+CREATE TABLE tb_psm_rpt_sbst_conf_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	cas_no varchar(50) NOT NULL,
+	detail_item_desc varchar(4000) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_sbst_conf_n_pk PRIMARY KEY (document_management_no, version_seqs, cas_no)
+);
+
+
+-- public.tb_psm_rpt_valve_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_psm_rpt_valve_n;
+
+CREATE TABLE tb_psm_rpt_valve_n (
+	document_management_no varchar(40) NOT NULL,
+	version_seqs numeric(22) NOT NULL,
+	equipment_serial_no varchar(40) NOT NULL,
+	input_material_detail_desc varchar(4000) NULL,
+	status_name varchar(300) NULL,
+	emission_capacity_value varchar(2000) NULL,
+	rated_capacity_value varchar(2000) NULL,
+	nozzle_entrance_size_value varchar(2000) NULL,
+	nozzle_exit_size_value varchar(2000) NULL,
+	protection_device_seq_no varchar(40) NULL,
+	prtc_device_op_pressure_value varchar(2000) NULL,
+	prtc_device_design_press_value varchar(2000) NULL,
+	setup_pressure_value varchar(2000) NULL,
+	prmr_material_content varchar(2000) NULL,
+	parts_material_content varchar(2000) NULL,
+	strictness_degree_content varchar(1000) NULL,
+	emission_connect_loc_content varchar(4000) NULL,
+	emission_cause_content varchar(4000) NULL,
+	valve_format_name varchar(500) NULL,
+	creation_user_id varchar(40) NOT NULL,
+	creation_date timestamp NOT NULL,
+	last_update_user_id varchar(40) NULL,
+	last_update_date timestamp NULL,
+	CONSTRAINT tb_psm_rpt_valve_n_pk PRIMARY KEY (document_management_no, version_seqs, equipment_serial_no)
+);
+
+
+-- public.tb_rapid_api_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_api_m;
+
+CREATE TABLE tb_rapid_api_m (
+	tokn_use_yn varchar(1) NULL,
+	use_yn varchar(1) NULL,
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	api_id varchar(50) NOT NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	http_mthd_cd varchar(50) NOT NULL,
+	api_nm varchar(100) NOT NULL,
+	dvlp_nm varchar(100) NULL,
+	api_url varchar(500) NOT NULL,
+	api_desc varchar(1000) NULL,
+	CONSTRAINT tb_rapid_api_m_pkey PRIMARY KEY (api_id),
+	CONSTRAINT tb_rapid_api_m_uk1 UNIQUE (api_url, http_mthd_cd)
+);
+
+
+-- public.tb_rapid_auth_ip_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_auth_ip_m;
+
+CREATE TABLE tb_rapid_auth_ip_m (
+	use_yn varchar(1) NULL,
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	tgt_ip varchar(40) NOT NULL,
+	auth_ip_id varchar(50) NOT NULL,
+	auth_ip_tp_cd varchar(50) NOT NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	user_id varchar(50) NULL,
+	auth_ip_nm varchar(300) NOT NULL,
+	opt_val_ctn1 varchar(1000) NULL,
+	opt_val_ctn2 varchar(1000) NULL,
+	opt_val_ctn3 varchar(1000) NULL,
+	opt_val_ctn4 varchar(1000) NULL,
+	opt_val_ctn5 varchar(1000) NULL,
+	auth_ip_ctn varchar(4000) NULL,
+	CONSTRAINT tb_rapid_auth_ip_m_pkey PRIMARY KEY (auth_ip_id),
+	CONSTRAINT tb_rapid_auth_ip_m_uk1 UNIQUE (auth_ip_tp_cd, tgt_ip)
+);
+
+
+-- public.tb_rapid_bbm_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_bbm_m;
+
+CREATE TABLE tb_rapid_bbm_m (
+	del_yn varchar(1) NULL,
+	impt_yn varchar(1) NULL,
+	poup_use_yn varchar(1) NULL,
+	bbm_vwct int8 NULL,
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	poup_end_dtm timestamp(6) NULL,
+	poup_st_dtm timestamp(6) NULL,
+	ptup_end_dt varchar(8) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	bbm_clsf_cd varchar(50) NULL,
+	bbm_id varchar(50) NOT NULL,
+	bbs_id varchar(50) NOT NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	uppr_bbm_id varchar(50) NULL,
+	bbm_tit_nm varchar(300) NOT NULL,
+	htag_ctn varchar(300) NULL,
+	smry_ctn varchar(4000) NULL,
+	bbm_ctn varchar(32600) NULL,
+	CONSTRAINT tb_rapid_bbm_m_pkey PRIMARY KEY (bbm_id)
+);
+CREATE INDEX tb_rapid_bbm_m_ix1 ON public.tb_rapid_bbm_m USING btree (bbs_id);
+
+
+-- public.tb_rapid_bbm_role_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_bbm_role_m;
+
+CREATE TABLE tb_rapid_bbm_role_m (
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	role_cd varchar(20) NOT NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	bbm_id varchar(50) NOT NULL,
+	bbm_role_id varchar(50) NOT NULL,
+	bbm_role_tp_cd varchar(50) NOT NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	CONSTRAINT tb_rapid_bbm_role_m_pkey PRIMARY KEY (bbm_role_id),
+	CONSTRAINT tb_rapid_bbm_role_m_uk1 UNIQUE (bbm_id, role_cd)
+);
+
+
+-- public.tb_rapid_bbs_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_bbs_m;
+
+CREATE TABLE tb_rapid_bbs_m (
+	file_use_yn varchar(1) NULL,
+	re_use_yn varchar(1) NULL,
+	use_yn varchar(1) NULL,
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	bbm_clsf_gr_cd varchar(50) NULL,
+	bbs_id varchar(50) NOT NULL,
+	bbs_tp_cd varchar(50) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	mgr_user_id varchar(50) NULL,
+	msg_cd varchar(150) NULL,
+	bbs_nm varchar(200) NOT NULL,
+	bbs_desc varchar(1000) NULL,
+	CONSTRAINT tb_rapid_bbs_m_pkey PRIMARY KEY (bbs_id)
+);
+
+
+-- public.tb_rapid_bbs_role_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_bbs_role_m;
+
+CREATE TABLE tb_rapid_bbs_role_m (
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	role_cd varchar(20) NOT NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	bbs_id varchar(50) NOT NULL,
+	bbs_role_id varchar(50) NOT NULL,
+	bbs_role_tp_cd varchar(50) NOT NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	CONSTRAINT tb_rapid_bbs_role_m_pkey PRIMARY KEY (bbs_role_id),
+	CONSTRAINT tb_rapid_bbs_role_m_uk1 UNIQUE (bbs_id, role_cd)
+);
+
+
+-- public.tb_rapid_btch_job_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_btch_job_m;
+
+CREATE TABLE tb_rapid_btch_job_m (
+	sort_ord int4 NULL,
+	use_yn varchar(1) NULL,
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	btch_job_id varchar(50) NOT NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	dvlp_nm varchar(100) NULL,
+	btch_job_exec_tm_ctn varchar(200) NULL,
+	btch_job_nm varchar(200) NOT NULL,
+	btch_job_desc varchar(1000) NULL,
+	btch_job_pram_ctn varchar(1000) NULL,
+	opt_val_ctn1 varchar(1000) NULL,
+	opt_val_ctn2 varchar(1000) NULL,
+	opt_val_ctn3 varchar(1000) NULL,
+	opt_val_ctn4 varchar(1000) NULL,
+	opt_val_ctn5 varchar(1000) NULL,
+	CONSTRAINT tb_rapid_btch_job_m_pkey PRIMARY KEY (btch_job_id)
+);
+
+
+-- public.tb_rapid_btch_lok_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_btch_lok_m;
+
+CREATE TABLE tb_rapid_btch_lok_m (
+	lok_acqr_dtm timestamp(6) NOT NULL,
+	lok_exp_dtm timestamp(6) NOT NULL,
+	btch_lok_nm varchar(200) NOT NULL,
+	lok_ownr_nm varchar(300) NOT NULL,
+	CONSTRAINT tb_rapid_btch_lok_m_pkey PRIMARY KEY (btch_lok_nm)
+);
+
+
+-- public.tb_rapid_cmn_c definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_cmn_c;
+
+CREATE TABLE tb_rapid_cmn_c (
+	sort_ord int4 NULL,
+	use_yn varchar(1) NULL,
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	cmn_cd_id varchar(50) NOT NULL,
+	cmn_gr_cd varchar(50) NOT NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	cmn_cd varchar(150) NOT NULL,
+	msg_cd varchar(150) NULL,
+	uppr_cmn_cd varchar(150) NULL,
+	cmn_cd_nm varchar(200) NOT NULL,
+	cmn_cd_desc varchar(400) NULL,
+	opt_val_ctn1 varchar(1000) NULL,
+	opt_val_ctn10 varchar(1000) NULL,
+	opt_val_ctn2 varchar(1000) NULL,
+	opt_val_ctn3 varchar(1000) NULL,
+	opt_val_ctn4 varchar(1000) NULL,
+	opt_val_ctn5 varchar(1000) NULL,
+	opt_val_ctn6 varchar(1000) NULL,
+	opt_val_ctn7 varchar(1000) NULL,
+	opt_val_ctn8 varchar(1000) NULL,
+	opt_val_ctn9 varchar(1000) NULL,
+	CONSTRAINT tb_rapid_cmn_c_pkey PRIMARY KEY (cmn_cd_id),
+	CONSTRAINT tb_rapid_cmn_c_uk1 UNIQUE (cmn_gr_cd, cmn_cd)
+);
+
+
+-- public.tb_rapid_cmn_gr_c definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_cmn_gr_c;
+
+CREATE TABLE tb_rapid_cmn_gr_c (
+	sort_ord int4 NULL,
+	use_yn varchar(1) NULL,
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	cmn_gr_cd varchar(50) NOT NULL,
+	cmn_gr_cd_nm varchar(50) NOT NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	uppr_cmn_gr_cd varchar(50) NULL,
+	wkt_area_divs_cd varchar(50) NULL,
+	msg_cd varchar(150) NULL,
+	cmn_gr_cd_desc varchar(1000) NULL,
+	opt_val_ctn1 varchar(1000) NULL,
+	opt_val_ctn2 varchar(1000) NULL,
+	opt_val_ctn3 varchar(1000) NULL,
+	opt_val_ctn4 varchar(1000) NULL,
+	opt_val_ctn5 varchar(1000) NULL,
+	rmk varchar(1000) NULL,
+	CONSTRAINT tb_rapid_cmn_gr_c_pkey PRIMARY KEY (cmn_gr_cd)
+);
+
+
+-- public.tb_rapid_dept_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_dept_m;
+
+CREATE TABLE tb_rapid_dept_m (
+	use_yn varchar(1) NULL,
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	cop_cd varchar(10) NULL,
+	dept_cd varchar(20) NOT NULL,
+	uppr_dept_cd varchar(20) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	tem_ldr_user_id varchar(50) NULL,
+	dept_cng_nm varchar(300) NULL,
+	dept_eng_nm varchar(300) NULL,
+	dept_nm varchar(300) NULL,
+	CONSTRAINT tb_rapid_dept_m_pkey PRIMARY KEY (dept_cd)
+);
+CREATE INDEX tb_rapid_dept_m_ix1 ON public.tb_rapid_dept_m USING btree (uppr_dept_cd);
+CREATE INDEX tb_rapid_dept_m_ix2 ON public.tb_rapid_dept_m USING btree (tem_ldr_user_id);
+
+
+-- public.tb_rapid_dt_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_dt_m;
+
+CREATE TABLE tb_rapid_dt_m (
+	cop_cd varchar(10) NOT NULL,
+	scal_dt bpchar(8) NOT NULL,
+	scal_yy bpchar(4) NOT NULL,
+	scal_mm bpchar(2) NOT NULL,
+	scal_dd bpchar(2) NOT NULL,
+	lcal_dt bpchar(8) NULL,
+	dywk_no_cd bpchar(1) NULL,
+	yywk bpchar(2) NULL,
+	mm_wct int2 NULL,
+	hldy_yn bpchar(1) DEFAULT 'N'::bpchar NULL,
+	hldy_nm varchar(100) NULL,
+	opt_val_nm1 varchar(100) NULL,
+	opt_val_nm2 varchar(100) NULL,
+	opt_val_nm3 varchar(100) NULL,
+	opt_val_nm4 varchar(100) NULL,
+	opt_val_nm5 varchar(100) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_ins_user_ip varchar(45) NULL,
+	data_ins_dtm timestamp NULL,
+	data_upd_user_id varchar(50) NULL,
+	data_upd_user_ip varchar(45) NULL,
+	data_upd_dtm timestamp NULL
+);
+
+
+-- public.tb_rapid_eml_sndo_file_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_eml_sndo_file_m;
+
+CREATE TABLE tb_rapid_eml_sndo_file_m (
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	eml_sndo_file_id varchar(50) NOT NULL,
+	eml_sndo_id varchar(50) NOT NULL,
+	file_id varchar(50) NOT NULL,
+	CONSTRAINT tb_rapid_eml_sndo_file_m_pkey PRIMARY KEY (eml_sndo_file_id),
+	CONSTRAINT tb_rapid_eml_sndo_file_m_uk1 UNIQUE (eml_sndo_id, file_id)
+);
+
+
+-- public.tb_rapid_eml_sndo_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_eml_sndo_m;
+
+CREATE TABLE tb_rapid_eml_sndo_m (
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	sed_dtm timestamp(6) NULL,
+	eml_tp_cd varchar(20) NULL,
+	eml_trnm_stat_cd varchar(20) NULL,
+	sed_user_nm varchar(30) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	apr_req_id varchar(50) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	eml_sndo_id varchar(50) NOT NULL,
+	sed_emal varchar(100) NOT NULL,
+	eml_trnm_rlt_ctn varchar(200) NULL,
+	eml_tit_nm varchar(1000) NOT NULL,
+	opt_val_ctn1 varchar(1000) NULL,
+	opt_val_ctn2 varchar(1000) NULL,
+	opt_val_ctn3 varchar(1000) NULL,
+	opt_val_ctn4 varchar(1000) NULL,
+	opt_val_ctn5 varchar(1000) NULL,
+	eml_dtl_ctn varchar(32600) NULL,
+	CONSTRAINT tb_rapid_eml_sndo_m_pkey PRIMARY KEY (eml_sndo_id)
+);
+
+
+-- public.tb_rapid_eml_sndo_rcvr_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_eml_sndo_rcvr_m;
+
+CREATE TABLE tb_rapid_eml_sndo_rcvr_m (
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	eml_sndo_id varchar(50) NOT NULL,
+	eml_sndo_rcvr_id varchar(50) NOT NULL,
+	rcvr_tp_cd varchar(50) NOT NULL,
+	emal varchar(100) NOT NULL,
+	CONSTRAINT tb_rapid_eml_sndo_rcvr_m_pkey PRIMARY KEY (eml_sndo_rcvr_id),
+	CONSTRAINT tb_rapid_eml_sndo_rcvr_m_uk1 UNIQUE (eml_sndo_id, rcvr_tp_cd, emal)
+);
+
+
+-- public.tb_rapid_er_log_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_er_log_m;
+
+CREATE TABLE tb_rapid_er_log_m (
+	eml_sndo_yn varchar(1) NULL,
+	log_dtm timestamp(6) NULL,
+	svr_ip varchar(40) NULL,
+	user_ip varchar(40) NULL,
+	er_log_id varchar(50) NOT NULL,
+	http_mthd_cd varchar(50) NULL,
+	sys_cd varchar(50) NULL,
+	user_id varchar(50) NULL,
+	er_cls_nm varchar(200) NULL,
+	brsr_kdn_nm varchar(500) NULL,
+	er_msg_ctn varchar(2000) NULL,
+	req_path_ctn varchar(2000) NULL,
+	hdr_ifo_ctn varchar(4000) NULL,
+	pram_ifo_ctn varchar(4000) NULL,
+	stak_trc_desc varchar(32600) NULL,
+	CONSTRAINT tb_rapid_er_log_m_pkey PRIMARY KEY (er_log_id)
+);
+
+
+-- public.tb_rapid_file_dld_log_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_file_dld_log_m;
+
+CREATE TABLE tb_rapid_file_dld_log_m (
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	log_dtm timestamp(6) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	svr_ip varchar(40) NULL,
+	user_ip varchar(40) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	file_dld_log_id varchar(50) NOT NULL,
+	file_dld_log_tp_cd varchar(50) NULL,
+	file_id varchar(50) NOT NULL,
+	user_id varchar(50) NOT NULL,
+	CONSTRAINT tb_rapid_file_dld_log_m_pkey PRIMARY KEY (file_dld_log_id)
+);
+
+
+-- public.tb_rapid_file_gr_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_file_gr_m;
+
+CREATE TABLE tb_rapid_file_gr_m (
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	file_gr_id varchar(50) NOT NULL,
+	file_gr_stat_cd varchar(50) NOT NULL,
+	file_gr_tp_cd varchar(50) NOT NULL,
+	file_gr_wkt_id varchar(100) NOT NULL,
+	opt_val_ctn1 varchar(1000) NULL,
+	opt_val_ctn2 varchar(1000) NULL,
+	opt_val_ctn3 varchar(1000) NULL,
+	opt_val_ctn4 varchar(1000) NULL,
+	opt_val_ctn5 varchar(1000) NULL,
+	CONSTRAINT tb_rapid_file_gr_m_pkey PRIMARY KEY (file_gr_id),
+	CONSTRAINT tb_rapid_file_gr_m_uk1 UNIQUE (file_gr_tp_cd, file_gr_wkt_id)
+);
+CREATE INDEX tb_rapid_file_gr_m_ix1 ON public.tb_rapid_file_gr_m USING btree (file_gr_tp_cd);
+CREATE INDEX tb_rapid_file_gr_m_ix2 ON public.tb_rapid_file_gr_m USING btree (file_gr_wkt_id);
+
+
+-- public.tb_rapid_file_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_file_m;
+
+CREATE TABLE tb_rapid_file_m (
+	sort_ord int4 NULL,
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	file_size int8 NULL,
+	file_save_loc_divs_cd varchar(20) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	file_gr_id varchar(50) NOT NULL,
+	file_id varchar(50) NOT NULL,
+	file_stat_cd varchar(50) NOT NULL,
+	file_efnm_nm varchar(100) NULL,
+	file_nm varchar(500) NOT NULL,
+	file_save_nm varchar(500) NULL,
+	opt_val_ctn1 varchar(1000) NULL,
+	opt_val_ctn2 varchar(1000) NULL,
+	opt_val_ctn3 varchar(1000) NULL,
+	opt_val_ctn4 varchar(1000) NULL,
+	opt_val_ctn5 varchar(1000) NULL,
+	file_save_path_ctn varchar(4000) NULL,
+	CONSTRAINT tb_rapid_file_m_pkey PRIMARY KEY (file_id)
+);
+CREATE INDEX tb_rapid_file_m_ix1 ON public.tb_rapid_file_m USING btree (file_gr_id);
+
+
+-- public.tb_rapid_hlp_ctn_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_hlp_ctn_m;
+
+CREATE TABLE tb_rapid_hlp_ctn_m (
+	lang_cd varchar(3) NOT NULL,
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	hlp_ctn_id varchar(50) NOT NULL,
+	hlp_id varchar(50) NOT NULL,
+	hlp_ctn varchar(32600) NULL,
+	CONSTRAINT tb_rapid_hlp_ctn_m_pkey PRIMARY KEY (hlp_ctn_id),
+	CONSTRAINT tb_rapid_hlp_ctn_m_uk1 UNIQUE (hlp_id, lang_cd)
+);
+
+
+-- public.tb_rapid_hlp_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_hlp_m;
+
+CREATE TABLE tb_rapid_hlp_m (
+	use_yn varchar(1) NULL,
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	hlp_id varchar(50) NOT NULL,
+	msg_cd varchar(150) NULL,
+	hlp_nm varchar(300) NOT NULL,
+	hlp_desc varchar(1000) NULL,
+	opt_val_ctn1 varchar(1000) NULL,
+	opt_val_ctn2 varchar(1000) NULL,
+	opt_val_ctn3 varchar(1000) NULL,
+	opt_val_ctn4 varchar(1000) NULL,
+	opt_val_ctn5 varchar(1000) NULL,
+	CONSTRAINT tb_rapid_hlp_m_pkey PRIMARY KEY (hlp_id)
+);
+
+
+-- public.tb_rapid_logn_log_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_logn_log_m;
+
+CREATE TABLE tb_rapid_logn_log_m (
+	cont_dtm timestamp(6) NULL,
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	cont_ip varchar(40) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	cont_log_id varchar(50) NOT NULL,
+	cont_user_id varchar(50) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	CONSTRAINT tb_rapid_logn_log_m_pkey PRIMARY KEY (cont_log_id)
+);
+
+
+-- public.tb_rapid_mnu_aces_log_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_mnu_aces_log_m;
+
+CREATE TABLE tb_rapid_mnu_aces_log_m (
+	cont_dtm timestamp(6) NULL,
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	cont_ip varchar(40) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	svr_ip varchar(40) NULL,
+	cont_user_id varchar(50) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	mnu_aces_log_id varchar(50) NOT NULL,
+	mnu_id varchar(50) NOT NULL,
+	CONSTRAINT tb_rapid_mnu_aces_log_m_pkey PRIMARY KEY (mnu_aces_log_id)
+);
+CREATE INDEX tb_rapid_mnu_aces_log_m_ix1 ON public.tb_rapid_mnu_aces_log_m USING btree (mnu_id);
+
+
+-- public.tb_rapid_mnu_bmk_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_mnu_bmk_m;
+
+CREATE TABLE tb_rapid_mnu_bmk_m (
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	mnu_bmk_id varchar(50) NOT NULL,
+	mnu_id varchar(50) NOT NULL,
+	user_id varchar(50) NOT NULL,
+	CONSTRAINT tb_rapid_mnu_bmk_m_pkey PRIMARY KEY (mnu_bmk_id),
+	CONSTRAINT tb_rapid_mnu_bmk_m_uk1 UNIQUE (user_id, mnu_id)
+);
+
+
+-- public.tb_rapid_mnu_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_mnu_m;
+
+CREATE TABLE tb_rapid_mnu_m (
+	mnu_eps_yn varchar(1) NULL,
+	mnu_lv_no int4 NULL,
+	page_refh_yn varchar(1) NULL,
+	sort_ord int4 NULL,
+	use_yn varchar(1) NULL,
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	mnu_disp_tp_cd varchar(50) NULL,
+	mnu_id varchar(50) NOT NULL,
+	page_id varchar(50) NULL,
+	uppr_mnu_id varchar(50) NULL,
+	msg_cd varchar(150) NULL,
+	mnu_desc varchar(200) NULL,
+	mnu_url varchar(500) NULL,
+	mnu_nm varchar(1000) NOT NULL,
+	opt_val_ctn1 varchar(1000) NULL,
+	opt_val_ctn2 varchar(1000) NULL,
+	opt_val_ctn3 varchar(1000) NULL,
+	opt_val_ctn4 varchar(1000) NULL,
+	opt_val_ctn5 varchar(1000) NULL,
+	CONSTRAINT tb_rapid_mnu_m_pkey PRIMARY KEY (mnu_id)
+);
+CREATE INDEX tb_rapid_mnu_m_ix1 ON public.tb_rapid_mnu_m USING btree (uppr_mnu_id);
+
+
+-- public.tb_rapid_msg_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_msg_m;
+
+CREATE TABLE tb_rapid_msg_m (
+	lang_cd varchar(3) NOT NULL,
+	use_yn varchar(1) NULL,
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	msg_id varchar(50) NOT NULL,
+	msg_cd varchar(150) NOT NULL,
+	opt_val_ctn1 varchar(1000) NULL,
+	opt_val_ctn2 varchar(1000) NULL,
+	opt_val_ctn3 varchar(1000) NULL,
+	opt_val_ctn4 varchar(1000) NULL,
+	opt_val_ctn5 varchar(1000) NULL,
+	rmk varchar(1000) NULL,
+	msg_ctn varchar(4000) NOT NULL,
+	CONSTRAINT tb_rapid_msg_m_pkey PRIMARY KEY (msg_id),
+	CONSTRAINT tb_rapid_msg_m_uk1 UNIQUE (msg_cd, lang_cd)
+);
+
+
+-- public.tb_rapid_page_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_page_m;
+
+CREATE TABLE tb_rapid_page_m (
+	hlp_disp_yn varchar(1) NULL,
+	poup_vtc_len int4 NULL,
+	poup_wth_len int4 NULL,
+	refh_disp_yn varchar(1) NULL,
+	srch_area_disp_yn varchar(1) NULL,
+	use_yn varchar(1) NULL,
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	sys_cd varchar(10) NOT NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	hlp_disp_tp_cd varchar(50) NULL,
+	hlp_id varchar(50) NULL,
+	page_id varchar(50) NOT NULL,
+	dvlp_nm varchar(100) NULL,
+	msg_cd varchar(150) NULL,
+	cpnt_path_nm varchar(300) NOT NULL,
+	page_nm varchar(300) NOT NULL,
+	page_path_nm varchar(300) NOT NULL,
+	page_pram_ctn varchar(1000) NULL,
+	CONSTRAINT tb_rapid_page_m_pkey PRIMARY KEY (page_id),
+	CONSTRAINT tb_rapid_page_m_uk1 UNIQUE (sys_cd, page_path_nm)
+);
+
+
+-- public.tb_rapid_re_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_re_m;
+
+CREATE TABLE tb_rapid_re_m (
+	del_yn varchar(1) NULL,
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	re_gr_tp_cd varchar(50) NOT NULL,
+	re_id varchar(50) NOT NULL,
+	uppr_re_id varchar(50) NULL,
+	re_gr_wkt_id varchar(100) NOT NULL,
+	re_ctn varchar(32600) NULL,
+	CONSTRAINT tb_rapid_re_m_pkey PRIMARY KEY (re_id)
+);
+CREATE INDEX tb_rapid_re_m_ix1 ON public.tb_rapid_re_m USING btree (re_gr_tp_cd);
+CREATE INDEX tb_rapid_re_m_ix2 ON public.tb_rapid_re_m USING btree (re_gr_wkt_id);
+
+
+-- public.tb_rapid_role_api_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_role_api_m;
+
+CREATE TABLE tb_rapid_role_api_m (
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	role_cd varchar(20) NOT NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	api_id varchar(50) NOT NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	role_api_id varchar(50) NOT NULL,
+	CONSTRAINT tb_rapid_role_api_m_pkey PRIMARY KEY (role_api_id),
+	CONSTRAINT tb_rapid_role_api_m_uk1 UNIQUE (role_cd, api_id)
+);
+
+
+-- public.tb_rapid_role_file_gr_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_role_file_gr_m;
+
+CREATE TABLE tb_rapid_role_file_gr_m (
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	role_cd varchar(20) NOT NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	file_gr_tp_cd varchar(50) NOT NULL,
+	role_file_gr_id varchar(50) NOT NULL,
+	CONSTRAINT tb_rapid_role_file_gr_m_pkey PRIMARY KEY (role_file_gr_id),
+	CONSTRAINT tb_rapid_role_file_gr_m_uk1 UNIQUE (role_cd, file_gr_tp_cd)
+);
+
+
+-- public.tb_rapid_role_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_role_m;
+
+CREATE TABLE tb_rapid_role_m (
+	sort_ord int4 NULL,
+	use_yn varchar(1) NULL,
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	role_cd varchar(20) NOT NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	msg_cd varchar(150) NULL,
+	role_nm varchar(400) NOT NULL,
+	opt_val_ctn1 varchar(1000) NULL,
+	opt_val_ctn2 varchar(1000) NULL,
+	opt_val_ctn3 varchar(1000) NULL,
+	opt_val_ctn4 varchar(1000) NULL,
+	opt_val_ctn5 varchar(1000) NULL,
+	role_desc varchar(4000) NULL,
+	CONSTRAINT tb_rapid_role_m_pkey PRIMARY KEY (role_cd)
+);
+
+
+-- public.tb_rapid_role_mnu_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_role_mnu_m;
+
+CREATE TABLE tb_rapid_role_mnu_m (
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	role_cd varchar(20) NOT NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	mnu_id varchar(50) NOT NULL,
+	role_mnu_id varchar(50) NOT NULL,
+	CONSTRAINT tb_rapid_role_mnu_m_pkey PRIMARY KEY (role_mnu_id),
+	CONSTRAINT tb_rapid_role_mnu_m_uk1 UNIQUE (role_cd, mnu_id)
+);
+
+
+-- public.tb_rapid_role_page_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_role_page_m;
+
+CREATE TABLE tb_rapid_role_page_m (
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	role_cd varchar(20) NOT NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	page_id varchar(50) NOT NULL,
+	role_page_id varchar(50) NOT NULL,
+	CONSTRAINT tb_rapid_role_page_m_pkey PRIMARY KEY (role_page_id),
+	CONSTRAINT tb_rapid_role_page_m_uk1 UNIQUE (role_cd, page_id)
+);
+
+
+-- public.tb_rapid_role_user_gr_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_role_user_gr_m;
+
+CREATE TABLE tb_rapid_role_user_gr_m (
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	role_cd varchar(20) NOT NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	role_user_gr_id varchar(50) NOT NULL,
+	user_gr_cd varchar(50) NOT NULL,
+	CONSTRAINT tb_rapid_role_user_gr_m_pkey PRIMARY KEY (role_user_gr_id),
+	CONSTRAINT tb_rapid_role_user_gr_m_uk1 UNIQUE (role_cd, user_gr_cd)
+);
+
+
+-- public.tb_rapid_srch_log_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_srch_log_m;
+
+CREATE TABLE tb_rapid_srch_log_m (
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	log_dtm timestamp(6) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	svr_ip varchar(40) NULL,
+	user_ip varchar(40) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	page_id varchar(50) NOT NULL,
+	srch_log_id varchar(50) NOT NULL,
+	user_id varchar(50) NOT NULL,
+	srch_pram_ctn varchar(4000) NULL,
+	CONSTRAINT tb_rapid_srch_log_m_pkey PRIMARY KEY (srch_log_id)
+);
+CREATE INDEX tb_rapid_srch_log_m_ix1 ON public.tb_rapid_srch_log_m USING btree (page_id);
+
+
+-- public.tb_rapid_todo_tp_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_todo_tp_m;
+
+CREATE TABLE tb_rapid_todo_tp_m (
+	cplt_alrm_yn varchar(1) NULL,
+	due_ddn int4 NULL,
+	req_alrm_yn varchar(1) NULL,
+	use_yn varchar(1) NULL,
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	psg_page_id varchar(50) NOT NULL,
+	todo_psg_tp_cd varchar(50) NOT NULL,
+	todo_tp_id varchar(50) NOT NULL,
+	vw_page_id varchar(50) NOT NULL,
+	todo_tp_nm varchar(100) NOT NULL,
+	msg_cd varchar(150) NULL,
+	CONSTRAINT tb_rapid_todo_tp_m_pkey PRIMARY KEY (todo_tp_id)
+);
+
+
+-- public.tb_rapid_tpl_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_tpl_m;
+
+CREATE TABLE tb_rapid_tpl_m (
+	use_yn varchar(1) NULL,
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	tpl_id varchar(50) NOT NULL,
+	tpl_nm varchar(200) NULL,
+	tpl_tit_nm varchar(1000) NULL,
+	tpl_desc varchar(32600) NULL,
+	CONSTRAINT tb_rapid_tpl_m_pkey PRIMARY KEY (tpl_id)
+);
+
+
+-- public.tb_rapid_user_gr_dept_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_user_gr_dept_m;
+
+CREATE TABLE tb_rapid_user_gr_dept_m (
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	dept_cd varchar(20) NOT NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	user_gr_cd varchar(50) NOT NULL,
+	user_gr_dept_id varchar(50) NOT NULL,
+	CONSTRAINT tb_rapid_user_gr_dept_m_pkey PRIMARY KEY (user_gr_dept_id),
+	CONSTRAINT tb_rapid_user_gr_dept_m_uk1 UNIQUE (user_gr_cd, dept_cd)
+);
+
+
+-- public.tb_rapid_user_gr_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_user_gr_m;
+
+CREATE TABLE tb_rapid_user_gr_m (
+	sort_ord int4 NULL,
+	use_yn varchar(1) NULL,
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	user_gr_cd varchar(50) NOT NULL,
+	user_gr_tp_cd varchar(50) NOT NULL,
+	msg_cd varchar(150) NULL,
+	user_gr_desc varchar(200) NULL,
+	opt_val_ctn1 varchar(1000) NULL,
+	opt_val_ctn2 varchar(1000) NULL,
+	opt_val_ctn3 varchar(1000) NULL,
+	opt_val_ctn4 varchar(1000) NULL,
+	opt_val_ctn5 varchar(1000) NULL,
+	user_gr_nm varchar(1000) NOT NULL,
+	CONSTRAINT tb_rapid_user_gr_m_pkey PRIMARY KEY (user_gr_cd)
+);
+
+
+-- public.tb_rapid_user_gr_user_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_user_gr_user_m;
+
+CREATE TABLE tb_rapid_user_gr_user_m (
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	user_gr_cd varchar(50) NOT NULL,
+	user_gr_user_id varchar(50) NOT NULL,
+	user_id varchar(50) NOT NULL,
+	CONSTRAINT tb_rapid_user_gr_user_m_pkey PRIMARY KEY (user_gr_user_id),
+	CONSTRAINT tb_rapid_user_gr_user_m_uk1 UNIQUE (user_gr_cd, user_id)
+);
+
+
+-- public.tb_rapid_user_his_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_user_his_m;
+
+CREATE TABLE tb_rapid_user_his_m (
+	fin_yn varchar(1) NULL,
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	jps_cd varchar(10) NULL,
+	jti_cd varchar(10) NULL,
+	dept_cd varchar(20) NULL,
+	emp_no varchar(20) NULL,
+	ino_divs_cd varchar(20) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	emp_nm varchar(50) NULL,
+	jps_cng_nm varchar(50) NULL,
+	jps_eng_nm varchar(50) NULL,
+	jti_cng_nm varchar(50) NULL,
+	jti_eng_nm varchar(50) NULL,
+	user_his_id varchar(50) NOT NULL,
+	user_id varchar(50) NULL,
+	emal varchar(100) NULL,
+	emp_cng_nm varchar(100) NULL,
+	emp_eng_nm varchar(100) NULL,
+	jps_nm varchar(200) NULL,
+	jti_nm varchar(200) NULL,
+	dept_cng_nm varchar(300) NULL,
+	dept_eng_nm varchar(300) NULL,
+	dept_nm varchar(300) NULL,
+	CONSTRAINT tb_rapid_user_his_m_pkey PRIMARY KEY (user_his_id)
+);
+CREATE INDEX tb_rapid_user_his_m_ix1 ON public.tb_rapid_user_his_m USING btree (user_id);
+
+
+-- public.tb_rapid_user_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_user_m;
+
+CREATE TABLE tb_rapid_user_m (
+	use_yn varchar(1) NULL,
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	jcom_dt varchar(8) NULL,
+	rsgn_dt varchar(8) NULL,
+	sso_chg_dt varchar(8) NULL,
+	cop_cd varchar(10) NULL,
+	ctry_cd varchar(10) NULL,
+	hme_tano varchar(10) NULL,
+	jps_cd varchar(10) NULL,
+	jti_cd varchar(10) NULL,
+	ofc_tano varchar(10) NULL,
+	dept_cd varchar(20) NULL,
+	doc_auth_cd varchar(20) NULL,
+	emp_no varchar(20) NULL,
+	ino_divs_cd varchar(20) NULL,
+	ino_stat_cd varchar(20) NULL,
+	old_dept_cd varchar(20) NULL,
+	old_emp_no varchar(20) NULL,
+	uppr_emp_no varchar(20) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	emp_hphn varchar(50) NULL,
+	emp_lowr_gr_cd varchar(50) NULL,
+	emp_nm varchar(50) NULL,
+	emp_uppr_gr_cd varchar(50) NULL,
+	hme_phn varchar(50) NULL,
+	jps_cng_nm varchar(50) NULL,
+	jps_eng_nm varchar(50) NULL,
+	jti_cng_nm varchar(50) NULL,
+	jti_eng_nm varchar(50) NULL,
+	ofc_etn_phn varchar(50) NULL,
+	ofc_phn varchar(50) NULL,
+	ondu_regn_cd varchar(50) NULL,
+	ondu_regn_nm varchar(50) NULL,
+	sso_chg_tp_cd varchar(50) NULL,
+	sso_dtpl_cd varchar(50) NULL,
+	user_id varchar(50) NOT NULL,
+	emal varchar(100) NULL,
+	emp_cng_nm varchar(100) NULL,
+	emp_eng_nm varchar(100) NULL,
+	sso_dtpl_nm varchar(100) NULL,
+	sso_emp_cng_nm varchar(100) NULL,
+	eml_dmn_ifo_nm varchar(200) NULL,
+	jps_nm varchar(200) NULL,
+	jti_nm varchar(200) NULL,
+	dept_cng_nm varchar(300) NULL,
+	dept_eng_desc varchar(300) NULL,
+	dept_eng_nm varchar(300) NULL,
+	dept_nm varchar(300) NULL,
+	CONSTRAINT tb_rapid_user_m_emp_no_key UNIQUE (emp_no),
+	CONSTRAINT tb_rapid_user_m_pkey PRIMARY KEY (user_id)
+);
+CREATE INDEX tb_rapid_user_m_ix1 ON public.tb_rapid_user_m USING btree (emp_no);
+CREATE INDEX tb_rapid_user_m_ix2 ON public.tb_rapid_user_m USING btree (dept_cd);
+
+
+-- public.tb_rm_regt_subt_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_rm_regt_subt_n;
+
+CREATE TABLE tb_rm_regt_subt_n (
+	regt_hd_id varchar(20) NOT NULL,
+	cas_no varchar(200) NOT NULL,
+	subt_nm varchar(3000) NOT NULL,
+	chk_obj1_value varchar(20) NULL,
+	check_warty_from_cd varchar(30) NULL,
+	chk_obj2_value varchar(20) NULL,
+	check_warty_to_cd varchar(30) NULL,
+	ue_yn varchar(1) NULL,
+	propet1_value varchar(4000) NULL,
+	propet2_value varchar(4000) NULL,
+	propet3_value varchar(4000) NULL,
+	propet4_value varchar(4000) NULL,
+	propet5_value varchar(4000) NULL,
+	propet6_value varchar(4000) NULL,
+	propet7_value varchar(4000) NULL,
+	propet8_value varchar(4000) NULL,
+	propet9_value varchar(4000) NULL,
+	propet10_value varchar(4000) NULL,
+	propet11_value varchar(4000) NULL,
+	propet12_value varchar(4000) NULL,
+	propet13_value varchar(4000) NULL,
+	propet14_value varchar(4000) NULL,
+	propet15_value varchar(4000) NULL,
+	propet16_value varchar(4000) NULL,
+	propet17_value varchar(4000) NULL,
+	propet18_value varchar(4000) NULL,
+	propet19_value varchar(4000) NULL,
+	propet20_value varchar(4000) NULL,
+	propet21_value varchar(4000) NULL,
+	propet22_value varchar(4000) NULL,
+	propet23_value varchar(4000) NULL,
+	propet24_value varchar(4000) NULL,
+	propet25_value varchar(4000) NULL,
+	propet26_value varchar(4000) NULL,
+	propet27_value varchar(4000) NULL,
+	propet28_value varchar(4000) NULL,
+	propet29_value varchar(4000) NULL,
+	propet30_value varchar(4000) NULL,
+	propet31_value varchar(4000) NULL,
+	propet32_value varchar(4000) NULL,
+	propet33_value varchar(4000) NULL,
+	propet34_value varchar(4000) NULL,
+	propet35_value varchar(4000) NULL,
+	propet36_value varchar(4000) NULL,
+	propet37_value varchar(4000) NULL,
+	propet38_value varchar(4000) NULL,
+	propet39_value varchar(4000) NULL,
+	propet40_value varchar(4000) NULL,
+	propet41_value varchar(4000) NULL,
+	propet42_value varchar(4000) NULL,
+	propet43_value varchar(4000) NULL,
+	propet44_value varchar(4000) NULL,
+	propet45_value varchar(4000) NULL,
+	propet46_value varchar(4000) NULL,
+	propet47_value varchar(4000) NULL,
+	propet48_value varchar(4000) NULL,
+	propet49_value varchar(4000) NULL,
+	propet50_value varchar(4000) NULL,
+	cret_dte date NOT NULL,
+	cret_user_id varchar(20) NOT NULL,
+	lt_upt_dte date NULL,
+	lt_upt_user_id varchar(20) NULL,
+	propet51_value varchar(4000) NULL,
+	propet52_value varchar(4000) NULL,
+	propet53_value varchar(4000) NULL,
+	propet54_value varchar(4000) NULL,
+	propet55_value varchar(4000) NULL,
+	propet56_value varchar(4000) NULL,
+	propet57_value varchar(4000) NULL,
+	propet58_value varchar(4000) NULL,
+	propet59_value varchar(4000) NULL,
+	subt_no varchar(20) NULL,
+	gr_no varchar(20) NULL,
+	CONSTRAINT gcms_mgr_con674800149 PRIMARY KEY (regt_hd_id, cas_no, subt_nm)
+);
+
+
+-- public.tb_scmsb_ess_hmsb_ifo_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_scmsb_ess_hmsb_ifo_m;
+
+CREATE TABLE tb_scmsb_ess_hmsb_ifo_m (
+	ess_hmsb_ifo_doc_no varchar(50) NOT NULL,
+	prj_cd varchar(20) NULL,
+	prj_nm varchar(300) NULL,
+	ess_hmsb_mdu_cd varchar(50) NULL,
+	ess_hmsb_mdu_nm varchar(500) NULL,
+	mat_cd varchar(100) NULL,
+	excp_cd varchar(20) NULL,
+	excp_crge_user_id varchar(50) NULL,
+	excp_mgr_nm varchar(100) NULL,
+	req_dt varchar(8) NULL,
+	rqr_emp_no varchar(20) NULL,
+	puch_mgr_emp_no varchar(20) NULL,
+	dev_mgr_emp_no varchar(20) NULL,
+	qt_mgr_emp_no varchar(20) NULL,
+	etc_ctn varchar(300) NULL,
+	ess_hmsb_ifo_reg_prog_stat_cd varchar(30) NULL,
+	apr_id varchar(50) NULL,
+	apr_prog_stat_cd varchar(20) NULL,
+	data_ins_user_id varchar(20) NOT NULL,
+	data_ins_dtm timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	data_upd_user_id varchar(20) NOT NULL,
+	data_upd_dtm timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	del_yn varchar(1) DEFAULT 'N'::character varying NULL,
+	apl_mkt_ctry_cd varchar(10) NULL,
+	apl_ctrd_nm varchar(300) NULL,
+	ess_hmsb_biz_tp_cd varchar(30) NULL,
+	CONSTRAINT tb_scmsb_ess_hmsb_ifo_m_pkey PRIMARY KEY (ess_hmsb_ifo_doc_no)
+);
+
+
+-- public.tb_scmsb_mdlt_puch_expc_qnty_reg_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_scmsb_mdlt_puch_expc_qnty_reg_m;
+
+CREATE TABLE tb_scmsb_mdlt_puch_expc_qnty_reg_m (
+	hsm_ecof_mat_rvw_doc_no varchar(50) NULL,
+	ctry_cd varchar(10) NOT NULL,
+	cop_cd varchar(10) NOT NULL,
+	mat_cd varchar(100) NOT NULL,
+	vdcp_cd varchar(10) NOT NULL,
+	cas_no varchar(50) NOT NULL,
+	kor_recm_reg_exmp_no varchar(50) NOT NULL,
+	kor_recm_reg_exmp_dt timestamp NULL,
+	recm_reg_qty numeric NULL,
+	recm_reg_qty_cd varchar(10) NULL,
+	hdfg_ins_yn varchar(1) DEFAULT 'N'::character varying NOT NULL,
+	hdfg_ins_trnm_yn varchar(1) DEFAULT 'N'::character varying NOT NULL,
+	sbsc_no varchar(20) NULL,
+	sbsc_nm text NULL,
+	euc_no varchar(10) NULL,
+	sa_sct_divs_cd varchar(10) NULL,
+	ipt_yn varchar(1) NULL,
+	chsb_cptn_rt numeric NULL,
+	n2_sbsc_no varchar(50) NULL,
+	kor_recm_reg_tgt_cd varchar(10) NULL,
+	kor_recm_reg_tp_cd varchar(10) NULL,
+	atch_file_id varchar(50) NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_ins_dtm timestamp NULL,
+	data_upd_user_id varchar(50) NULL,
+	data_upd_dtm timestamp NULL,
+	ins_ifo_trnm_dt timestamp NULL,
+	kor_recm_exmp_st_dt timestamp NULL,
+	kor_recm_exmp_end_dt timestamp NULL,
+	rnd_fert_yn varchar(1) DEFAULT 'N'::character varying NOT NULL,
+	CONSTRAINT tb_scmsb_mdlt_puch_expc_qnty_reg_m_pkey PRIMARY KEY (ctry_cd, cop_cd, mat_cd, vdcp_cd, cas_no, kor_recm_reg_exmp_no, hdfg_ins_yn, hdfg_ins_trnm_yn, rnd_fert_yn)
+);
+
+
+-- public.tb_scmsb_rlb_mdp_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_scmsb_rlb_mdp_m;
+
+CREATE TABLE tb_scmsb_rlb_mdp_m (
+	rlb_mdp_id varchar(20) NOT NULL,
+	rlb_vdcp_mdp_nm varchar(200) NOT NULL,
+	rpsn_nm varchar(100) NULL,
+	mgr_nm varchar(100) NULL,
+	badr varchar(200) NULL,
+	mgr_ctpl_ctn varchar(50) NULL,
+	mgr_emal varchar(100) NULL,
+	use_yn varchar(1) NULL,
+	mdp_nm_srwd_nm varchar(500) NOT NULL,
+	data_ins_dtm timestamp NOT NULL,
+	data_ins_user_id varchar(20) NOT NULL,
+	data_upd_dtm timestamp NULL,
+	data_upd_user_id varchar(20) NULL,
+	CONSTRAINT pk_tb_scmsb_rlb_mdp_m PRIMARY KEY (rlb_mdp_id)
+);
+
+
+-- public.tb_scmsb_rlb_sbsc_reg_nti_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_scmsb_rlb_sbsc_reg_nti_m;
+
+CREATE TABLE tb_scmsb_rlb_sbsc_reg_nti_m (
+	subt_reg_notice_doct_no varchar(30) NOT NULL,
+	subt_reg_plan_doct_no varchar(30) NOT NULL,
+	request_title_nm varchar(300) NULL,
+	appr_req_form_id varchar(20) NULL,
+	attach_file_grp_id numeric NULL,
+	notice_type_cd varchar(30) NULL,
+	sbsc_reg_exmp_divs_cd varchar(10) NULL,
+	reg_qty varchar(50) NULL,
+	impn_expc_qty numeric(18, 5) NULL,
+	rnd_st_dt varchar(8) NULL,
+	rnd_end_dt varchar(8) NULL,
+	sbsc_reg_exmp_no varchar(30) NULL,
+	sbsc_reg_rcpt_no varchar(30) NULL,
+	sbsc_reg_cplt_dt varchar(8) NULL,
+	sbsc_reg_exp_dt varchar(8) NULL,
+	reg_notice_detail_cnts text NULL,
+	cret_user_id varchar(20) NOT NULL,
+	cret_dte timestamp NOT NULL,
+	lt_upt_user_id varchar(20) NULL,
+	lt_upt_dte timestamp NULL,
+	reg_charge_id varchar(30) NULL,
+	ton_reg_qty varchar(50) NULL,
+	previous_rept_no varchar(30) NULL,
+	reg_exmp_st_dt varchar(8) NULL,
+	sbsc_reg_req_doc_no varchar(50) NULL,
+	reqr_perd_ddn numeric(7) NULL,
+	sbsc_reg_exmp_rsn_cd varchar(20) NULL,
+	tot_impn_expc_qty numeric(18, 5) NULL,
+	tsyy_impn_qty numeric(18, 5) NULL,
+	sbsc_reg_exmp_chk_tgt_rsn_cd varchar(10) NULL,
+	sbsc_divs_cd varchar(10) NULL,
+	CONSTRAINT pk_tb_scmsb_rlb_sbsc_reg_nti_m PRIMARY KEY (subt_reg_notice_doct_no)
+);
+
+
+-- public.tb_scmsb_rlb_sbsc_reg_plan_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_scmsb_rlb_sbsc_reg_plan_m;
+
+CREATE TABLE tb_scmsb_rlb_sbsc_reg_plan_m (
+	subt_reg_plan_doct_no varchar(30) NOT NULL,
+	subt_reg_req_doct_no varchar(30) NULL,
+	reg_req_seq numeric NULL,
+	appr_req_form_id varchar(20) NULL,
+	request_title_nm varchar(300) NULL,
+	attach_file_grp_id numeric NULL,
+	necessary_period_cnts varchar(150) NULL,
+	start_day varchar(8) NULL,
+	close_day varchar(8) NULL,
+	total_cost_value numeric NULL,
+	consulting_company_nm varchar(200) NULL,
+	consulting_charge_nm varchar(100) NULL,
+	desc_cnts varchar(1000) NULL,
+	test_proc_last_status_cd varchar(30) NULL,
+	sbsc_reg_tp_cd varchar(10) NULL,
+	sbsc_reg_expc_qty numeric(18, 5) NULL,
+	sbsc_reg_mgr_emp_no varchar(20) NULL,
+	sbsc_reg_mgr_ctpl_ctn varchar(500) NULL,
+	sbsc_reg_exmp_tp_cd varchar(10) NULL,
+	atcp_cplt_dt varchar(8) NULL,
+	reg_plan_detail_cnts text NULL,
+	cret_user_id varchar(20) NOT NULL,
+	cret_dte timestamp NOT NULL,
+	lt_upt_user_id varchar(20) NULL,
+	lt_upt_dte timestamp NULL,
+	imtr_badr varchar(200) NULL,
+	imtr_bzno varchar(12) NULL,
+	imtr_conm_nm varchar(200) NULL,
+	imtr_rpsn_nm varchar(100) NULL,
+	tsyy_impn_qty numeric(18, 5) NULL,
+	yer_impn_expc_qty numeric(18) NULL,
+	tot_impn_expc_qty numeric(18, 5) NULL,
+	assc_rsc_vdr_prv_qty numeric(18) NULL,
+	sbsc_reg_exmp_chk_tgt_rsn_cd varchar(10) NULL,
+	useg_dtl_desc varchar(1000) NULL,
+	hdlg_hh_catn_matr_ctn varchar(1000) NULL,
+	save_kep_mthd_ctn varchar(1000) NULL,
+	act_mthd_ctn varchar(1000) NULL,
+	sbsc_divs_cd varchar(10) NULL,
+	sbsc_divs_nm varchar(200) NULL,
+	sbsc_reg_tp_nm varchar(200) NULL,
+	sbsc_ctun_nvl numeric(16, 6) NULL,
+	CONSTRAINT tb_scmsb_rlb_sbsc_reg_plan_m_pkey PRIMARY KEY (subt_reg_plan_doct_no)
+);
+
+
+-- public.tb_scmsb_rlb_sbsc_reg_req_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_scmsb_rlb_sbsc_reg_req_m;
+
+CREATE TABLE tb_scmsb_rlb_sbsc_reg_req_m (
+	subt_reg_req_doct_no varchar(30) NOT NULL,
+	appr_req_form_id varchar(20) NULL,
+	attach_file_grp_id varchar(50) NULL,
+	req_division_cd varchar(30) NULL,
+	req_dept_cd varchar(30) NULL,
+	chem_subt_nm varchar(2000) NULL,
+	import_making_cate_cd varchar(30) NULL,
+	cas_no varchar(200) NULL,
+	reg_subt_cate_cd varchar(7) NULL,
+	molcl_fomul_cnts varchar(200) NULL,
+	purpose_cd varchar(30) NULL,
+	prod_nm varchar(200) NULL,
+	use_cate_cd varchar(4000) NULL,
+	matl_cd varchar(100) NULL,
+	matl_nm varchar(1000) NULL,
+	order_charge_id varchar(20) NULL,
+	supy_vend_cd varchar(20) NULL,
+	impn_ctry_cd varchar(10) NULL,
+	ctry_cd varchar(10) NULL,
+	to_bplc_cd varchar(30) NULL,
+	mspd_expc_dt varchar(10) NULL,
+	yer_use_expc_qty numeric(18, 5) NULL,
+	cctr_cd varchar(40) NULL,
+	cst_psg_dept_cd varchar(50) NULL,
+	tsyy_impn_qty numeric(18, 5) NULL,
+	imtr_conm_nm varchar(200) NULL,
+	imtr_rpsn_nm varchar(100) NULL,
+	imtr_bzno varchar(12) NULL,
+	imtr_badr varchar(200) NULL,
+	rnd_st_dt varchar(8) NULL,
+	rnd_end_dt varchar(8) NULL,
+	yer_impn_expc_qty numeric(18, 5) NULL,
+	tot_impn_expc_qty numeric(18, 5) NULL,
+	assc_rsc_vdr_prv_qty numeric(18) NULL,
+	useg_dtl_desc varchar(1000) NULL,
+	hdlg_hh_catn_matr_ctn varchar(1000) NULL,
+	save_kep_mthd_ctn varchar(1000) NULL,
+	act_mthd_ctn varchar(1000) NULL,
+	sbsc_reg_stp_stat_cd varchar(10) NULL,
+	stp_rsn_ctn varchar(4000) NULL,
+	sbsc_reg_exmp_chk_tgt_rsn_cd varchar(10) NULL,
+	reg_request_detail_cnts text NULL,
+	add_ifo_ctn text NULL,
+	to_cop_cd varchar(30) NULL,
+	vdcp_nm varchar(1000) NULL,
+	pmng_req_tit_nm varchar(500) NULL,
+	pmng_witr_emp_no varchar(20) NULL,
+	pmng_wrt_dt varchar(8) NULL,
+	pmng_prog_stat_cd varchar(10) NULL,
+	bplc_cd varchar(30) NULL,
+	use_yn varchar(1) DEFAULT 'Y'::character varying NULL,
+	request_title_nm varchar(300) NULL,
+	cret_user_id varchar(20) NOT NULL,
+	cret_dte timestamp NOT NULL,
+	lt_upt_user_id varchar(20) NULL,
+	lt_upt_dte timestamp NULL,
+	subt_no varchar(100) NULL,
+	to_cop_nm varchar(500) NULL,
+	to_bplc_nm varchar(500) NULL,
+	reg_nano_cate_nm varchar(10) NULL,
+	reg_divs_cd varchar(10) NULL,
+	pmng_cfm_dt varchar(8) NULL,
+	sbsc_ctun_nvl numeric(16, 6) NULL,
+	n2_sbsc_no varchar(50) NULL,
+	CONSTRAINT tb_scmsb_rlb_sbsc_reg_req_m_pkey PRIMARY KEY (subt_reg_req_doct_no)
+);
+
+
+-- public.tb_scmsb_sbsc_reg_befo_ins_d definition
+
+-- Drop table
+
+-- DROP TABLE tb_scmsb_sbsc_reg_befo_ins_d;
+
+CREATE TABLE tb_scmsb_sbsc_reg_befo_ins_d (
+	sbsc_reg_befo_ins_id varchar(30) NOT NULL,
+	sbsc_reg_befo_ins_dtl_id varchar(30) NOT NULL,
+	sbsc_reg_tp_cd varchar(50) NULL,
+	sbsc_reg_tp_sa_sct_yn varchar(1) NULL,
+	sbsc_reg_exmp_rsn_cd varchar(30) NULL,
+	exmp_rsn_sa_sct_yn varchar(1) NULL,
+	sbsc_reg_exmp_no varchar(30) NULL,
+	sbsc_reg_exmp_no_sa_sct_yn varchar(1) NULL,
+	sbsc_reg_qty_cd varchar(30) NULL,
+	reg_qty_rang_val_ctn varchar(50) NULL,
+	reg_qty_sa_sct_yn varchar(1) NULL,
+	reg_vdr_nm varchar(300) NULL,
+	sbsc_reg_vdr_divs_cd varchar(10) NULL,
+	or_vdr_nm varchar(200) NULL,
+	or_badr varchar(200) NULL,
+	or_emal varchar(100) NULL,
+	or_mgr_nm varchar(100) NULL,
+	or_phn varchar(50) NULL,
+	doc_atch_file_id varchar(50) NULL,
+	mnm_yn varchar(1) NULL,
+	cfm_yn varchar(1) NULL,
+	cfm_dt varchar(8) NULL,
+	upd_tp_cd varchar(1) NULL,
+	sbsc_trns_tgt_yn varchar(1) NULL,
+	cfm_stat_cd varchar(50) NULL,
+	del_yn varchar(1) NULL,
+	sbsc_no_seq varchar(10) NULL,
+	mgr_emp_no varchar(20) NULL,
+	data_ins_user_id varchar(50) NOT NULL,
+	data_ins_dtm timestamp NOT NULL,
+	data_upd_user_id varchar(50) NULL,
+	data_upd_dtm timestamp NULL,
+	reg_exmp_st_dt varchar(8) NULL,
+	reg_exmp_end_dt varchar(8) NULL,
+	sa_sct_yn varchar(1) NULL,
+	sbsc_reg_vdr_sa_sct_yn varchar(1) NULL,
+	mnm_cas_no varchar(50) NULL,
+	mnm_seq numeric(18) NULL,
+	mnm_cas_no_sa_sct_yn varchar(1) NULL,
+	mnm_ctun_rt numeric(12, 8) NULL,
+	mnm_ctun_rt_sa_sct_yn varchar(1) NULL,
+	scrn_sort_ord numeric(10) NULL,
+	reg_exmp_dd_sa_sct_yn varchar(1) NULL,
+	sbsc_nm varchar(3000) NULL,
+	n2_sbsc_no varchar(20) NULL
+);
+CREATE INDEX tb_scmsb_sbsc_reg_befo_ins_d_idx01 ON public.tb_scmsb_sbsc_reg_befo_ins_d USING btree (sbsc_reg_befo_ins_id);
+
+
+-- public.tb_scmsb_sbsc_reg_befo_ins_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_scmsb_sbsc_reg_befo_ins_m;
+
+CREATE TABLE tb_scmsb_sbsc_reg_befo_ins_m (
+	sbsc_reg_befo_ins_id varchar(30) NOT NULL,
+	ctry_cd varchar(10) NULL,
+	cas_no varchar(50) NULL,
+	sbsc_no varchar(30) NULL,
+	vdr_cd varchar(30) NULL,
+	vdcp_nm varchar(1000) NULL,
+	vdcp_nm1 varchar(1000) NULL,
+	mdp_nm varchar(200) NULL,
+	sbsc_divs_cd varchar(20) NULL,
+	plmr_nnms_divs_cd varchar(30) NULL,
+	euc_no varchar(10) NULL,
+	sbsc_reg_ispt_cplt_yn varchar(1) NULL,
+	data_ins_user_id varchar(50) NOT NULL,
+	data_ins_dtm timestamp NOT NULL,
+	data_upd_user_id varchar(50) NULL,
+	data_upd_dtm timestamp NULL,
+	reg_ifo_exst_yn varchar(1) NULL,
+	mdp_cd varchar(20) NULL,
+	sbsc_nm varchar(1000) NULL,
+	mnm_yn varchar(50) NULL,
+	svon_yn varchar(1) NULL,
+	n2_sbsc_no varchar(20) NULL
+);
+CREATE INDEX tb_scmsb_sbsc_reg_befo_ins_m_idx01 ON public.tb_scmsb_sbsc_reg_befo_ins_m USING btree (sbsc_reg_befo_ins_id);
+CREATE INDEX tb_scmsb_sbsc_reg_befo_ins_m_idx02 ON public.tb_scmsb_sbsc_reg_befo_ins_m USING btree (vdr_cd, cas_no, ctry_cd);
+
+
+-- public.tb_scmsb_sbsc_reg_req_rnd_istu_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_scmsb_sbsc_reg_req_rnd_istu_m;
+
+CREATE TABLE tb_scmsb_sbsc_reg_req_rnd_istu_m (
+	sbsc_reg_req_doc_no varchar(50) NOT NULL,
+	sbsc_reg_req_seq numeric(18) NOT NULL,
+	to_bplc_cd varchar(30) NULL,
+	rnd_istu_conm_nm varchar(200) NULL,
+	rnd_istu_bzno varchar(1000) NULL,
+	rnd_istu_rpsn_nm varchar(50) NULL,
+	rnd_istu_badr varchar(200) NULL,
+	safe_adm_nm varchar(100) NULL,
+	safe_adm_ctpl_ctn varchar(1000) NULL,
+	safe_adm_jgd_nm varchar(100) NULL,
+	wst_psg_vdr_nm varchar(100) NULL,
+	wst_self_psg_plan_ctn varchar(1000) NULL,
+	wst_spl_vdr_nm varchar(100) NULL,
+	move_trsf_mthd_ctn varchar(1000) NULL,
+	kep_wh_plac_ctn varchar(1000) NULL,
+	dcd_plan_cd numeric(10) NULL,
+	trsp_vdr_id varchar(500) NULL,
+	cfm_yn varchar(1) NULL,
+	cret_user_id varchar(20) NULL,
+	cret_dte timestamp NULL,
+	lt_upt_user_id varchar(20) NULL,
+	lt_upt_dte timestamp NULL,
+	to_cop_nm varchar(500) NULL,
+	CONSTRAINT pk_tb_scmsb_sbsc_reg_req_rnd_istu_m PRIMARY KEY (sbsc_reg_req_doc_no, sbsc_reg_req_seq)
+);
+
+
+-- public.tb_scmse_rsmt_matr_d definition
+
+-- Drop table
+
+-- DROP TABLE tb_scmse_rsmt_matr_d;
+
+CREATE TABLE tb_scmse_rsmt_matr_d (
+	sbsc_no varchar(20) NOT NULL,
+	rsmt_useg_matr_seq numeric NOT NULL,
+	cas_no varchar(200) NULL,
+	rsmt_useg_matr_kog_ctn text NULL,
+	rohs_exct_clus_kog text NULL,
+	rsmt_useg_matr_eng_ctn text NULL,
+	rohs_exct_clus_eng text NULL,
+	rsmt_useg_matr_cng_ctn text NULL,
+	rohs_exct_clus_cng text NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_ins_dtm timestamp NULL,
+	data_upd_user_id varchar(50) NULL,
+	data_upd_dtm timestamp NULL,
+	regt_hd_id varchar(20) DEFAULT 'EU2300009'::character varying NOT NULL,
+	CONSTRAINT pk_tb_scmse_rsmt_matr_d1 PRIMARY KEY (sbsc_no, regt_hd_id, rsmt_useg_matr_seq)
+);
+
+
+-- public.tb_scmse_svhc_rvw_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_scmse_svhc_rvw_m;
+
+CREATE TABLE tb_scmse_svhc_rvw_m (
+	homa_doc_no varchar(50) NOT NULL,
+	svhc_rvw_req_no varchar(10) NOT NULL,
+	svhc_sbsc_icl_yn varchar(1) NOT NULL,
+	excp_nm varchar(200) NULL,
+	excp_rpsn_nm varchar(50) NULL,
+	svhc_sbsc_cnt numeric NULL,
+	smit_dt varchar(8) NULL,
+	data_ins_user_id varchar(50) NOT NULL,
+	data_ins_dtm date NOT NULL,
+	data_upd_user_id varchar(50) NOT NULL,
+	data_upd_dtm date NOT NULL,
+	witr_nm varchar(100) NULL,
+	svhc_blc_dt varchar(8) NULL,
+	CONSTRAINT tb_scmse_svhc_rvw_m_pk PRIMARY KEY (homa_doc_no, svhc_rvw_req_no)
+);
+
+
+-- public.tb_scp_sup_plan_sum_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_scp_sup_plan_sum_m;
+
+CREATE TABLE tb_scp_sup_plan_sum_m (
+	ver_id varchar(10) NOT NULL,
+	plan_yy varchar(4) NOT NULL,
+	mat_cd varchar(100) NOT NULL,
+	plnt_cd varchar(10) NOT NULL,
+	vdcp_cd varchar(20) NULL,
+	plan_tp varchar(20) NOT NULL,
+	pcls_dtl_ctn varchar(200) NULL,
+	prdn_ln_cd varchar(70) NULL,
+	mdl_alas_nm varchar(40) NULL,
+	mat_gr_ctn varchar(20) NULL,
+	mon_01 numeric DEFAULT 0 NULL,
+	mon_02 numeric DEFAULT 0 NULL,
+	mon_03 numeric DEFAULT 0 NULL,
+	mon_04 numeric DEFAULT 0 NULL,
+	mon_05 numeric DEFAULT 0 NULL,
+	mon_06 numeric DEFAULT 0 NULL,
+	mon_07 numeric DEFAULT 0 NULL,
+	mon_08 numeric DEFAULT 0 NULL,
+	mon_09 numeric DEFAULT 0 NULL,
+	mon_10 numeric DEFAULT 0 NULL,
+	mon_11 numeric DEFAULT 0 NULL,
+	mon_12 numeric DEFAULT 0 NULL,
+	data_ins_user_id varchar(50) NOT NULL,
+	data_ins_dtm timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	data_upd_user_id varchar(50) NULL,
+	data_upd_dtm timestamp NULL
+);
+
+
+-- public.tb_she_bugt_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_she_bugt_m;
+
+CREATE TABLE tb_she_bugt_m (
+	plant_cd varchar(30) NOT NULL,
+	yy varchar(4) NOT NULL,
+	dept_cd varchar(30) NOT NULL,
+	prog_st_cd varchar(30) NOT NULL,
+	work_rang_cd varchar(30) NOT NULL,
+	crt_id varchar(50) NOT NULL,
+	crt_dt timestamp NOT NULL,
+	updt_id varchar(50) NOT NULL,
+	updt_dt timestamp NOT NULL
+);
+
+
+-- public.tb_she_bugt_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_she_bugt_n;
+
+CREATE TABLE tb_she_bugt_n (
+	plant_cd varchar(30) NOT NULL,
+	yy varchar(4) NOT NULL,
+	dept_cd varchar(30) NOT NULL,
+	seq numeric(4) NOT NULL,
+	bugt_type_cd varchar(30) NOT NULL,
+	bugt_ctn varchar(4000) NULL,
+	bugt numeric(20) NOT NULL,
+	fhyr_pf numeric(20) NULL,
+	shyr_pf numeric(20) NULL,
+	opin_ctn varchar(4000) NULL,
+	file_id varchar(100) NULL,
+	crt_dt timestamp NOT NULL,
+	updt_dt timestamp NOT NULL,
+	crt_id varchar(50) DEFAULT 'Admin'::character varying NOT NULL,
+	updt_id varchar(50) DEFAULT 'Admin'::character varying NOT NULL
+);
+
+
+-- public.tb_she_goal_item_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_she_goal_item_m;
+
+CREATE TABLE tb_she_goal_item_m (
+	goal_item_id varchar(10) NOT NULL,
+	plant_cd varchar(30) NOT NULL,
+	yy varchar(4) NOT NULL,
+	goal_ctn varchar(4000) NULL,
+	goal_ord numeric(4) NULL,
+	goal_dtl_ctn varchar(4000) NULL,
+	goal_dtl_ord numeric(4) NULL,
+	goal_type varchar(30) NOT NULL,
+	prd varchar(30) NOT NULL,
+	crt_id varchar(50) NOT NULL,
+	crt_dt timestamp NOT NULL,
+	updt_id varchar(50) NOT NULL,
+	updt_dt timestamp NOT NULL,
+	CONSTRAINT "PK_TB_SHE_GOAL_ITEM_M" PRIMARY KEY (goal_item_id, plant_cd, yy)
+);
+
+
+-- public.tb_she_goal_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_she_goal_m;
+
+CREATE TABLE tb_she_goal_m (
+	goal_id varchar(30) NOT NULL,
+	plant_cd varchar(30) NOT NULL,
+	yy varchar(4) NOT NULL,
+	dept_cd varchar(30) NOT NULL,
+	prog_st_cd varchar(30) NOT NULL,
+	work_rang_cd varchar(30) NOT NULL,
+	crt_id varchar(50) NOT NULL,
+	crt_dt timestamp NOT NULL,
+	updt_id varchar(50) NOT NULL,
+	updt_dt timestamp NOT NULL,
+	CONSTRAINT "PK_TB_SHE_GOAL_M" PRIMARY KEY (goal_id, plant_cd, yy, dept_cd)
+);
+
+
+-- public.tb_she_goal_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_she_goal_n;
+
+CREATE TABLE tb_she_goal_n (
+	goal_id varchar(30) NOT NULL,
+	plant_cd varchar(30) NOT NULL,
+	yy varchar(4) NOT NULL,
+	dept_cd varchar(30) NOT NULL,
+	seq numeric(4) NOT NULL,
+	goal_ctn varchar(4000) NULL,
+	goal_dtl_ctm varchar(4000) NULL,
+	prpl_plan varchar(4000) NULL,
+	bf_yy_attn varchar(4000) NULL,
+	goal_tgt varchar(4000) NULL,
+	acvm_rt numeric(3) NULL,
+	plan_bugt numeric(20) NULL,
+	pf_bugt numeric(20) NULL,
+	user_id varchar(30) NULL,
+	un_acvm_rsn varchar(4000) NULL,
+	iprv_ctms varchar(4000) NULL,
+	fhyr_pf varchar(4000) NULL,
+	shyr_pf varchar(4000) NULL,
+	file_id varchar(50) NULL,
+	crt_id varchar(50) NOT NULL,
+	crt_dt timestamp NOT NULL,
+	updt_id varchar(50) NOT NULL,
+	updt_dt timestamp NOT NULL,
+	goal_tgt_type_cd varchar(30) DEFAULT 'GT001'::character varying NOT NULL,
+	CONSTRAINT "PK_TB_SHE_GOAL_N" PRIMARY KEY (goal_id, plant_cd, yy, dept_cd, seq)
+);
+
+
+-- public.tb_she_lgl_apt_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_she_lgl_apt_m;
+
+CREATE TABLE tb_she_lgl_apt_m (
+	lgl_apt_m_id int8 NOT NULL,
+	plant_cd varchar(20) NOT NULL,
+	"year" varchar(4) NOT NULL,
+	ptgt_cd varchar(20) NULL,
+	tgt_cd varchar(20) NULL,
+	cat_cd varchar(20) NULL,
+	apt_cd varchar(20) NULL,
+	lgl_headcount int4 DEFAULT 0 NULL,
+	crt_dt timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	crt_id varchar(100) NULL,
+	updt_dt timestamp NULL,
+	updt_id varchar(100) NULL,
+	deleted int2 DEFAULT 0 NULL,
+	deleted_at timestamp NULL,
+	CONSTRAINT tb_she_lgl_apt_m_pkey PRIMARY KEY (lgl_apt_m_id)
+);
+CREATE INDEX ix_tb_she_lgl_apt_m_apt_cd ON public.tb_she_lgl_apt_m USING btree (apt_cd);
+CREATE INDEX ix_tb_she_lgl_apt_m_plant_cd ON public.tb_she_lgl_apt_m USING btree (plant_cd);
+CREATE INDEX ix_tb_she_lgl_apt_m_year ON public.tb_she_lgl_apt_m USING btree (year);
+
+
+-- public.tb_she_lgl_apt_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_she_lgl_apt_n;
+
+CREATE TABLE tb_she_lgl_apt_n (
+	lgl_apt_n_id int8 NOT NULL,
+	plant_cd varchar(20) NOT NULL,
+	"year" varchar(4) NOT NULL,
+	ptgt_cd varchar(20) NULL,
+	tgt_cd varchar(20) NULL,
+	cat_cd varchar(20) NULL,
+	apt_cd varchar(20) NULL,
+	stat_cd varchar(20) NULL,
+	user_id varchar(100) NULL,
+	apt_dt date NULL,
+	dis_dt date NULL,
+	rpt_dt date NULL,
+	qlfc_req varchar(500) NULL,
+	last_edu_dt date NULL,
+	next_edu_dt date NULL,
+	crt_dt timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	crt_id varchar(100) NULL,
+	updt_dt timestamp NULL,
+	updt_id varchar(100) NULL,
+	deleted int2 DEFAULT 0 NULL,
+	deleted_at timestamp NULL,
+	CONSTRAINT tb_she_lgl_apt_n_pkey PRIMARY KEY (lgl_apt_n_id)
+);
+CREATE INDEX ix_tb_she_lgl_apt_n_apt_cd ON public.tb_she_lgl_apt_n USING btree (apt_cd);
+CREATE INDEX ix_tb_she_lgl_apt_n_plant_cd ON public.tb_she_lgl_apt_n USING btree (plant_cd);
+CREATE INDEX ix_tb_she_lgl_apt_n_stat_cd ON public.tb_she_lgl_apt_n USING btree (stat_cd);
+CREATE INDEX ix_tb_she_lgl_apt_n_user_id ON public.tb_she_lgl_apt_n USING btree (user_id);
+CREATE INDEX ix_tb_she_lgl_apt_n_year ON public.tb_she_lgl_apt_n USING btree (year);
+
+
+-- public.tb_she_lgl_mng_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_she_lgl_mng_m;
+
+CREATE TABLE tb_she_lgl_mng_m (
+	lgl_mng_m_id int8 NOT NULL,
+	plant_cd varchar(20) NOT NULL,
+	"year" varchar(4) NOT NULL,
+	mng_cat_cd varchar(20) NULL,
+	mng_role_cd varchar(20) NULL,
+	user_id varchar(100) NULL,
+	stat_cd varchar(20) NULL,
+	apt_dt date NULL,
+	dis_dt date NULL,
+	crt_dt timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	crt_id varchar(100) NULL,
+	updt_dt timestamp NULL,
+	updt_id varchar(100) NULL,
+	deleted int2 DEFAULT 0 NULL,
+	deleted_at timestamp NULL,
+	CONSTRAINT tb_she_lgl_mng_m_pkey PRIMARY KEY (lgl_mng_m_id)
+);
+CREATE INDEX ix_tb_she_lgl_mng_m_mng_cat_cd ON public.tb_she_lgl_mng_m USING btree (mng_cat_cd);
+CREATE INDEX ix_tb_she_lgl_mng_m_mng_role_cd ON public.tb_she_lgl_mng_m USING btree (mng_role_cd);
+CREATE INDEX ix_tb_she_lgl_mng_m_plant_cd ON public.tb_she_lgl_mng_m USING btree (plant_cd);
+CREATE INDEX ix_tb_she_lgl_mng_m_user_id ON public.tb_she_lgl_mng_m USING btree (user_id);
+CREATE INDEX ix_tb_she_lgl_mng_m_year ON public.tb_she_lgl_mng_m USING btree (year);
+
+
+-- public.tb_she_mgmt_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_she_mgmt_m;
+
+CREATE TABLE tb_she_mgmt_m (
+	mgmt_id varchar(30) NOT NULL,
+	plant_cd varchar(30) NOT NULL,
+	yy varchar(4) NOT NULL,
+	title varchar(300) NOT NULL,
+	ctn varchar(4000) NOT NULL,
+	ptup_plac varchar(300) NULL,
+	file_id varchar(100) NULL,
+	crt_id varchar(50) NULL,
+	crt_dt varchar(14) NULL,
+	updt_id varchar(50) NULL,
+	updt_dt varchar(14) NULL,
+	CONSTRAINT pk_tb_she_mgmt_m PRIMARY KEY (mgmt_id)
+);
+
+
+-- public.tb_she_sfc_cncl_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_she_sfc_cncl_m;
+
+CREATE TABLE tb_she_sfc_cncl_m (
+	sfc_cncl_m_id int8 NOT NULL,
+	plant_cd varchar(20) NOT NULL,
+	"year" varchar(4) NOT NULL,
+	cncl_cat_cd varchar(20) NULL,
+	cncl_date date NULL,
+	subject varchar(500) NULL,
+	"content" text NULL,
+	act_dept_cd varchar(20) NULL,
+	act_user_id varchar(100) NULL,
+	act_content text NULL,
+	act_cd varchar(20) NULL,
+	act_plan_dt date NULL,
+	act_fsh_dt date NULL,
+	crt_dt timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	crt_id varchar(100) NULL,
+	updt_dt timestamp NULL,
+	updt_id varchar(100) NULL,
+	deleted int2 DEFAULT 0 NULL,
+	deleted_at timestamp NULL,
+	CONSTRAINT tb_she_sfc_cncl_m_pkey PRIMARY KEY (sfc_cncl_m_id)
+);
+CREATE INDEX ix_tb_she_sfc_cncl_m_act_cd ON public.tb_she_sfc_cncl_m USING btree (act_cd);
+CREATE INDEX ix_tb_she_sfc_cncl_m_cncl_cat_cd ON public.tb_she_sfc_cncl_m USING btree (cncl_cat_cd);
+CREATE INDEX ix_tb_she_sfc_cncl_m_plant_cd ON public.tb_she_sfc_cncl_m USING btree (plant_cd);
+CREATE INDEX ix_tb_she_sfc_cncl_m_year ON public.tb_she_sfc_cncl_m USING btree (year);
+
+
+-- public.tb_she_sfc_rpt_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_she_sfc_rpt_m;
+
+CREATE TABLE tb_she_sfc_rpt_m (
+	sfc_rpt_m_id int8 NOT NULL,
+	plant_cd varchar(20) NOT NULL,
+	"year" varchar(4) NOT NULL,
+	rpt_cat_cd varchar(20) NULL,
+	req_fsh_date date NULL,
+	subject varchar(500) NULL,
+	"content" text NULL,
+	act_dept_cd varchar(20) NULL,
+	act_user_id varchar(100) NULL,
+	act_content text NULL,
+	act_cd varchar(20) NULL,
+	plan_dt date NULL,
+	act_fsh_dt date NULL,
+	crt_dt timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	crt_id varchar(100) NULL,
+	updt_dt timestamp NULL,
+	updt_id varchar(100) NULL,
+	deleted int2 DEFAULT 0 NULL,
+	deleted_at timestamp NULL,
+	CONSTRAINT tb_she_sfc_rpt_m_pkey PRIMARY KEY (sfc_rpt_m_id)
+);
+CREATE INDEX ix_tb_she_sfc_rpt_m_act_cd ON public.tb_she_sfc_rpt_m USING btree (act_cd);
+CREATE INDEX ix_tb_she_sfc_rpt_m_plant_cd ON public.tb_she_sfc_rpt_m USING btree (plant_cd);
+CREATE INDEX ix_tb_she_sfc_rpt_m_rpt_cat_cd ON public.tb_she_sfc_rpt_m USING btree (rpt_cat_cd);
+CREATE INDEX ix_tb_she_sfc_rpt_m_year ON public.tb_she_sfc_rpt_m USING btree (year);
+
+
+-- public.tb_sm_sample_material_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_sm_sample_material_n;
+
+CREATE TABLE tb_sm_sample_material_n (
+	sample_matl_no varchar(20) NOT NULL,
+	sample_matl_nm varchar(200) NULL,
+	supy_vend_nm varchar(100) NULL,
+	matl_cd varchar(30) NULL,
+	supy_vend_cd varchar(20) NULL,
+	matl_cate_classf_cd varchar(10) NULL,
+	stock_wkplc_cd varchar(10) NULL,
+	ord_type_cd varchar(10) NULL,
+	ord_cost_cd varchar(10) NULL,
+	imp_reason_cd varchar(10) NULL,
+	imp_reason_detail_cnts varchar(100) NULL,
+	desc_cnts varchar(4000) NULL,
+	bl_no varchar(50) NULL,
+	impt_natn_cd varchar(10) NULL,
+	hs_cd varchar(40) NULL,
+	year_imp_quota numeric NULL,
+	year_imp_quota_ut varchar(3) NULL,
+	pantos_if_yn varchar(1) DEFAULT 'N'::character varying NOT NULL,
+	poi_subt_yn varchar(1) NULL,
+	cret_user_id varchar(20) NULL,
+	cret_dte timestamp NULL,
+	op_heat_cd varchar(30) NULL,
+	dvs_cd varchar(30) NULL,
+	dept_cd varchar(30) NULL,
+	lt_upt_user_id varchar(20) NULL,
+	file_url varchar(500) NULL,
+	file_id varchar(50) NULL,
+	request_id varchar(30) NULL,
+	imp_rept_rcv_no varchar(20) NULL,
+	lt_upt_dte timestamp NULL,
+	conv_detail_cnts varchar(1000) NULL,
+	return_yn varchar(1) DEFAULT 'N'::character varying NULL,
+	return_custom_no varchar(30) NULL,
+	sa_comp_cd varchar(10) DEFAULT 'HQ00'::character varying NOT NULL,
+	abt_apro_no varchar(20) NULL,
+	rem_subt_yn varchar(1) NULL,
+	prm_subt_yn varchar(1) NULL,
+	abt_subt_yn varchar(1) NULL,
+	tox_apro_no varchar(20) NULL,
+	rem_apro_no varchar(20) NULL,
+	prm_apro_no varchar(20) NULL,
+	matl_use_place_cd varchar(30) NULL,
+	matl_use_place_text varchar(1000) NULL,
+	matl_use_estmt_dt varchar(8) NULL,
+	tox_imp_rept_apr_no varchar(100) NULL,
+	rem_imp_purpose varchar(500) NULL,
+	imp_rept_qty numeric NULL,
+	tox_imp_rept_qty numeric NULL,
+	rem_imp_rept_qty numeric NULL,
+	prm_imp_rept_qty numeric NULL,
+	imp_no_chk varchar(1) NULL,
+	imp_tox_chk varchar(1) NULL,
+	imp_rem_chk varchar(1) NULL,
+	imp_prm_chk varchar(1) NULL,
+	add_impn_yn varchar(1) NULL,
+	pmss_sbsc_impn_dclr_tgt_yn varchar(1) NULL,
+	pmss_sbsc_impn_dclr_no varchar(20) NULL,
+	pmss_sbsc_impn_dclr_qty numeric NULL,
+	pmss_sbsc_exc_cho_yn varchar(1) NULL,
+	CONSTRAINT tb_sm_sample_material_n_pkey PRIMARY KEY (sample_matl_no)
+);
+CREATE INDEX tb_sm_sample_material_n_idx01 ON public.tb_sm_sample_material_n USING btree (sample_matl_nm, supy_vend_nm, ord_type_cd);
+CREATE INDEX tb_sm_sample_material_n_idx02 ON public.tb_sm_sample_material_n USING btree (matl_cd, supy_vend_cd, ord_type_cd);
+CREATE INDEX tb_sm_sample_material_n_idx03 ON public.tb_sm_sample_material_n USING btree (request_id, sa_comp_cd);
+CREATE INDEX tb_sm_sample_material_n_idx04 ON public.tb_sm_sample_material_n USING btree (cret_dte, sample_matl_no);
+
+
+-- public.tb_subc_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_subc_m;
+
+CREATE TABLE tb_subc_m (
+	subc_id int8 NOT NULL,
+	comp_nm varchar(200) NULL,
+	comp_cd varchar(50) NULL,
+	repr_nm varchar(100) NULL,
+	repr_tel varchar(50) NULL,
+	crt_dt timestamp NULL,
+	crt_id varchar(100) NULL,
+	updt_dt timestamp NULL,
+	updt_id varchar(100) NULL,
+	deleted int2 NULL,
+	deleted_at timestamp NULL,
+	CONSTRAINT tb_subc_m_pkey PRIMARY KEY (subc_id)
+);
+CREATE INDEX ix_tb_subc_m_comp_cd ON public.tb_subc_m USING btree (comp_cd);
+
+
+-- public.tb_vend_old_new definition
+
+-- Drop table
+
+-- DROP TABLE tb_vend_old_new;
+
+CREATE TABLE tb_vend_old_new (
+	vend_old varchar(20) NULL,
+	vend_new varchar(20) NULL
+);
+
+
+-- public.tb_work_pmt_aprv_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_work_pmt_aprv_n;
+
+CREATE TABLE tb_work_pmt_aprv_n (
+	work_pmt_id int8 NULL,
+	aprv_user_id varchar(50) NULL,
+	aprv_type varchar(20) NULL,
+	aprv_ord int4 NULL,
+	aprv_rst varchar(20) NULL,
+	aprv_dtm timestamp NULL,
+	aprv_cmnt varchar(500) NULL,
+	crt_dt timestamp NULL,
+	crt_id varchar(100) NULL,
+	updt_dt timestamp NULL,
+	updt_id varchar(100) NULL,
+	deleted int2 NULL,
+	deleted_at timestamp NULL
+);
+CREATE INDEX ix_tb_work_pmt_aprv_n_aprv_user_id ON public.tb_work_pmt_aprv_n USING btree (aprv_user_id);
+CREATE INDEX ix_tb_work_pmt_aprv_n_work_pmt_id ON public.tb_work_pmt_aprv_n USING btree (work_pmt_id);
+
+
+-- public.tb_work_pmt_doc_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_work_pmt_doc_n;
+
+CREATE TABLE tb_work_pmt_doc_n (
+	work_pmt_id int8 NULL,
+	work_type_doc_id int8 NULL,
+	file_id int8 NULL,
+	submit_dt date NULL,
+	stat_cd varchar(20) NULL,
+	rmk varchar(500) NULL,
+	crt_dt timestamp NULL,
+	crt_id varchar(100) NULL,
+	updt_dt timestamp NULL,
+	updt_id varchar(100) NULL,
+	deleted int2 NULL,
+	deleted_at timestamp NULL
+);
+CREATE INDEX ix_tb_work_pmt_doc_n_work_pmt_id ON public.tb_work_pmt_doc_n USING btree (work_pmt_id);
+CREATE INDEX ix_tb_work_pmt_doc_n_work_type_doc_id ON public.tb_work_pmt_doc_n USING btree (work_type_doc_id);
+
+
+-- public.tb_work_pmt_dtl_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_work_pmt_dtl_n;
+
+CREATE TABLE tb_work_pmt_dtl_n (
+	work_pmt_id int8 NULL,
+	work_type_dtl_id int8 NULL,
+	str_val varchar(1000) NULL,
+	date_val date NULL,
+	bool_val bool NULL,
+	crt_dt timestamp NULL,
+	crt_id varchar(100) NULL,
+	updt_dt timestamp NULL,
+	updt_id varchar(100) NULL,
+	deleted int2 NULL,
+	deleted_at timestamp NULL
+);
+CREATE INDEX ix_tb_work_pmt_d_work_pmt_id ON public.tb_work_pmt_dtl_n USING btree (work_pmt_id);
+CREATE INDEX ix_tb_work_pmt_d_work_type_dtl_id ON public.tb_work_pmt_dtl_n USING btree (work_type_dtl_id);
+
+
+-- public.tb_work_pmt_insp_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_work_pmt_insp_n;
+
+CREATE TABLE tb_work_pmt_insp_n (
+	work_pmt_id int8 NULL,
+	ctgry varchar(100) NULL,
+	is_good bool NULL,
+	spec_note varchar(1000) NULL,
+	insp_user_id int8 NULL,
+	insp_dtm timestamp NULL,
+	crt_dt timestamp NULL,
+	crt_id varchar(100) NULL,
+	updt_dt timestamp NULL,
+	updt_id varchar(100) NULL,
+	deleted int2 NULL,
+	deleted_at timestamp NULL
+);
+CREATE INDEX ix_tb_work_pmt_insp_n_work_pmt_id ON public.tb_work_pmt_insp_n USING btree (work_pmt_id);
+
+
+-- public.tb_work_pmt_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_work_pmt_m;
+
+CREATE TABLE tb_work_pmt_m (
+	work_pmt_id int8 NOT NULL,
+	work_nm varchar(300) NULL,
+	subc_id int8 NULL,
+	subc_mgr_nm varchar(100) NULL,
+	subc_mgr_tel varchar(50) NULL,
+	work_dt date NULL,
+	work_loc varchar(300) NULL,
+	main_equip varchar(300) NULL,
+	work_equip varchar(1000) NULL,
+	work_desc text NULL,
+	permit_no varchar(30) NULL,
+	draft_user_id int8 NULL,
+	draft_dtm timestamp NULL,
+	valid_until date NULL,
+	permit_stat_cd varchar(20) NULL,
+	prog_stat_cd varchar(20) NULL,
+	start_dtm timestamp NULL,
+	start_conf_user_id int8 NULL,
+	end_dtm timestamp NULL,
+	end_conf_user_id int8 NULL,
+	cancel_dtm timestamp NULL,
+	cancel_user_id int8 NULL,
+	crt_dt timestamp NULL,
+	crt_id varchar(100) NULL,
+	updt_dt timestamp NULL,
+	updt_id varchar(100) NULL,
+	deleted int2 NULL,
+	deleted_at timestamp NULL,
+	fac_dept_cd varchar(20) NULL,
+	work_dept_cd varchar(20) NULL,
+	CONSTRAINT tb_work_pmt_m_pkey PRIMARY KEY (work_pmt_id)
+);
+CREATE INDEX ix_tb_work_pmt_m_fac_dept_cd ON public.tb_work_pmt_m USING btree (fac_dept_cd);
+CREATE INDEX ix_tb_work_pmt_m_permit_no ON public.tb_work_pmt_m USING btree (permit_no);
+CREATE INDEX ix_tb_work_pmt_m_permit_stat_cd ON public.tb_work_pmt_m USING btree (permit_stat_cd);
+CREATE INDEX ix_tb_work_pmt_m_prog_stat_cd ON public.tb_work_pmt_m USING btree (prog_stat_cd);
+CREATE INDEX ix_tb_work_pmt_m_subc_id ON public.tb_work_pmt_m USING btree (subc_id);
+CREATE INDEX ix_tb_work_pmt_m_work_dept_cd ON public.tb_work_pmt_m USING btree (work_dept_cd);
+CREATE INDEX ix_tb_work_pmt_m_work_dt ON public.tb_work_pmt_m USING btree (work_dt);
+
+
+-- public.tb_work_pmt_prchk_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_work_pmt_prchk_n;
+
+CREATE TABLE tb_work_pmt_prchk_n (
+	work_pmt_id int8 NULL,
+	chk_cd varchar(50) NULL,
+	chk_label varchar(200) NULL,
+	is_chk bool NULL,
+	crt_dt timestamp NULL,
+	crt_id varchar(100) NULL,
+	updt_dt timestamp NULL,
+	updt_id varchar(100) NULL,
+	deleted int2 NULL,
+	deleted_at timestamp NULL
+);
+CREATE INDEX ix_tb_work_pmt_prchk_n_work_pmt_id ON public.tb_work_pmt_prchk_n USING btree (work_pmt_id);
+
+
+-- public.tb_work_pmt_type_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_work_pmt_type_n;
+
+CREATE TABLE tb_work_pmt_type_n (
+	work_pmt_id int8 NULL,
+	work_type_id int8 NULL,
+	crt_dt timestamp NULL,
+	crt_id varchar(100) NULL,
+	updt_dt timestamp NULL,
+	updt_id varchar(100) NULL,
+	deleted int2 NULL,
+	deleted_at timestamp NULL
+);
+CREATE INDEX ix_tb_work_pmt_type_n_work_pmt_id ON public.tb_work_pmt_type_n USING btree (work_pmt_id);
+CREATE INDEX ix_tb_work_pmt_type_n_work_type_id ON public.tb_work_pmt_type_n USING btree (work_type_id);
+
+
+-- public.tb_work_pmt_wrkr_n definition
+
+-- Drop table
+
+-- DROP TABLE tb_work_pmt_wrkr_n;
+
+CREATE TABLE tb_work_pmt_wrkr_n (
+	work_pmt_id int8 NULL,
+	wrkr_id int8 NULL,
+	is_site_mgr bool NULL,
+	work_pmt_dtm timestamp NULL,
+	in_dtm timestamp NULL,
+	out_dtm timestamp NULL,
+	crt_dt timestamp NULL,
+	crt_id varchar(100) NULL,
+	updt_dt timestamp NULL,
+	updt_id varchar(100) NULL,
+	deleted int2 NULL,
+	deleted_at timestamp NULL
+);
+CREATE INDEX ix_tb_work_pmt_wrkr_n_work_pmt_id ON public.tb_work_pmt_wrkr_n USING btree (work_pmt_id);
+CREATE INDEX ix_tb_work_pmt_wrkr_n_wrkr_id ON public.tb_work_pmt_wrkr_n USING btree (wrkr_id);
+
+
+-- public.tb_work_type_doc_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_work_type_doc_m;
+
+CREATE TABLE tb_work_type_doc_m (
+	work_type_doc_id int8 NOT NULL,
+	work_type_id int8 NULL,
+	doc_nm varchar(200) NULL,
+	doc_cd varchar(50) NULL,
+	form_file_id int8 NULL,
+	is_required int2 NULL,
+	valid_from_dt date NULL,
+	valid_to_dt date NULL,
+	ord_no int4 NULL,
+	crt_dt timestamp NULL,
+	crt_id varchar(100) NULL,
+	updt_dt timestamp NULL,
+	updt_id varchar(100) NULL,
+	deleted int2 NULL,
+	deleted_at timestamp NULL,
+	CONSTRAINT tb_work_type_doc_m_pkey PRIMARY KEY (work_type_doc_id)
+);
+CREATE INDEX ix_tb_work_type_doc_m_work_type_id ON public.tb_work_type_doc_m USING btree (work_type_id);
+
+
+-- public.tb_work_type_dtl_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_work_type_dtl_m;
+
+CREATE TABLE tb_work_type_dtl_m (
+	work_type_dtl_id int8 NOT NULL,
+	work_type_id int8 NULL,
+	col_span int4 NULL,
+	"label" varchar(200) NULL,
+	input_type varchar(50) NULL,
+	is_required int2 NULL,
+	ord_no int4 NULL,
+	crt_dt timestamp NULL,
+	crt_id varchar(100) NULL,
+	updt_dt timestamp NULL,
+	updt_id varchar(100) NULL,
+	deleted int2 NULL,
+	deleted_at timestamp NULL,
+	CONSTRAINT tb_work_type_dtl_m_pkey PRIMARY KEY (work_type_dtl_id)
+);
+CREATE INDEX ix_tb_work_type_dtl_m_work_type_id ON public.tb_work_type_dtl_m USING btree (work_type_id);
+
+
+-- public.tb_work_type_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_work_type_m;
+
+CREATE TABLE tb_work_type_m (
+	work_type_id int8 NOT NULL,
+	type_nm varchar(200) NULL,
+	type_cd varchar(50) NULL,
+	type_ctgry varchar(10) NULL,
+	enabled int2 NULL,
+	ord_no int4 NULL,
+	crt_dt timestamp NULL,
+	crt_id varchar(100) NULL,
+	updt_dt timestamp NULL,
+	updt_id varchar(100) NULL,
+	deleted int2 NULL,
+	deleted_at timestamp NULL,
+	CONSTRAINT tb_work_type_m_pkey PRIMARY KEY (work_type_id)
+);
+CREATE INDEX ix_tb_work_type_m_type_cd ON public.tb_work_type_m USING btree (type_cd);
+
+
+-- public.tb_wrkr_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_wrkr_m;
+
+CREATE TABLE tb_wrkr_m (
+	wrkr_id int8 NOT NULL,
+	subc_id int8 NULL,
+	wrkr_nm varchar(200) NULL,
+	wrkr_tel varchar(50) NULL,
+	car_no varchar(50) NULL,
+	crt_dt timestamp NULL,
+	crt_id varchar(100) NULL,
+	updt_dt timestamp NULL,
+	updt_id varchar(100) NULL,
+	deleted int2 NULL,
+	deleted_at timestamp NULL,
+	CONSTRAINT tb_wrkr_m_pkey PRIMARY KEY (wrkr_id)
+);
+CREATE INDEX ix_tb_wrkr_m_subc_id ON public.tb_wrkr_m USING btree (subc_id);
+CREATE INDEX ix_tb_wrkr_m_wrkr_nm ON public.tb_wrkr_m USING btree (wrkr_nm);
+
+
+-- public.batch_job_execution definition
+
+-- Drop table
+
+-- DROP TABLE batch_job_execution;
+
+CREATE TABLE batch_job_execution (
+	job_execution_id int8 NOT NULL,
+	"version" int8 NULL,
+	job_instance_id int8 NOT NULL,
+	create_time timestamp NOT NULL,
+	start_time timestamp NULL,
+	end_time timestamp NULL,
+	status varchar(10) NULL,
+	exit_code varchar(2500) NULL,
+	exit_message varchar(2500) NULL,
+	last_updated timestamp NULL,
+	CONSTRAINT batch_job_execution_pkey PRIMARY KEY (job_execution_id),
+	CONSTRAINT job_inst_exec_fk FOREIGN KEY (job_instance_id) REFERENCES batch_job_instance(job_instance_id)
+);
+
+
+-- public.batch_job_execution_context definition
+
+-- Drop table
+
+-- DROP TABLE batch_job_execution_context;
+
+CREATE TABLE batch_job_execution_context (
+	job_execution_id int8 NOT NULL,
+	short_context varchar(2500) NOT NULL,
+	serialized_context text NULL,
+	CONSTRAINT batch_job_execution_context_pkey PRIMARY KEY (job_execution_id),
+	CONSTRAINT job_exec_ctx_fk FOREIGN KEY (job_execution_id) REFERENCES batch_job_execution(job_execution_id)
+);
+
+
+-- public.batch_job_execution_params definition
+
+-- Drop table
+
+-- DROP TABLE batch_job_execution_params;
+
+CREATE TABLE batch_job_execution_params (
+	job_execution_id int8 NOT NULL,
+	parameter_name varchar(100) NOT NULL,
+	parameter_type varchar(100) NOT NULL,
+	parameter_value varchar(2500) NULL,
+	identifying bpchar(1) NOT NULL,
+	CONSTRAINT job_exec_params_fk FOREIGN KEY (job_execution_id) REFERENCES batch_job_execution(job_execution_id)
+);
+
+
+-- public.batch_step_execution definition
+
+-- Drop table
+
+-- DROP TABLE batch_step_execution;
+
+CREATE TABLE batch_step_execution (
+	step_execution_id int8 NOT NULL,
+	"version" int8 NOT NULL,
+	step_name varchar(100) NOT NULL,
+	job_execution_id int8 NOT NULL,
+	create_time timestamp NOT NULL,
+	start_time timestamp NULL,
+	end_time timestamp NULL,
+	status varchar(10) NULL,
+	commit_count int8 NULL,
+	read_count int8 NULL,
+	filter_count int8 NULL,
+	write_count int8 NULL,
+	read_skip_count int8 NULL,
+	write_skip_count int8 NULL,
+	process_skip_count int8 NULL,
+	rollback_count int8 NULL,
+	exit_code varchar(2500) NULL,
+	exit_message varchar(2500) NULL,
+	last_updated timestamp NULL,
+	CONSTRAINT batch_step_execution_pkey PRIMARY KEY (step_execution_id),
+	CONSTRAINT job_exec_step_fk FOREIGN KEY (job_execution_id) REFERENCES batch_job_execution(job_execution_id)
+);
+
+
+-- public.batch_step_execution_context definition
+
+-- Drop table
+
+-- DROP TABLE batch_step_execution_context;
+
+CREATE TABLE batch_step_execution_context (
+	step_execution_id int8 NOT NULL,
+	short_context varchar(2500) NOT NULL,
+	serialized_context text NULL,
+	CONSTRAINT batch_step_execution_context_pkey PRIMARY KEY (step_execution_id),
+	CONSTRAINT step_exec_ctx_fk FOREIGN KEY (step_execution_id) REFERENCES batch_step_execution(step_execution_id)
+);
+
+
+-- public.tb_rapid_todo_m definition
+
+-- Drop table
+
+-- DROP TABLE tb_rapid_todo_m;
+
+CREATE TABLE tb_rapid_todo_m (
+	cplt_dtm timestamp(6) NULL,
+	data_ins_dtm timestamp(6) NULL,
+	data_upd_dtm timestamp(6) NULL,
+	req_dtm timestamp(6) NOT NULL,
+	todo_due_dtm timestamp(6) NULL,
+	data_ins_user_ip varchar(40) NULL,
+	data_upd_user_ip varchar(40) NULL,
+	assg_user_id varchar(50) NOT NULL,
+	data_ins_user_id varchar(50) NULL,
+	data_upd_user_id varchar(50) NULL,
+	req_user_id varchar(50) NULL,
+	todo_id varchar(50) NOT NULL,
+	todo_stat_cd varchar(50) NOT NULL,
+	todo_tp_id varchar(50) NOT NULL,
+	todo_wkt_id varchar(100) NOT NULL,
+	todo_pram_nm varchar(200) NULL,
+	todo_nm varchar(300) NOT NULL,
+	CONSTRAINT tb_rapid_todo_m_pkey PRIMARY KEY (todo_id),
+	CONSTRAINT fkm3e248qq0xesvosl2vapm5u0 FOREIGN KEY (todo_tp_id) REFERENCES tb_rapid_todo_tp_m(todo_tp_id)
+);
